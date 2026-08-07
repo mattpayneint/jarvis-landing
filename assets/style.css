@@ -134,6 +134,50 @@ h1 {
   letter-spacing: 0.02em;
 }
 
+/* Opt-in form */
+.optin-frame {
+  margin: 40px 0;
+  padding: 44px 32px;
+  border-radius: 4px;
+  background: var(--bg-soft);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 12px 40px rgba(22,33,62,0.06);
+  text-align: center;
+}
+.optin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.optin-form input {
+  width: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  background: #FFFFFF;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  color: var(--ink);
+}
+.optin-form input::placeholder { color: var(--ink-soft); }
+.optin-form input:focus { outline: none; border-color: var(--gold); }
+.optin-form button.btn-gold {
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 6px;
+  font-size: 14px;
+}
+.optin-note {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
 /* Proof */
 .proof {
   margin: 72px 0;

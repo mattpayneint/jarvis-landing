@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matthew Payne Consulting — Watch The Training</title>
+<meta name="description" content="Enter your email to unlock the training.">
+<link rel="stylesheet" href="assets/style.css">
+
+<!-- Meta Pixel base code — PIXEL_ID placeholder, fill in once the ad account exists -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="mark">Matthew Payne <span>Consulting</span></div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow" id="eyebrow">For Fund Managers &amp; General Partners</div>
+    <h1 id="headline">The Quiet Approach To Raising Capital</h1>
+    <p class="sub" id="subhead">Enter your email below to watch the training — I'll also send the link to your inbox so you can finish it anytime.</p>
+  </section>
+
+  <div class="optin-frame">
+    <form id="optinForm" class="optin-form">
+      <input type="text" name="firstName" placeholder="First Name" autocomplete="given-name" required>
+      <input type="email" name="email" placeholder="Email Address" autocomplete="email" required>
+      <button type="submit" class="btn-gold">Unlock The Training</button>
+    </form>
+    <div class="optin-note">No spam. Just the video, and occasionally something worth your time.</div>
+  </div>
+
+  <section class="proof">
+    <h2>A Few Real Ones</h2>
+    <div class="proof-item">
+      <div class="proof-mark">&rdquo;</div>
+      <div class="proof-text"><strong>Pete</strong>, a client of mine, landed a $100M investor using this approach.</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-mark">&rdquo;</div>
+      <div class="proof-text"><strong>Chris</strong>, a VP at Merrill, landed $60M off a single conversation.</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-mark">&rdquo;</div>
+      <div class="proof-text"><strong>Todd</strong>, a friend running a fund, landed $35M in his bourbon fund the same way.</div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site">Matthew Payne Consulting</footer>
+
+<script>
+// Vertical-aware copy — one template drives all 3 ad destinations via ?v=vc|advisor|attorney
+// (mirrors the hero copy already live in vc.html / advisor.html / attorney.html)
+var VERTICALS = {
+  vc: {
+    eyebrow: 'For Fund Managers &amp; General Partners',
+    headline: 'The Quiet Approach To Raising Capital',
+    redirect: 'vc.html'
+  },
+  advisor: {
+    eyebrow: 'For Financial Advisors &amp; Wealth Managers',
+    headline: 'Growing AUM Starts With Trust, Not Pitches',
+    redirect: 'advisor.html'
+  },
+  attorney: {
+    eyebrow: 'For Estate &amp; Wealth-Focused Attorneys',
+    headline: 'The Relationships Behind Every Referral',
+    redirect: 'attorney.html'
+  }
+};
+
+var params = new URLSearchParams(window.location.search);
+var key = params.get('v');
+var v = VERTICALS[key] || VERTICALS.vc;
+document.getElementById('eyebrow').innerHTML = v.eyebrow;
+document.getElementById('headline').textContent = v.headline;
+
+// Opt-in submit: fires the Meta Lead event, posts to the (not-yet-live) n8n capture
+// webhook, then hands off to the matching vertical VSL page. Swap OPTIN_WEBHOOK_URL
+// for the real n8n webhook URL once that workflow is built — see
+// project_meta_ads_media_buyer_2026-08-07.md / project_infusionsoft_keap_audit_2026-08-07.md.
+document.getElementById('optinForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var data = new FormData(e.target);
+  var payload = {
+    firstName: data.get('firstName'),
+    email: data.get('email'),
+    vertical: key || 'vc'
+  };
+
+  if (typeof fbq === 'function') fbq('track', 'Lead');
+
+  fetch('OPTIN_WEBHOOK_URL', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(function () {});
+
+  window.location.href = v.redirect;
+});
+</script>
+
+</body>
+</html>
