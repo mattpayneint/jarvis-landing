@@ -353,22 +353,22 @@ h1 {
   background: linear-gradient(165deg, #FFFFFF 0%, var(--bg-soft) 100%);
   border: 1px solid var(--hairline);
   border-radius: 6px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
-/* A quieter echo of the opt-in card's spotlight — same visual family,
-   clearly less prominent so the card hierarchy stays intact. */
+/* Same spotlight treatment as the opt-in card — Matt's explicit call
+   to match depth across both, not just echo it faintly. */
 .proof-item::before {
   content: '';
   position: absolute;
-  inset: -10% -4%;
+  inset: -14% -8%;
   z-index: -1;
-  border-radius: 12px;
-  background: radial-gradient(ellipse at 50% 50%, rgba(160,138,82,0.07), transparent 72%);
-  filter: blur(4px);
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(160,138,82,0.16), transparent 70%);
+  filter: blur(6px);
 }
 .proof-item:hover {
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 4px 8px rgba(22,33,62,0.1), 0 20px 40px rgba(22,33,62,0.16), 0 56px 100px rgba(22,33,62,0.26);
   transform: translateY(-4px);
 }
 .proof-item:last-child { margin-bottom: 0; }
