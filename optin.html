@@ -51,7 +51,7 @@ fbq('track', 'PageView');
   </div>
 
   <section class="proof">
-    <h2 class="reveal">A Few Real Ones</h2>
+    <h2 class="reveal" id="proofHeading">Recent Raises</h2>
     <div class="proof-item reveal">
       <div class="proof-mark">&rdquo;</div>
       <div class="proof-text"><strong>Pete</strong>, a client of mine, landed a $100M investor using this approach.</div>
@@ -78,6 +78,7 @@ var VERTICALS = {
     eyebrow: 'For Fund Managers &amp; General Partners',
     headline: 'The Quiet Approach To Raising Capital',
     redirect: 'vc.html',
+    proofHeading: 'Recent Raises',
     bullets: [
       'The relationship-first approach that landed Pete a $100M allocator',
       'Why "pitching" is quietly costing you capital commitments',
@@ -88,6 +89,7 @@ var VERTICALS = {
     eyebrow: 'For Financial Advisors &amp; Wealth Managers',
     headline: 'Growing AUM Starts With Trust, Not Pitches',
     redirect: 'advisor.html',
+    proofHeading: 'Recent Results',
     bullets: [
       'The approach that took Chris from one conversation to $60M in new AUM',
       'Why traditional prospecting is quietly working against you',
@@ -98,6 +100,7 @@ var VERTICALS = {
     eyebrow: 'For Estate &amp; Wealth-Focused Attorneys',
     headline: 'The Relationships Behind Every Referral',
     redirect: 'attorney.html',
+    proofHeading: 'Recent Wins',
     bullets: [
       'Why referral relationships outperform every marketing dollar you spend',
       'The conversation framework that consistently earns repeat introductions',
@@ -111,6 +114,7 @@ var key = params.get('v');
 var v = VERTICALS[key] || VERTICALS.vc;
 document.getElementById('eyebrow').innerHTML = v.eyebrow;
 document.getElementById('headline').textContent = v.headline;
+document.getElementById('proofHeading').textContent = v.proofHeading;
 document.querySelectorAll('#benefits li span').forEach(function (el, i) {
   el.textContent = v.bullets[i];
 });

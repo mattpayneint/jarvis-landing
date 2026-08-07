@@ -348,30 +348,33 @@ h1 {
   display: flex;
   align-items: flex-start;
   gap: 18px;
-  padding: 22px 24px;
-  margin-bottom: 14px;
+  padding: 26px 28px;
+  margin-bottom: 32px;
   background: linear-gradient(165deg, #FFFFFF 0%, var(--bg-soft) 100%);
   border: 1px solid var(--hairline);
   border-radius: 6px;
   box-shadow: var(--shadow-xl);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
-/* Same spotlight treatment as the opt-in card — Matt's explicit call
-   to match depth across both, not just echo it faintly. */
+/* Same spotlight treatment as the opt-in card. Fixed pixel sizing, not
+   percentage — a percentage inset scales with each element's own
+   height, so short stacked cards got a proportionally tiny glow next
+   to the tall opt-in card even with "identical" CSS. Fixed px keeps
+   the glow the same absolute size everywhere. */
 .proof-item::before {
   content: '';
   position: absolute;
-  inset: -14% -8%;
+  inset: -34px -26px;
   z-index: -1;
   border-radius: 16px;
   background: radial-gradient(ellipse at 50% 40%, rgba(160,138,82,0.16), transparent 70%);
   filter: blur(6px);
 }
+.proof-item:last-child { margin-bottom: 0; }
 .proof-item:hover {
   box-shadow: 0 4px 8px rgba(22,33,62,0.1), 0 20px 40px rgba(22,33,62,0.16), 0 56px 100px rgba(22,33,62,0.26);
   transform: translateY(-4px);
 }
-.proof-item:last-child { margin-bottom: 0; }
 .proof-mark {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 30px;
