@@ -17,6 +17,7 @@
   --shadow-sm: 0 1px 2px rgba(22,33,62,0.05);
   --shadow-md: 0 2px 4px rgba(22,33,62,0.05), 0 10px 20px rgba(22,33,62,0.07);
   --shadow-lg: 0 2px 4px rgba(22,33,62,0.04), 0 10px 20px rgba(22,33,62,0.06), 0 28px 56px rgba(22,33,62,0.12);
+  --shadow-xl: 0 2px 6px rgba(22,33,62,0.08), 0 16px 32px rgba(22,33,62,0.14), 0 48px 90px rgba(22,33,62,0.22);
   --shadow-gold-md: 0 2px 6px rgba(160,138,82,0.22), 0 8px 16px rgba(160,138,82,0.18);
   --shadow-gold-lg: 0 4px 10px rgba(160,138,82,0.26), 0 20px 40px rgba(160,138,82,0.3);
 }
@@ -237,24 +238,37 @@ h1 {
 
 /* Opt-in form */
 .optin-frame {
-  margin: 40px 0;
-  padding: 46px 32px 40px;
+  position: relative;
+  margin: 56px 0;
+  padding: 48px 32px 42px;
   border-radius: 8px;
   border-top: 2px solid var(--gold);
-  background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(250,249,246,0.86) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(253,252,249,0.98) 100%);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   border-left: 1px solid rgba(231,228,220,0.9);
   border-right: 1px solid rgba(231,228,220,0.9);
   border-bottom: 1px solid rgba(231,228,220,0.9);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
   text-align: center;
   transform-style: preserve-3d;
   transition: transform 0.15s ease-out, box-shadow 0.3s ease;
   will-change: transform;
 }
+/* Soft spotlight behind the card — separates it from a same-tone page
+   background far more than a shadow alone can. Sits behind (z-index -1)
+   and bleeds past the card edges. */
+.optin-frame::before {
+  content: '';
+  position: absolute;
+  inset: -14% -8%;
+  z-index: -1;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(160,138,82,0.16), transparent 70%);
+  filter: blur(6px);
+}
 .optin-frame:hover {
-  box-shadow: 0 4px 10px rgba(22,33,62,0.05), 0 14px 28px rgba(22,33,62,0.08), 0 36px 64px rgba(22,33,62,0.16);
+  box-shadow: 0 4px 8px rgba(22,33,62,0.1), 0 20px 40px rgba(22,33,62,0.16), 0 56px 100px rgba(22,33,62,0.26);
 }
 .optin-form {
   display: flex;
