@@ -132,17 +132,32 @@ h1 {
 
 /* Video */
 .video-frame {
-  margin: 40px 0;
+  position: relative;
+  margin: 56px 0;
   border-radius: 6px;
-  overflow: hidden;
   background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-soft) 100%);
   border: 1px solid var(--hairline);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-xl);
+}
+/* Same spotlight treatment as the opt-in card / proof cards — fixed
+   pixel inset, not percentage (percentage scales with the element's
+   own height, which is why an earlier pass looked inconsistent across
+   differently-sized elements). */
+.video-frame::before {
+  content: '';
+  position: absolute;
+  inset: -34px -26px;
+  z-index: -1;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(160,138,82,0.16), transparent 70%);
+  filter: blur(6px);
 }
 .video-frame .ratio {
   position: relative;
   width: 100%;
   padding-top: 56.25%;
+  border-radius: 6px;
+  overflow: hidden;
 }
 .video-frame .ratio iframe,
 .video-frame .ratio .placeholder {
