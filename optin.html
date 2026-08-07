@@ -29,13 +29,19 @@ fbq('track', 'PageView');
 
 <div class="wrap">
 
-  <section class="hero">
+  <section class="hero reveal">
     <div class="eyebrow" id="eyebrow">For Fund Managers &amp; General Partners</div>
     <h1 id="headline">The Quiet Approach To Raising Capital</h1>
     <p class="sub" id="subhead">Enter your email below to watch the training — I'll also send the link to your inbox so you can finish it anytime.</p>
   </section>
 
-  <div class="optin-frame">
+  <ul class="benefits reveal" id="benefits">
+    <li><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg><span></span></li>
+    <li><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg><span></span></li>
+    <li><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg><span></span></li>
+  </ul>
+
+  <div class="optin-frame reveal">
     <form id="optinForm" class="optin-form">
       <input type="text" name="firstName" placeholder="First Name" autocomplete="given-name" required>
       <input type="email" name="email" placeholder="Email Address" autocomplete="email" required>
@@ -45,16 +51,16 @@ fbq('track', 'PageView');
   </div>
 
   <section class="proof">
-    <h2>A Few Real Ones</h2>
-    <div class="proof-item">
+    <h2 class="reveal">A Few Real Ones</h2>
+    <div class="proof-item reveal">
       <div class="proof-mark">&rdquo;</div>
       <div class="proof-text"><strong>Pete</strong>, a client of mine, landed a $100M investor using this approach.</div>
     </div>
-    <div class="proof-item">
+    <div class="proof-item reveal">
       <div class="proof-mark">&rdquo;</div>
       <div class="proof-text"><strong>Chris</strong>, a VP at Merrill, landed $60M off a single conversation.</div>
     </div>
-    <div class="proof-item">
+    <div class="proof-item reveal">
       <div class="proof-mark">&rdquo;</div>
       <div class="proof-text"><strong>Todd</strong>, a friend running a fund, landed $35M in his bourbon fund the same way.</div>
     </div>
@@ -71,17 +77,32 @@ var VERTICALS = {
   vc: {
     eyebrow: 'For Fund Managers &amp; General Partners',
     headline: 'The Quiet Approach To Raising Capital',
-    redirect: 'vc.html'
+    redirect: 'vc.html',
+    bullets: [
+      'The relationship-first approach that landed Pete a $100M allocator',
+      'Why "pitching" is quietly costing you capital commitments',
+      'How to build allocator trust months before you ever ask for a check'
+    ]
   },
   advisor: {
     eyebrow: 'For Financial Advisors &amp; Wealth Managers',
     headline: 'Growing AUM Starts With Trust, Not Pitches',
-    redirect: 'advisor.html'
+    redirect: 'advisor.html',
+    bullets: [
+      'The approach that took Chris from one conversation to $60M in new AUM',
+      'Why traditional prospecting is quietly working against you',
+      'How to become the advisor top prospects seek out, not the other way around'
+    ]
   },
   attorney: {
     eyebrow: 'For Estate &amp; Wealth-Focused Attorneys',
     headline: 'The Relationships Behind Every Referral',
-    redirect: 'attorney.html'
+    redirect: 'attorney.html',
+    bullets: [
+      'Why referral relationships outperform every marketing dollar you spend',
+      'The conversation framework that consistently earns repeat introductions',
+      'How to build the kind of trust that turns one client into five referrals'
+    ]
   }
 };
 
@@ -90,6 +111,30 @@ var key = params.get('v');
 var v = VERTICALS[key] || VERTICALS.vc;
 document.getElementById('eyebrow').innerHTML = v.eyebrow;
 document.getElementById('headline').textContent = v.headline;
+document.querySelectorAll('#benefits li span').forEach(function (el, i) {
+  el.textContent = v.bullets[i];
+});
+
+// Scroll-reveal: sections fade/lift into place as they enter view. Respects
+// prefers-reduced-motion — no-op there, everything just stays visible.
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(function (el, i) {
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+    observer.observe(el);
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(function (el) {
+    el.classList.add('is-visible');
+  });
+}
 
 // Opt-in submit: fires the Meta Lead event, posts to the (not-yet-live) n8n capture
 // webhook, then hands off to the matching vertical VSL page. Swap OPTIN_WEBHOOK_URL
