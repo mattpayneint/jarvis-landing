@@ -1,0 +1,204 @@
+/* Matthew Payne Consulting — VSL landing page
+   Clean/light variant: editorial serif + tracked sans, gold accent, generous white space.
+   Typography and accent color inherited from BRICK design system; palette flipped light per Matt's direction 2026-08-07. */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Jost:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #FFFFFF;
+  --bg-soft: #FAF9F6;
+  --ink: #16213E;
+  --ink-soft: #5B6478;
+  --gold: #A08A52;
+  --hairline: #E7E4DC;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+header.site {
+  padding: 40px 0 0;
+  text-align: center;
+}
+header.site .mark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 300;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+header.site .mark span {
+  color: var(--gold);
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 56px 0 32px;
+}
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 300;
+  font-size: 44px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.sub {
+  font-size: 18px;
+  color: var(--ink-soft);
+  max-width: 540px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+/* Video */
+.video-frame {
+  margin: 40px 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg-soft);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 12px 40px rgba(22,33,62,0.06);
+}
+.video-frame .ratio {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+}
+.video-frame .ratio iframe,
+.video-frame .ratio .placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.video-frame .placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* CTA */
+.cta-row {
+  text-align: center;
+  margin: 32px 0 8px;
+}
+.btn-gold {
+  display: inline-block;
+  background: var(--gold);
+  color: #FFFFFF;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 18px 44px;
+  border-radius: 2px;
+  transition: opacity 0.2s ease;
+}
+.btn-gold:hover { opacity: 0.88; }
+.cta-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+/* Proof */
+.proof {
+  margin: 72px 0;
+  padding: 48px 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+.proof h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 300;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 36px;
+  color: var(--ink);
+}
+.proof-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.proof-item:last-child { border-bottom: none; }
+.proof-mark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  color: var(--gold);
+  flex-shrink: 0;
+  width: 28px;
+}
+.proof-text {
+  font-size: 16px;
+  color: var(--ink-soft);
+  font-weight: 300;
+}
+.proof-text strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* Secondary CTA */
+.cta-final {
+  text-align: center;
+  padding: 8px 0 72px;
+}
+.cta-final p {
+  font-size: 17px;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Footer */
+footer.site {
+  text-align: center;
+  padding: 28px 0 48px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 32px; }
+  .sub { font-size: 16px; }
+  .proof { margin: 48px 0; padding: 36px 0; }
+}
