@@ -32,14 +32,14 @@ body {
 
 /* Header */
 header.site {
-  padding: 40px 0 0;
+  padding: 44px 0 0;
   text-align: center;
 }
 header.site .mark {
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 300;
-  font-size: 18px;
-  letter-spacing: 0.02em;
+  font-size: 32px;
+  letter-spacing: 0.01em;
   color: var(--ink);
 }
 header.site .mark span {
