@@ -41,15 +41,6 @@ fbq('track', 'PageView');
     <li><svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg><span></span></li>
   </ul>
 
-  <div class="optin-frame reveal">
-    <form id="optinForm" class="optin-form">
-      <input type="text" name="firstName" placeholder="First Name" autocomplete="given-name" required>
-      <input type="email" name="email" placeholder="Email Address" autocomplete="email" required>
-      <button type="submit" class="btn-gold">Unlock The Training</button>
-    </form>
-    <div class="optin-note">No spam. Just the video, and occasionally something worth your time.</div>
-  </div>
-
   <section class="proof">
     <h2 class="reveal">A Few Real Ones</h2>
     <div class="proof-item reveal">
@@ -65,6 +56,15 @@ fbq('track', 'PageView');
       <div class="proof-text"><strong>Todd</strong>, a friend running a fund, landed $35M in his bourbon fund the same way.</div>
     </div>
   </section>
+
+  <div class="optin-frame reveal" id="optinCard">
+    <form id="optinForm" class="optin-form">
+      <input type="text" name="firstName" placeholder="First Name" autocomplete="given-name" required>
+      <input type="email" name="email" placeholder="Email Address" autocomplete="email" required>
+      <button type="submit" class="btn-gold">Unlock The Training</button>
+    </form>
+    <div class="optin-note">No spam. Just the video, and occasionally something worth your time.</div>
+  </div>
 
 </div>
 
@@ -133,6 +133,24 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'Intersect
 } else {
   document.querySelectorAll('.reveal').forEach(function (el) {
     el.classList.add('is-visible');
+  });
+}
+
+// Subtle interactive tilt on the opt-in card — the clearest, most literal
+// "three-dimensional" cue on the page. Mouse-only (skipped on touch), and
+// respects prefers-reduced-motion like everything else here.
+var tiltCard = document.getElementById('optinCard');
+if (tiltCard && window.matchMedia('(hover: hover)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  tiltCard.addEventListener('mousemove', function (e) {
+    var r = tiltCard.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width - 0.5;
+    var y = (e.clientY - r.top) / r.height - 0.5;
+    tiltCard.style.transform =
+      'perspective(1000px) rotateY(' + (x * 5) + 'deg) rotateX(' + (-y * 5) + 'deg) translateZ(0)';
+  });
+  tiltCard.addEventListener('mouseleave', function () {
+    tiltCard.style.transform = '';
   });
 }
 
