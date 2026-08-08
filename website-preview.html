@@ -154,6 +154,29 @@
   .scrolly-pin { position: sticky; top: 130px; }
   .scrolly-pin h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); line-height: 1.1; }
   .scrolly-pin p { font-size: 1.1rem; color: var(--ink-soft); max-width: 38ch; margin-top: 22px; }
+  /* Strategy route visual — the plan draws itself as the steps activate */
+  .strat-visual { margin-top: 46px; max-width: 400px; position: relative; }
+  .strat-visual svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .strat-grid circle { fill: var(--brass); opacity: 0.13; }
+  .strat-ring { fill: none; stroke: var(--brass-soft); stroke-width: 0.7; stroke-dasharray: 3 7; opacity: 0.35; transform-origin: 200px 220px; animation: ringspin 90s linear infinite; }
+  @keyframes ringspin { to { transform: rotate(360deg); } }
+  .strat-path-ghost { fill: none; stroke: var(--hairline); stroke-width: 1.2; }
+  .strat-path { fill: none; stroke: var(--brass); stroke-width: 1.8; transition: stroke-dashoffset 1.1s var(--ease); }
+  .strat-node circle.core { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.4; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); }
+  .strat-node text { font-family: var(--serif); font-size: 13px; fill: var(--ink-soft); transition: fill 0.5s var(--ease); }
+  .strat-node.lit circle.core { fill: var(--brass); stroke: var(--brass); }
+  .strat-node.lit text { fill: var(--brass); }
+  .strat-node circle.halo { fill: none; stroke: var(--brass-soft); stroke-width: 1; opacity: 0; }
+  .strat-node.lit circle.halo { animation: halo 2.6s var(--ease) infinite; }
+  @keyframes halo { 0% { opacity: 0.55; r: 8; } 70% { opacity: 0; r: 20; } 100% { opacity: 0; r: 20; } }
+  .strat-dot { fill: var(--brass); opacity: 0; }
+  .strat-dot.go { opacity: 1; animation: travel 11s var(--ease) infinite; }
+  @keyframes travel { 0% { offset-distance: 0%; opacity: 0; } 6% { opacity: 1; } 88% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .strat-ring, .strat-node.lit circle.halo, .strat-dot.go { animation: none; }
+    .strat-dot { opacity: 0; }
+    .strat-path { stroke-dashoffset: 0 !important; transition: none; }
+  }
   .scrolly-steps { display: flex; flex-direction: column; padding: 2vh 0 8vh; }
   .s-step { border-top: 1px solid var(--hairline); padding: 40px 0 0; opacity: 0.22; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); min-height: 36vh; }
   .s-step.live { opacity: 1; transform: none; }
@@ -352,6 +375,24 @@
         <div class="eyebrow">The Approach</div>
         <h2>It's all about strategy</h2>
         <p>One system, four movements. The heading holds while the work unfolds. Keep scrolling.</p>
+        <div class="strat-visual" aria-hidden="true">
+          <svg viewBox="0 0 400 440">
+            <defs>
+              <pattern id="dotgrid" width="26" height="26" patternUnits="userSpaceOnUse">
+                <circle cx="1.2" cy="1.2" r="1.2" />
+              </pattern>
+            </defs>
+            <g class="strat-grid"><rect width="400" height="440" fill="url(#dotgrid)" opacity="0.55" /></g>
+            <circle class="strat-ring" cx="200" cy="220" r="170" />
+            <path class="strat-path-ghost" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
+            <path class="strat-path" id="stratPath" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
+            <circle class="strat-dot" id="stratDot" r="3.4" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
+            <g class="strat-node" data-node="0" transform="translate(56, 386)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-30" y="5">I.</text></g>
+            <g class="strat-node" data-node="1" transform="translate(158, 268)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-32" y="5">II.</text></g>
+            <g class="strat-node" data-node="2" transform="translate(244, 176)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-36" y="5">III.</text></g>
+            <g class="strat-node" data-node="3" transform="translate(344, 74)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-38" y="5">IV.</text></g>
+          </svg>
+        </div>
       </div>
       <div class="scrolly-steps" id="steps">
         <div class="s-step"><span class="num">I.</span><h3>Automate</h3><p>The infrastructure that works while you don't. Outreach, follow-up, and qualification running on rails, so the practice grows on schedule instead of on willpower.</p></div>
@@ -620,15 +661,35 @@
       parallax();
     }
 
-    /* Pinned scrollytelling */
+    /* Pinned scrollytelling + strategy route visual */
     var steps = document.querySelectorAll('.s-step');
+    var stratPath = document.getElementById('stratPath');
+    var stratDot = document.getElementById('stratDot');
+    var stratNodes = document.querySelectorAll('.strat-node');
+    var pathLen = stratPath ? stratPath.getTotalLength() : 0;
+    if (stratPath) {
+      stratPath.style.strokeDasharray = pathLen;
+      stratPath.style.strokeDashoffset = pathLen;
+    }
+    function updateStrat() {
+      if (!stratPath) return;
+      var maxLive = -1;
+      steps.forEach(function (s, i) { if (s.classList.contains('live')) maxLive = Math.max(maxLive, i); });
+      var progress = (maxLive + 1) / steps.length;
+      stratPath.style.strokeDashoffset = pathLen * (1 - progress);
+      stratNodes.forEach(function (n, i) { n.classList.toggle('lit', i <= maxLive); });
+      if (maxLive >= 0) stratDot.classList.add('go');
+    }
     if (!reduce && 'IntersectionObserver' in window) {
       var sio = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) { e.target.classList.toggle('live', e.isIntersecting); });
+        updateStrat();
       }, { threshold: 0.5 });
       steps.forEach(function (s) { sio.observe(s); });
     } else {
       steps.forEach(function (s) { s.classList.add('live'); });
+      stratNodes.forEach(function (n) { n.classList.add('lit'); });
+      if (stratPath) stratPath.style.strokeDashoffset = 0;
     }
 
     /* Reveals + counters, staggered */
