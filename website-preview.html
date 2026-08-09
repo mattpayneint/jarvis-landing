@@ -542,10 +542,10 @@
   .closing-copy h2 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); line-height: 1.1; }
   .closing-copy h2 em { color: var(--brass); }
   .closing-copy p { color: var(--ink-soft); max-width: 46ch; margin: 22px 0 42px; }
-  .cal-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; max-width: 430px; }
+  .cal-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; max-width: 430px; perspective: 800px; }
   .cal-opt { position: relative; display: flex; flex-direction: column; gap: 4px; text-decoration: none; border: 1px solid var(--hairline); background: #FFFDF8; padding: 20px 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(88,70,38,0.08), 0 8px 22px rgba(88,70,38,0.08); transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease); }
   .cal-opt::before { content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 46px; background: var(--brass); transition: width 0.7s var(--ease); }
-  .cal-opt:hover { transform: translateY(-4px); border-color: var(--brass-soft); box-shadow: 0 3px 6px rgba(88,70,38,0.1), 0 18px 42px rgba(88,70,38,0.16); }
+  .cal-opt:hover { transform: rotateX(5deg) rotateY(-3deg) translateY(-6px) scale(1.02); border-color: var(--brass-soft); box-shadow: 0 4px 10px rgba(88,70,38,0.12), 0 24px 54px rgba(88,70,38,0.2), 0 42px 88px rgba(88,70,38,0.1); }
   .cal-opt:hover::before { width: 100%; }
   .cal-opt .ck { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); }
   .cal-opt .cs { font-size: 13.5px; color: var(--ink-soft); }
