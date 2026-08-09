@@ -477,7 +477,8 @@
   .j-row p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 52ch; }
   .j-grid > .reveal { perspective: 1200px; }
   .j-core { position: relative; width: min(360px, 78vw); aspect-ratio: 1; margin: 0 auto; transform-style: preserve-3d; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
-  .j-core::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -9%; height: 7%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); filter: blur(7px); }
+  .j-core::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -9%; height: 7%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); filter: blur(7px); transform: translateX(var(--shx, 0px)); }
+  .j-glint { position: absolute; inset: 6%; border-radius: 50%; background: radial-gradient(circle at var(--gx, 32%) var(--gy, 26%), rgba(255,246,220,0.16), transparent 46%); transform: translateZ(44px); pointer-events: none; }
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
   .j-ring { position: absolute; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.55); }
   .jr1 { inset: 0; animation: gyroX 16s linear infinite; }
@@ -1139,7 +1140,7 @@
           <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
           <span class="j-orb o1"></span><span class="j-orb o2"></span>
           <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
-          <span class="j-dot"></span>
+          <span class="j-glint" aria-hidden="true"></span><span class="j-dot"></span>
         </div>
         <div class="j-label">J A R V I S</div>
       </div>
@@ -1865,6 +1866,40 @@
       }, { threshold: 0.1 });
       document.querySelectorAll('.q-scroll, .m-scroll, .car-track').forEach(function (t) { tio.observe(t); });
     }
+  })();
+</script>
+<script>
+  (function () {
+    var core = document.querySelector('.j-core');
+    if (!core) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(max-width: 900px)').matches) return;
+    var zone = core.closest('.j-grid') || core.parentElement;
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, engaged = false;
+    function step() {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      core.style.transform = 'scale(1) rotateX(' + cy.toFixed(2) + 'deg) rotateY(' + cx.toFixed(2) + 'deg)';
+      core.style.setProperty('--shx', (-cx * 2.4).toFixed(1) + 'px');
+      if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) raf = requestAnimationFrame(step); else raf = 0;
+    }
+    zone.addEventListener('mousemove', function (e) {
+      if (!engaged) { engaged = true; core.style.transition = 'opacity 1s'; }
+      var r = core.getBoundingClientRect();
+      var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+      dx = Math.max(-0.75, Math.min(0.75, dx));
+      dy = Math.max(-0.75, Math.min(0.75, dy));
+      tx = dx * 16;
+      ty = -dy * 14;
+      core.style.setProperty('--gx', (50 + dx * 46).toFixed(1) + '%');
+      core.style.setProperty('--gy', (42 + dy * 40).toFixed(1) + '%');
+      if (!raf) raf = requestAnimationFrame(step);
+    });
+    zone.addEventListener('mouseleave', function () {
+      tx = 0; ty = 0;
+      if (!raf) raf = requestAnimationFrame(step);
+    });
   })();
 </script>
 
