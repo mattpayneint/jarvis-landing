@@ -219,6 +219,38 @@
   .about-stage .portrait-frame { width: 105%; }
   .about-stage .portrait-frame:hover .portrait-clip { transform: scale(1.045); }
   .about-stage .portrait-clip { transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
+  /* Coaching method */
+  .m-steps { margin-top: 56px; }
+  .m-step { display: flex; gap: 30px; align-items: flex-start; border-top: 1px solid var(--hairline); padding: 34px 0; }
+  .m-step:last-child { border-bottom: 1px solid var(--hairline); }
+  .m-step .mn { font-family: var(--serif); font-size: 1.5rem; color: var(--brass); flex: none; width: 52px; }
+  .m-step h3 { font-size: 1.45rem; margin-bottom: 10px; }
+  .m-step p { font-size: 15px; color: var(--ink-soft); max-width: 62ch; margin: 0; }
+  .levers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 54px; }
+  .lever { position: relative; background: #FFFDF8; border: 1px solid var(--hairline); padding: 22px 24px 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); overflow: hidden; transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+  .lever::before { content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 40px; background: var(--brass); transition: width 0.7s var(--ease); }
+  .lever:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(88,70,38,0.12); }
+  .lever:hover::before { width: 100%; }
+  @media (max-width: 860px) { .levers { grid-template-columns: 1fr 1fr; } .m-step { gap: 18px; } }
+  /* Jarvis */
+  .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; overflow: hidden; }
+  .jarvis h2 em { color: var(--brass-soft); font-style: italic; }
+  .j-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 80px; align-items: center; }
+  .j-rows { margin-top: 42px; }
+  .j-row { border-top: 1px solid var(--hairline-dark); padding: 24px 0; }
+  .j-row .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
+  .j-row p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 52ch; }
+  .j-core { position: relative; width: min(360px, 78vw); aspect-ratio: 1; margin: 0 auto; }
+  .j-ring { position: absolute; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.55); }
+  .jr1 { inset: 0; animation: ringspin 44s linear infinite; }
+  .jr2 { inset: 13%; border-color: rgba(194,164,104,0.4); animation: ringspin 30s linear infinite reverse; }
+  .jr3 { inset: 27%; border-style: solid; border-color: rgba(194,164,104,0.18); animation: ringspin 60s linear infinite; }
+  .j-orb { position: absolute; inset: 6.5%; animation: ringspin 18s linear infinite; }
+  .j-orb.o2 { inset: 20%; animation-duration: 26s; animation-direction: reverse; }
+  .j-orb::before { content: ""; position: absolute; top: -3px; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 12px rgba(194,164,104,0.8); }
+  .j-dot { position: absolute; top: 50%; left: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--brass-soft); animation: jpulse 3.2s var(--ease) infinite; }
+  @keyframes jpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(194,164,104,0.5), 0 0 24px rgba(194,164,104,0.9); } 50% { box-shadow: 0 0 0 26px rgba(194,164,104,0), 0 0 34px rgba(194,164,104,1); } }
+  @media (max-width: 860px) { .j-grid { grid-template-columns: 1fr; gap: 56px; } }
   .strat-node circle.core { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.4; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); }
   .strat-node text { font-family: var(--serif); font-size: 13px; fill: var(--ink-soft); transition: fill 0.5s var(--ease); }
   .strat-node.lit circle.core { fill: var(--brass); stroke: var(--brass); }
@@ -439,6 +471,8 @@
     .strat-node .orbit, .strat-burst .spin { animation: none; }
     .gear .rot { animation: none; opacity: 0.38 !important; }
     .about-h2 .aw { opacity: 1; transform: none; transition: none; }
+    .j-ring, .j-orb { animation: none; }
+    .j-dot { animation: none; }
     .about-sig path { stroke-dashoffset: 0; transition: none; }
     #dialNeedle { transition: none; }
     .strat-area, .strat-burst { opacity: 1 !important; transition: none; }
@@ -458,6 +492,7 @@
     <a href="#process">Approach</a>
     <a href="#programs">Programs</a>
     <a href="#coaching">Coaching</a>
+    <a href="#jarvis">Jarvis</a>
     <a href="#audio">Audio</a>
     <a href="#contact" class="cta">Schedule A Call</a>
   </div>
@@ -881,6 +916,52 @@
         <h2 class="reveal" style="font-size: clamp(2rem, 4vw, 3.2rem);">Optimal performance, on both sides of the desk</h2>
         <p class="lede reveal">The practice grows when you do. Psychology, strategy, habits, and energy: the four levers I've coached across three thousand rooms, applied to your business and the life it funds.</p>
         <div class="reveal" style="margin-top: 36px;"><a class="btn" href="#contact">Explore Coaching</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER VIb — COACHING METHOD (light), real methodology from matthewpayneconsulting.com/coaching -->
+<section class="light deep" id="coaching-method">
+  <div class="wrap">
+    <div class="eyebrow reveal">The Method</div>
+    <h2 class="reveal" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 22px;">Optimal performance, engineered</h2>
+    <p class="reveal" style="color: var(--ink-soft); max-width: 58ch;">The source of real greatness is already in you. The work is tapping it, intellectually, emotionally, and physically, continuously. Together we implement the strategy that does exactly that.</p>
+    <div class="m-steps">
+      <div class="m-step reveal"><span class="mn">I.</span><div><h3>Crystalize your goals and values</h3><p>Clarity coupled with consistent focus is power. When you know what you want most and why, laid out in a measurable, visual plan, follow-through becomes automatic.</p></div></div>
+      <div class="m-step reveal"><span class="mn">II.</span><div><h3>Create the strategic plan</h3><p>The precise order, logic, and sequence of objectives that must land on time to accomplish your personal and professional goals.</p></div></div>
+      <div class="m-step reveal"><span class="mn">III.</span><div><h3>Install the daily habits and routines</h3><p>What you repeatedly focus on, believe, and do determines your destination. We install and reinforce the routines that compound.</p></div></div>
+      <div class="m-step reveal"><span class="mn">IV.</span><div><h3>Resolve the internal conflicts keeping you stuck</h3><p>Procrastination is rarely laziness. It is conflict. We align your conscious goals with your unconscious commitments so you move forward congruently.</p></div></div>
+      <div class="m-step reveal"><span class="mn">V.</span><div><h3>Implement the strategies that change results</h3><p>Your approach is the most crucial variable. Best practice strategy, applied hand in hand, every single week.</p></div></div>
+    </div>
+    <div class="levers">
+      <div class="lever reveal">Psychology</div>
+      <div class="lever reveal">Strategy</div>
+      <div class="lever reveal">Habits</div>
+      <div class="lever reveal">Energy</div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER VIc — JARVIS (noir): agentic technology -->
+<section class="jarvis" id="jarvis">
+  <div class="wrap">
+    <div class="j-grid">
+      <div>
+        <div class="eyebrow reveal">Agentic Technology</div>
+        <h2 class="reveal" style="font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream);">Meet Jarvis. <em>The machine behind the machine.</em></h2>
+        <p class="reveal" style="color: rgba(242,237,225,0.75); max-width: 54ch; margin-top: 22px;">Every system on this page runs on more than willpower. Jarvis is my agentic AI operator. It researches, verifies, and follows up around the clock, so the pipeline never sleeps and nothing falls through the cracks.</p>
+        <div class="j-rows">
+          <div class="j-row reveal"><div class="t">Prospecting that never stops</div><p>Targeted research and verification running daily, feeding the system fresh, qualified names.</p></div>
+          <div class="j-row reveal"><div class="t">Follow-up with a perfect memory</div><p>Every conversation tracked, every promise kept, every revival right on schedule.</p></div>
+          <div class="j-row reveal"><div class="t">An operator, not a chatbot</div><p>Jarvis works under my direction, with real guardrails. You get the output: booked conversations with the right people.</p></div>
+        </div>
+        <div class="reveal" style="margin-top: 34px;"><a class="quiet-link" href="#contact" style="color: var(--cream);">Ask me about Jarvis</a></div>
+      </div>
+      <div class="j-core reveal" aria-hidden="true">
+        <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
+        <span class="j-orb o1"></span><span class="j-orb o2"></span>
+        <span class="j-dot"></span>
       </div>
     </div>
   </div>
