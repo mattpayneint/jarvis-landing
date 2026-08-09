@@ -237,7 +237,9 @@
   .lever:hover::before { width: 100%; }
   @media (max-width: 860px) { .levers { grid-template-columns: 1fr 1fr; } .m-step { gap: 18px; } }
   /* Jarvis */
-  .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; overflow: hidden; }
+  .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; overflow: hidden; position: relative; }
+  .jarvis video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; }
+  .j-scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,11,13,0.94) 0%, rgba(11,11,13,0.82) 45%, rgba(11,11,13,0.9) 100%); }
   .jarvis h2 em { color: var(--brass-soft); font-style: italic; }
   .j-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 80px; align-items: center; }
   .j-rows { margin-top: 42px; }
@@ -981,7 +983,9 @@
 
 <!-- CHAPTER VIc — JARVIS (noir): agentic technology -->
 <section class="jarvis" id="jarvis">
-  <div class="wrap">
+  <video id="jarvisVid" autoplay muted loop playsinline></video>
+  <div class="j-scrim"></div>
+  <div class="wrap" style="position: relative; z-index: 2;">
     <div class="j-grid">
       <div>
         <div class="eyebrow reveal">Agentic Technology</div>
@@ -1267,6 +1271,8 @@
     var heroSrc = document.querySelector('#heroVid source');
     var band = document.getElementById('bandVid');
     if (heroSrc && band) { band.src = heroSrc.src; if (reduce) band.pause(); }
+    var jv = document.getElementById('jarvisVid');
+    if (heroSrc && jv) { jv.src = heroSrc.src; if (reduce) jv.pause(); }
 
     /* FS Oahu-style card carousel: arrows, drag, dots, gentle auto-advance */
     var track = document.getElementById('carTrack');
