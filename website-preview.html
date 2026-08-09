@@ -180,6 +180,32 @@
   .strat-burst .spin { transform-box: fill-box; transform-origin: center; animation: ringspin 30s linear infinite; }
   .strat-dot.trail.go { animation-delay: 0.16s; }
   .strat-dot.trail.t2.go { animation-delay: 0.32s; }
+  .gear { opacity: 0.3; transition: opacity 0.9s var(--ease); }
+  .gear.on { opacity: 1; }
+  .gear .rot { transform-box: fill-box; transform-origin: center; animation: gearspin var(--gd, 30s) linear infinite; animation-play-state: paused; }
+  .gear.ccw .rot { animation-direction: reverse; }
+  .gear.on .rot { animation-play-state: running; }
+  @keyframes gearspin { to { transform: rotate(360deg); } }
+  .gear circle, .gear line { stroke: var(--ink-soft); fill: none; }
+  .gear .rim { stroke-width: 1.5; }
+  .gear .tooth { stroke-width: 1.6; }
+  .gear .inner1 { stroke-width: 0.6; opacity: 0.5; }
+  .gear .hub { stroke-width: 0.9; }
+  .gear .spoke { stroke-width: 2; opacity: 0.8; }
+  .gear .jewel { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.1; transition: fill 0.6s var(--ease); }
+  .gear.on circle, .gear.on line { stroke: var(--brass); }
+  .gear.on .jewel { fill: var(--brass-soft); }
+  .gear .nm { font-family: var(--sans); font-size: 8px; font-weight: 600; letter-spacing: 0.17em; fill: var(--ink-soft); opacity: 0; transition: opacity 0.6s var(--ease) 0.25s, fill 0.6s var(--ease); }
+  .gear.on .nm { opacity: 0.9; fill: var(--brass); }
+  .gear[data-gear="99"] { opacity: 0.22; }
+  .gear[data-gear="99"].on { opacity: 0.75; }
+  .dial .face { fill: none; stroke: var(--brass-soft); stroke-width: 1; opacity: 0.7; }
+  .dial .f2 { stroke-width: 0.6; opacity: 0.4; }
+  .dial .tick { stroke: var(--brass-soft); stroke-width: 1; opacity: 0.7; }
+  .dial .needle { fill: var(--brass); }
+  .dial .jewel { fill: var(--brass-soft); stroke: var(--brass); stroke-width: 1; }
+  .dial .dlab { font-family: var(--sans); font-size: 7.5px; font-weight: 600; letter-spacing: 0.22em; fill: var(--brass); opacity: 0.85; text-anchor: middle; }
+  #dialNeedle { transition: transform 1.2s var(--ease); }
   .strat-node circle.core { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.4; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); }
   .strat-node text { font-family: var(--serif); font-size: 13px; fill: var(--ink-soft); transition: fill 0.5s var(--ease); }
   .strat-node.lit circle.core { fill: var(--brass); stroke: var(--brass); }
@@ -398,6 +424,9 @@
     .m-img img, .m-ring circle { animation: none; }
     .stat-line .n { animation: none; }
     .strat-node .orbit, .strat-burst .spin { animation: none; }
+    .gear .rot { animation: none; }
+    .gear { opacity: 1; }
+    #dialNeedle { transition: none; }
     .strat-area, .strat-burst { opacity: 1 !important; transition: none; }
     .strat-path-glow { stroke-dashoffset: 0 !important; }
     .stat-line .n::after { transition: none; width: 100%; }
@@ -483,47 +512,191 @@
               <linearGradient id="goldpath" x1="0" y1="1" x2="1" y2="0">
                 <stop offset="0" stop-color="#9A7B3F" /><stop offset="1" stop-color="#C2A468" />
               </linearGradient>
-              <linearGradient id="goldarea" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#C2A468" stop-opacity="0.26" /><stop offset="1" stop-color="#C2A468" stop-opacity="0" />
-              </linearGradient>
               <filter id="goldglow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" /></filter>
             </defs>
             <g class="strat-grid"><rect width="400" height="440" fill="url(#dotgrid)" opacity="0.55" /></g>
             <circle class="strat-ring" cx="200" cy="220" r="170" />
             <circle class="strat-ring r2" cx="200" cy="220" r="148" />
-            <path class="strat-contour" d="M 344 74 m -26 0 a 26 20 -18 1 0 52 0 a 26 20 -18 1 0 -52 0" />
-            <path class="strat-contour" d="M 344 74 m -48 4 a 48 38 -18 1 0 96 0 a 48 38 -18 1 0 -96 0" />
-            <path class="strat-contour" d="M 344 74 m -74 10 a 74 60 -18 1 0 148 0 a 74 60 -18 1 0 -148 0" />
-            <g class="strat-compass">
-              <circle class="face" cx="96" cy="84" r="30" />
-              <circle class="face" cx="96" cy="84" r="24" />
-              <line class="tick" x1="96" y1="52" x2="96" y2="58" /><line class="tick" x1="96" y1="110" x2="96" y2="116" />
-              <line class="tick" x1="64" y1="84" x2="70" y2="84" /><line class="tick" x1="122" y1="84" x2="128" y2="84" />
-              <polygon class="needle" points="96,64 100,84 96,88 92,84" />
-              <polygon class="needle-s" points="96,104 100,84 96,80 92,84" />
-              <text x="92" y="46">N</text>
+            <g class="gear" data-gear="0" transform="translate(80, 356)" style="--gd: 14s">
+            <g class="rot">
+            <circle class="rim" r="30" />
+            <line class="tooth" x1="30.0" y1="0.0" x2="34.5" y2="0.0" />
+            <line class="tooth" x1="27.4" y1="12.2" x2="31.5" y2="14.0" />
+            <line class="tooth" x1="20.1" y1="22.3" x2="23.1" y2="25.6" />
+            <line class="tooth" x1="9.3" y1="28.5" x2="10.7" y2="32.8" />
+            <line class="tooth" x1="-3.1" y1="29.8" x2="-3.6" y2="34.3" />
+            <line class="tooth" x1="-15.0" y1="26.0" x2="-17.2" y2="29.9" />
+            <line class="tooth" x1="-24.3" y1="17.6" x2="-27.9" y2="20.3" />
+            <line class="tooth" x1="-29.3" y1="6.2" x2="-33.7" y2="7.2" />
+            <line class="tooth" x1="-29.3" y1="-6.2" x2="-33.7" y2="-7.2" />
+            <line class="tooth" x1="-24.3" y1="-17.6" x2="-27.9" y2="-20.3" />
+            <line class="tooth" x1="-15.0" y1="-26.0" x2="-17.3" y2="-29.9" />
+            <line class="tooth" x1="-3.1" y1="-29.8" x2="-3.6" y2="-34.3" />
+            <line class="tooth" x1="9.3" y1="-28.5" x2="10.7" y2="-32.8" />
+            <line class="tooth" x1="20.1" y1="-22.3" x2="23.1" y2="-25.6" />
+            <line class="tooth" x1="27.4" y1="-12.2" x2="31.5" y2="-14.0" />
+            <circle class="inner1" r="24" />
+            <line class="spoke" x1="6.4" y1="6.4" x2="16.3" y2="16.3" />
+            <line class="spoke" x1="-6.4" y1="6.4" x2="-16.3" y2="16.3" />
+            <line class="spoke" x1="-6.4" y1="-6.4" x2="-16.3" y2="-16.3" />
+            <line class="spoke" x1="6.4" y1="-6.4" x2="16.3" y2="-16.3" />
+            <circle class="hub" r="9.0" />
+            <circle class="jewel" r="3.6" />
             </g>
-            <path class="strat-proj" d="M 344 74 C 358 60, 368 50, 386 32" />
-            <circle class="strat-proj-end" cx="390" cy="28" r="5" />
-            <g class="strat-burst" transform="translate(390, 28)">
-              <g class="spin">
-                <path class="arc" d="M -13 0 A 13 13 0 0 1 13 0" /><path class="arc" d="M 13 0 A 13 13 0 0 1 -13 0" transform="rotate(120)" />
-                <path class="arc" d="M -20 0 A 20 20 0 0 1 20 0" transform="rotate(60)" /><path class="arc" d="M 20 0 A 20 20 0 0 1 -20 0" transform="rotate(200)" />
+            <text class="nm" x="-34" y="48">AUTOMATE</text>
+            </g>
+            <g class="gear ccw" data-gear="99" transform="translate(130, 302)" style="--gd: 9s">
+            <g class="rot">
+            <circle class="rim" r="24" />
+            <line class="tooth" x1="24.0" y1="0.0" x2="28.5" y2="0.0" />
+            <line class="tooth" x1="20.8" y1="12.0" x2="24.7" y2="14.2" />
+            <line class="tooth" x1="12.0" y1="20.8" x2="14.3" y2="24.7" />
+            <line class="tooth" x1="0.0" y1="24.0" x2="0.0" y2="28.5" />
+            <line class="tooth" x1="-12.0" y1="20.8" x2="-14.2" y2="24.7" />
+            <line class="tooth" x1="-20.8" y1="12.0" x2="-24.7" y2="14.2" />
+            <line class="tooth" x1="-24.0" y1="0.0" x2="-28.5" y2="0.0" />
+            <line class="tooth" x1="-20.8" y1="-12.0" x2="-24.7" y2="-14.2" />
+            <line class="tooth" x1="-12.0" y1="-20.8" x2="-14.3" y2="-24.7" />
+            <line class="tooth" x1="-0.0" y1="-24.0" x2="-0.0" y2="-28.5" />
+            <line class="tooth" x1="12.0" y1="-20.8" x2="14.3" y2="-24.7" />
+            <line class="tooth" x1="20.8" y1="-12.0" x2="24.7" y2="-14.3" />
+            <circle class="inner1" r="18" />
+            <line class="spoke" x1="5.1" y1="5.1" x2="12.0" y2="12.0" />
+            <line class="spoke" x1="-5.1" y1="5.1" x2="-12.0" y2="12.0" />
+            <line class="spoke" x1="-5.1" y1="-5.1" x2="-12.0" y2="-12.0" />
+            <line class="spoke" x1="5.1" y1="-5.1" x2="12.0" y2="-12.0" />
+            <circle class="hub" r="7.2" />
+            <circle class="jewel" r="3.6" />
+            </g>
+            <text class="nm" x="0" y="0"></text>
+            </g>
+            <g class="gear" data-gear="1" transform="translate(163, 258)" style="--gd: 20s">
+            <g class="rot">
+            <circle class="rim" r="46" />
+            <line class="tooth" x1="46.0" y1="0.0" x2="50.5" y2="0.0" />
+            <line class="tooth" x1="44.3" y1="12.4" x2="48.6" y2="13.6" />
+            <line class="tooth" x1="39.3" y1="23.9" x2="43.1" y2="26.2" />
+            <line class="tooth" x1="31.4" y1="33.6" x2="34.5" y2="36.9" />
+            <line class="tooth" x1="21.2" y1="40.8" x2="23.2" y2="44.8" />
+            <line class="tooth" x1="9.4" y1="45.0" x2="10.3" y2="49.4" />
+            <line class="tooth" x1="-3.1" y1="45.9" x2="-3.4" y2="50.4" />
+            <line class="tooth" x1="-15.4" y1="43.3" x2="-16.9" y2="47.6" />
+            <line class="tooth" x1="-26.5" y1="37.6" x2="-29.1" y2="41.3" />
+            <line class="tooth" x1="-35.7" y1="29.0" x2="-39.2" y2="31.9" />
+            <line class="tooth" x1="-42.2" y1="18.3" x2="-46.3" y2="20.1" />
+            <line class="tooth" x1="-45.6" y1="6.3" x2="-50.0" y2="6.9" />
+            <line class="tooth" x1="-45.6" y1="-6.3" x2="-50.0" y2="-6.9" />
+            <line class="tooth" x1="-42.2" y1="-18.3" x2="-46.3" y2="-20.1" />
+            <line class="tooth" x1="-35.7" y1="-29.0" x2="-39.2" y2="-31.9" />
+            <line class="tooth" x1="-26.5" y1="-37.6" x2="-29.1" y2="-41.3" />
+            <line class="tooth" x1="-15.4" y1="-43.3" x2="-16.9" y2="-47.6" />
+            <line class="tooth" x1="-3.1" y1="-45.9" x2="-3.4" y2="-50.4" />
+            <line class="tooth" x1="9.4" y1="-45.0" x2="10.3" y2="-49.4" />
+            <line class="tooth" x1="21.2" y1="-40.8" x2="23.2" y2="-44.8" />
+            <line class="tooth" x1="31.4" y1="-33.6" x2="34.5" y2="-36.9" />
+            <line class="tooth" x1="39.3" y1="-23.9" x2="43.1" y2="-26.2" />
+            <line class="tooth" x1="44.3" y1="-12.4" x2="48.6" y2="-13.6" />
+            <circle class="inner1" r="40" />
+            <line class="spoke" x1="9.8" y1="9.8" x2="27.6" y2="27.6" />
+            <line class="spoke" x1="-9.8" y1="9.8" x2="-27.6" y2="27.6" />
+            <line class="spoke" x1="-9.8" y1="-9.8" x2="-27.6" y2="-27.6" />
+            <line class="spoke" x1="9.8" y1="-9.8" x2="27.6" y2="-27.6" />
+            <circle class="hub" r="13.8" />
+            <circle class="jewel" r="3.6" />
+            </g>
+            <text class="nm" x="54" y="14">ATTRACT</text>
+            </g>
+            <g class="gear ccw" data-gear="2" transform="translate(238, 190)" style="--gd: 23s">
+            <g class="rot">
+            <circle class="rim" r="52" />
+            <line class="tooth" x1="52.0" y1="0.0" x2="56.5" y2="0.0" />
+            <line class="tooth" x1="50.5" y1="12.4" x2="54.9" y2="13.5" />
+            <line class="tooth" x1="46.0" y1="24.2" x2="50.0" y2="26.3" />
+            <line class="tooth" x1="38.9" y1="34.5" x2="42.3" y2="37.5" />
+            <line class="tooth" x1="29.5" y1="42.8" x2="32.1" y2="46.5" />
+            <line class="tooth" x1="18.4" y1="48.6" x2="20.0" y2="52.8" />
+            <line class="tooth" x1="6.3" y1="51.6" x2="6.8" y2="56.1" />
+            <line class="tooth" x1="-6.3" y1="51.6" x2="-6.8" y2="56.1" />
+            <line class="tooth" x1="-18.4" y1="48.6" x2="-20.0" y2="52.8" />
+            <line class="tooth" x1="-29.5" y1="42.8" x2="-32.1" y2="46.5" />
+            <line class="tooth" x1="-38.9" y1="34.5" x2="-42.3" y2="37.5" />
+            <line class="tooth" x1="-46.0" y1="24.2" x2="-50.0" y2="26.3" />
+            <line class="tooth" x1="-50.5" y1="12.4" x2="-54.9" y2="13.5" />
+            <line class="tooth" x1="-52.0" y1="-0.0" x2="-56.5" y2="-0.0" />
+            <line class="tooth" x1="-50.5" y1="-12.4" x2="-54.9" y2="-13.5" />
+            <line class="tooth" x1="-46.0" y1="-24.2" x2="-50.0" y2="-26.3" />
+            <line class="tooth" x1="-38.9" y1="-34.5" x2="-42.3" y2="-37.5" />
+            <line class="tooth" x1="-29.5" y1="-42.8" x2="-32.1" y2="-46.5" />
+            <line class="tooth" x1="-18.4" y1="-48.6" x2="-20.0" y2="-52.8" />
+            <line class="tooth" x1="-6.3" y1="-51.6" x2="-6.8" y2="-56.1" />
+            <line class="tooth" x1="6.3" y1="-51.6" x2="6.8" y2="-56.1" />
+            <line class="tooth" x1="18.4" y1="-48.6" x2="20.0" y2="-52.8" />
+            <line class="tooth" x1="29.5" y1="-42.8" x2="32.1" y2="-46.5" />
+            <line class="tooth" x1="38.9" y1="-34.5" x2="42.3" y2="-37.5" />
+            <line class="tooth" x1="46.0" y1="-24.2" x2="50.0" y2="-26.3" />
+            <line class="tooth" x1="50.5" y1="-12.4" x2="54.9" y2="-13.5" />
+            <circle class="inner1" r="46" />
+            <line class="spoke" x1="11.0" y1="11.0" x2="31.8" y2="31.8" />
+            <line class="spoke" x1="-11.0" y1="11.0" x2="-31.8" y2="31.8" />
+            <line class="spoke" x1="-11.0" y1="-11.0" x2="-31.8" y2="-31.8" />
+            <line class="spoke" x1="11.0" y1="-11.0" x2="31.8" y2="-31.8" />
+            <circle class="hub" r="15.6" />
+            <circle class="jewel" r="3.6" />
+            </g>
+            <text class="nm" x="60" y="10">CONVERT</text>
+            </g>
+            <g class="gear" data-gear="3" transform="translate(300, 118)" style="--gd: 19s">
+            <g class="rot">
+            <circle class="rim" r="44" />
+            <line class="tooth" x1="44.0" y1="0.0" x2="48.5" y2="0.0" />
+            <line class="tooth" x1="42.2" y1="12.4" x2="46.5" y2="13.7" />
+            <line class="tooth" x1="37.0" y1="23.8" x2="40.8" y2="26.2" />
+            <line class="tooth" x1="28.8" y1="33.3" x2="31.8" y2="36.7" />
+            <line class="tooth" x1="18.3" y1="40.0" x2="20.1" y2="44.1" />
+            <line class="tooth" x1="6.3" y1="43.6" x2="6.9" y2="48.0" />
+            <line class="tooth" x1="-6.3" y1="43.6" x2="-6.9" y2="48.0" />
+            <line class="tooth" x1="-18.3" y1="40.0" x2="-20.1" y2="44.1" />
+            <line class="tooth" x1="-28.8" y1="33.3" x2="-31.8" y2="36.7" />
+            <line class="tooth" x1="-37.0" y1="23.8" x2="-40.8" y2="26.2" />
+            <line class="tooth" x1="-42.2" y1="12.4" x2="-46.5" y2="13.7" />
+            <line class="tooth" x1="-44.0" y1="0.0" x2="-48.5" y2="0.0" />
+            <line class="tooth" x1="-42.2" y1="-12.4" x2="-46.5" y2="-13.7" />
+            <line class="tooth" x1="-37.0" y1="-23.8" x2="-40.8" y2="-26.2" />
+            <line class="tooth" x1="-28.8" y1="-33.3" x2="-31.8" y2="-36.7" />
+            <line class="tooth" x1="-18.3" y1="-40.0" x2="-20.1" y2="-44.1" />
+            <line class="tooth" x1="-6.3" y1="-43.6" x2="-6.9" y2="-48.0" />
+            <line class="tooth" x1="6.3" y1="-43.6" x2="6.9" y2="-48.0" />
+            <line class="tooth" x1="18.3" y1="-40.0" x2="20.1" y2="-44.1" />
+            <line class="tooth" x1="28.8" y1="-33.3" x2="31.8" y2="-36.7" />
+            <line class="tooth" x1="37.0" y1="-23.8" x2="40.8" y2="-26.2" />
+            <line class="tooth" x1="42.2" y1="-12.4" x2="46.5" y2="-13.7" />
+            <circle class="inner1" r="38" />
+            <line class="spoke" x1="9.3" y1="9.3" x2="26.2" y2="26.2" />
+            <line class="spoke" x1="-9.3" y1="9.3" x2="-26.2" y2="26.2" />
+            <line class="spoke" x1="-9.3" y1="-9.3" x2="-26.2" y2="-26.2" />
+            <line class="spoke" x1="9.3" y1="-9.3" x2="26.2" y2="-26.2" />
+            <circle class="hub" r="13.2" />
+            <circle class="jewel" r="3.6" />
+            </g>
+            <text class="nm" x="-122" y="60">SCALE &amp; GROW</text>
+            </g>
+            <g class="dial" transform="translate(330, 58)">
+              <path class="face" d="M -34 10 A 35 35 0 1 1 34 10" />
+              <path class="face f2" d="M -27 8 A 28 28 0 1 1 27 8" />
+              <line class="tick" x1="0" y1="-35" x2="0" y2="-29" />
+              <line class="tick" x1="-30" y1="-17" x2="-25" y2="-14" /><line class="tick" x1="30" y1="-17" x2="25" y2="-14" />
+              <line class="tick" x1="-33" y1="8" x2="-28" y2="6" /><line class="tick" x1="33" y1="8" x2="28" y2="6" />
+              <g id="dialNeedle" transform="rotate(-62)"><polygon class="needle" points="0,-31 2.4,4 0,8 -2.4,4" /></g>
+              <circle class="jewel" r="3.4" />
+              <text class="dlab" x="0" y="26">GROWTH</text>
+              <g class="strat-burst">
+                <g class="spin">
+                  <path class="arc" d="M -44 0 A 44 44 0 0 1 44 0" /><path class="arc" d="M 44 0 A 44 44 0 0 1 -44 0" transform="rotate(140)" />
+                  <path class="arc" d="M -52 0 A 52 52 0 0 1 52 0" transform="rotate(70)" />
+                </g>
+                <line class="ray" x1="0" y1="-56" x2="0" y2="-62" /><line class="ray" x1="56" y1="0" x2="62" y2="0" /><line class="ray" x1="-56" y1="0" x2="-62" y2="0" />
               </g>
-              <line class="ray" x1="0" y1="-26" x2="0" y2="-32" /><line class="ray" x1="26" y1="0" x2="32" y2="0" />
-              <line class="ray" x1="0" y1="26" x2="0" y2="32" /><line class="ray" x1="-26" y1="0" x2="-32" y2="0" />
             </g>
-            <path class="strat-area" id="stratArea" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74 L 344 386 Z" />
-            <path class="strat-path-ghost" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
-            <path class="strat-path-glow" id="stratGlow" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
-            <path class="strat-path" id="stratPath" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
-            <circle class="strat-dot" id="stratDot" r="3.8" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
-            <circle class="strat-dot trail t1" r="2.3" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
-            <circle class="strat-dot trail t2" r="1.5" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
-            <g class="strat-node" data-node="0" transform="translate(56, 386)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-30" y="5">I.</text><text class="nm" x="14" y="23">AUTOMATE</text></g>
-            <g class="strat-node" data-node="1" transform="translate(158, 268)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-32" y="5">II.</text><text class="nm" x="14" y="21">ATTRACT</text></g>
-            <g class="strat-node" data-node="2" transform="translate(244, 176)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-36" y="5">III.</text><text class="nm" x="14" y="21">CONVERT</text></g>
-            <g class="strat-node" data-node="3" transform="translate(344, 74)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-38" y="5">IV.</text><text class="nm" x="-96" y="28">SCALE &amp; GROW</text></g>
           </svg>
         </div>
       </div>
@@ -807,27 +980,16 @@
 
     /* Pinned scrollytelling + strategy route visual */
     var steps = document.querySelectorAll('.s-step');
-    var stratPath = document.getElementById('stratPath');
-    var stratDot = document.getElementById('stratDot');
-    var stratNodes = document.querySelectorAll('.strat-node');
-    var pathLen = stratPath ? stratPath.getTotalLength() : 0;
-    var stratGlow = document.getElementById('stratGlow');
-    var stratArea = document.getElementById('stratArea');
-    if (stratPath) {
-      stratPath.style.strokeDasharray = pathLen;
-      stratPath.style.strokeDashoffset = pathLen;
-      if (stratGlow) { stratGlow.style.strokeDasharray = pathLen; stratGlow.style.strokeDashoffset = pathLen; }
-    }
+    var gearEls = document.querySelectorAll('.gear:not([data-gear="99"])');
+    var idler = document.querySelector('.gear[data-gear="99"]');
+    var dialNeedle = document.getElementById('dialNeedle');
     function updateStrat() {
-      if (!stratPath) return;
       var maxLive = -1;
       steps.forEach(function (s, i) { if (s.classList.contains('live')) maxLive = Math.max(maxLive, i); });
       var progress = (maxLive + 1) / steps.length;
-      stratPath.style.strokeDashoffset = pathLen * (1 - progress);
-      if (stratGlow) stratGlow.style.strokeDashoffset = pathLen * (1 - progress);
-      if (stratArea) stratArea.style.opacity = progress;
-      stratNodes.forEach(function (n, i) { n.classList.toggle('lit', i <= maxLive); });
-      if (maxLive >= 0) document.querySelectorAll('.strat-dot').forEach(function (d) { d.classList.add('go'); });
+      gearEls.forEach(function (g, i) { g.classList.toggle('on', i <= maxLive); });
+      if (idler) idler.classList.toggle('on', maxLive >= 0);
+      if (dialNeedle) dialNeedle.setAttribute('transform', 'rotate(' + (-62 + 124 * progress) + ')');
       var vis = document.querySelector('.strat-visual');
       if (vis && maxLive >= steps.length - 1) vis.classList.add('done');
     }
@@ -839,10 +1001,10 @@
       steps.forEach(function (s) { sio.observe(s); });
     } else {
       steps.forEach(function (s) { s.classList.add('live'); });
-      stratNodes.forEach(function (n) { n.classList.add('lit'); });
-      if (stratPath) stratPath.style.strokeDashoffset = 0;
-      if (stratGlow) stratGlow.style.strokeDashoffset = 0;
-      if (stratArea) stratArea.style.opacity = 1;
+      document.querySelectorAll('.gear').forEach(function (g) { g.classList.add('on'); });
+      if (dialNeedle) dialNeedle.setAttribute('transform', 'rotate(62)');
+      var vis0 = document.querySelector('.strat-visual');
+      if (vis0) vis0.classList.add('done');
     }
 
     /* Reveals + counters, staggered */
