@@ -254,7 +254,28 @@
   .j-orb::before { content: ""; position: absolute; top: -3px; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 12px rgba(194,164,104,0.8); }
   .j-dot { position: absolute; top: 50%; left: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--brass-soft); animation: jpulse 3.2s var(--ease) infinite; }
   @keyframes jpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(194,164,104,0.5), 0 0 24px rgba(194,164,104,0.9); } 50% { box-shadow: 0 0 0 26px rgba(194,164,104,0), 0 0 34px rgba(194,164,104,1); } }
-  @media (max-width: 860px) { .j-grid { grid-template-columns: 1fr; gap: 56px; } }
+  .j-ticks { position: absolute; inset: -5%; border-radius: 50%; background: repeating-conic-gradient(rgba(194,164,104,0.55) 0deg 0.5deg, transparent 0.9deg 6deg); -webkit-mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); animation: ringspin 120s linear infinite; }
+  .j-sweep { position: absolute; inset: 3%; border-radius: 50%; background: conic-gradient(from 0deg, rgba(194,164,104,0.3), rgba(194,164,104,0.05) 55deg, transparent 75deg); -webkit-mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); animation: ringspin 9s linear infinite; }
+  .j-pip { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--brass-soft); animation: pipblink 4s var(--ease) infinite; }
+  .j-pip.p1 { top: 18%; left: 74%; } .j-pip.p2 { top: 66%; left: 12%; animation-delay: 1.3s; } .j-pip.p3 { top: 82%; left: 62%; animation-delay: 2.6s; }
+  @keyframes pipblink { 0%, 100% { opacity: 0.2; box-shadow: none; } 50% { opacity: 1; box-shadow: 0 0 10px rgba(194,164,104,0.9); } }
+  .j-label { text-align: center; margin-top: 28px; font-size: 11px; font-weight: 600; letter-spacing: 0.5em; color: var(--brass-soft); opacity: 0.85; }
+  .j-seq-head { margin-top: 96px; }
+  .j-seq-head h3 { font-family: var(--serif); font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--cream); max-width: 34ch; }
+  .j-seq { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
+  .j-step { display: flex; gap: 22px; border-top: 1px solid var(--hairline-dark); padding: 28px 0; align-items: flex-start; }
+  .j-step .jn { font-family: var(--serif); font-size: 1.3rem; color: var(--brass); flex: none; width: 42px; }
+  .j-step .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
+  .j-step p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 46ch; }
+  .j-impact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px; border-top: 1px solid var(--hairline-dark); border-bottom: 1px solid var(--hairline-dark); padding: 44px 0; }
+  .j-impact .ji { font-family: var(--serif); font-size: clamp(1.25rem, 2.2vw, 1.6rem); color: var(--cream); line-height: 1.3; }
+  .j-impact .ji em { color: var(--brass-soft); font-style: italic; }
+  .j-proof { margin-top: 70px; border: 1px solid rgba(194,164,104,0.4); background: var(--noir-2); padding: 52px 54px 44px; position: relative; overflow: hidden; box-shadow: 0 0 60px rgba(194,164,104,0.08) inset, 0 24px 70px rgba(0,0,0,0.45); transition: border-color 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+  .j-proof:hover { border-color: var(--brass-soft); box-shadow: 0 0 80px rgba(194,164,104,0.14) inset, 0 30px 90px rgba(0,0,0,0.55); }
+  .j-proof::before { content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 90px; background: var(--brass); animation: accentbreathe 5s ease-in-out infinite; }
+  .j-proof .jq { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--cream); line-height: 1.35; max-width: 26ch; }
+  .j-proof .jw { margin-top: 22px; font-size: 13.5px; letter-spacing: 0.06em; color: var(--brass-soft); }
+  @media (max-width: 860px) { .j-grid { grid-template-columns: 1fr; gap: 56px; } .j-seq { grid-template-columns: 1fr; } .j-impact { grid-template-columns: 1fr; gap: 24px; } .j-proof { padding: 38px 28px 32px; } }
   .strat-node circle.core { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.4; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); }
   .strat-node text { font-family: var(--serif); font-size: 13px; fill: var(--ink-soft); transition: fill 0.5s var(--ease); }
   .strat-node.lit circle.core { fill: var(--brass); stroke: var(--brass); }
@@ -477,6 +498,7 @@
     .gear .rot { animation: none; opacity: 0.38 !important; }
     .about-h2 .aw { opacity: 1; transform: none; transition: none; }
     .j-ring, .j-orb { animation: none; }
+    .j-sweep, .j-ticks, .j-pip { animation: none; }
     .j-dot { animation: none; }
     .about-sig path { stroke-dashoffset: 0; transition: none; }
     #dialNeedle { transition: none; }
@@ -956,19 +978,45 @@
       <div>
         <div class="eyebrow reveal">Agentic Technology</div>
         <h2 class="reveal" style="font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream);">Meet Jarvis. <em>The machine behind the machine.</em></h2>
-        <p class="reveal" style="color: rgba(242,237,225,0.75); max-width: 54ch; margin-top: 22px;">Every system on this page runs on more than willpower. Jarvis is my agentic AI operator. It researches, verifies, and follows up around the clock, so the pipeline never sleeps and nothing falls through the cracks.</p>
-        <div class="j-rows">
-          <div class="j-row reveal"><div class="t">Prospecting that never stops</div><p>Targeted research and verification running daily, feeding the system fresh, qualified names.</p></div>
-          <div class="j-row reveal"><div class="t">Follow-up with a perfect memory</div><p>Every conversation tracked, every promise kept, every revival right on schedule.</p></div>
-          <div class="j-row reveal"><div class="t">An operator, not a chatbot</div><p>Jarvis works under my direction, with real guardrails. You get the output: booked conversations with the right people.</p></div>
-        </div>
+        <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch; margin-top: 22px;">Every practice runs on the same scarce resource: your hours. Jarvis breaks that constraint. He is an agentic AI operator who researches, verifies, writes, follows up, and books, around the clock, in your voice, under your rules.</p>
+        <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch;">Not software you learn. <em style="color: var(--brass-soft);">A colleague you brief.</em></p>
         <div class="reveal" style="margin-top: 34px;"><a class="quiet-link" href="#contact" style="color: var(--cream);">Ask me about Jarvis</a></div>
       </div>
-      <div class="j-core reveal" aria-hidden="true">
-        <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
-        <span class="j-orb o1"></span><span class="j-orb o2"></span>
-        <span class="j-dot"></span>
+      <div class="reveal">
+        <div class="j-core" aria-hidden="true">
+          <span class="j-ticks"></span>
+          <span class="j-sweep"></span>
+          <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
+          <span class="j-orb o1"></span><span class="j-orb o2"></span>
+          <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
+          <span class="j-dot"></span>
+        </div>
+        <div class="j-label">J A R V I S</div>
       </div>
+    </div>
+
+    <div class="j-seq-head">
+      <div class="eyebrow reveal">The Operator&rsquo;s Sequence</div>
+      <h3 class="reveal">There is an order to it. Jarvis runs every step, in sequence, every day.</h3>
+    </div>
+    <div class="j-seq">
+      <div class="j-step reveal"><span class="jn">I.</span><div><div class="t">Research</div><p>Jarvis studies your ideal client and builds the room: the right names, at the right firms, found and organized before you pour your first coffee.</p></div></div>
+      <div class="j-step reveal"><span class="jn">II.</span><div><div class="t">Qualify</div><p>Every prospect is verified and checked against your standards before a single word is sent. No wasted swings, no burned reputation.</p></div></div>
+      <div class="j-step reveal"><span class="jn">III.</span><div><div class="t">Reach</div><p>Outreach in your voice, across email and LinkedIn, timed and sequenced like a campaign. Because it is one.</p></div></div>
+      <div class="j-step reveal"><span class="jn">IV.</span><div><div class="t">Follow Up</div><p>The fortune is in the follow-up, and Jarvis has never forgotten one. Every conversation remembered, every promise kept, every quiet lead revived on schedule.</p></div></div>
+      <div class="j-step reveal"><span class="jn">V.</span><div><div class="t">Book</div><p>Qualified conversations land on your calendar. You walk in prepared, because Jarvis briefed you before the meeting.</p></div></div>
+      <div class="j-step reveal"><span class="jn">VI.</span><div><div class="t">Watch</div><p>While you sleep, Jarvis watches the whole machine. Pipeline health, reply flags, tomorrow&rsquo;s briefing already written when you wake.</p></div></div>
+    </div>
+
+    <div class="j-impact">
+      <div class="reveal"><div class="ji">An operator on duty <em>168 hours</em> a week.</div></div>
+      <div class="reveal"><div class="ji"><em>Zero</em> forgotten follow-ups. Ever.</div></div>
+      <div class="reveal"><div class="ji">Your calendar fills <em>while you sleep.</em></div></div>
+    </div>
+
+    <div class="j-proof reveal">
+      <div class="jq">&ldquo;I&rsquo;ve got to have Jarvis. What he can do is insane.&rdquo;</div>
+      <div class="jw">A Merrill Lynch wealth advisor heard what Jarvis does, once. He paid $5,000 for him the same week.</div>
     </div>
   </div>
 </section>
