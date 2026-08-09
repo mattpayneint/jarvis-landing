@@ -543,13 +543,13 @@
   .closing-copy h2 em { color: var(--brass); }
   .closing-copy p { color: var(--ink-soft); max-width: 46ch; margin: 22px 0 42px; }
   .cal-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; max-width: 430px; perspective: 800px; }
-  .cal-opt { position: relative; display: flex; flex-direction: column; gap: 4px; text-decoration: none; border: 1px solid var(--hairline); background: #FFFDF8; padding: 20px 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(88,70,38,0.08), 0 8px 22px rgba(88,70,38,0.08); transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease); }
+  .cal-opt { position: relative; display: flex; flex-direction: column; gap: 4px; text-decoration: none; border: 1px solid var(--hairline); background: #FFFDF8; padding: 20px 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(88,70,38,0.08), 0 8px 22px rgba(88,70,38,0.08); transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s var(--ease), border-color 0.55s var(--ease); }
   @property --calA { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
   .cal-opt::before { content: ""; position: absolute; inset: 0; padding: 2px; background: conic-gradient(from var(--calA), rgba(194,164,104,0) 0deg 278deg, rgba(194,164,104,0.6) 312deg, #E9CD90 332deg, rgba(194,164,104,0.6) 352deg, rgba(194,164,104,0) 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; animation: calspin 6.5s linear infinite; pointer-events: none; }
   .cal-opt:nth-child(2)::before { animation-delay: -2.2s; }
   .cal-opt:nth-child(3)::before { animation-delay: -4.4s; }
   @keyframes calspin { to { --calA: 360deg; } }
-  .cal-opt:hover { transform: rotateX(5deg) rotateY(-3deg) translateY(-6px) scale(1.02); border-color: var(--brass-soft); box-shadow: 0 4px 10px rgba(88,70,38,0.12), 0 24px 54px rgba(88,70,38,0.2), 0 42px 88px rgba(88,70,38,0.1); }
+  .cal-opt:hover { transform: rotateX(7deg) rotateY(-5deg) translateY(-11px) scale(1.05); border-color: var(--brass-soft); box-shadow: 0 6px 14px rgba(88,70,38,0.14), 0 30px 64px rgba(88,70,38,0.24), 0 52px 104px rgba(88,70,38,0.12); }
   .cal-opt:hover::before { animation-duration: 2.2s; }
   .cal-opt .ck { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); }
   .cal-opt .cs { font-size: 13.5px; color: var(--ink-soft); }
@@ -1282,7 +1282,7 @@
   <div class="closing-grid">
     <div class="closing-copy">
       <div class="eyebrow reveal">New Networks</div>
-      <h2 class="reveal">New networks. New <em>high-trust</em> relationships with investors.</h2>
+      <h2 class="reveal about-h2"><span class="aw" style="transition-delay: 0ms">New</span> <span class="aw" style="transition-delay: 70ms">networks.</span> <span class="aw" style="transition-delay: 140ms">New</span> <span class="aw" style="transition-delay: 210ms"><em>high-trust</em></span> <span class="aw" style="transition-delay: 280ms">relationships</span> <span class="aw" style="transition-delay: 350ms">with</span> <span class="aw" style="transition-delay: 420ms">investors.</span></h2>
       <p class="reveal">One conversation, personally with Matthew. If there's a fit, you'll know within twenty minutes. Choose your world:</p>
       <div class="cal-grid">
         <a class="cal-opt reveal" href="https://calendly.com/matthewpayneconsulting/advisor-strategy-call" target="_blank" rel="noopener"><span class="ck">Financial Advisors</span><span class="cs">Book an advisor strategy call</span></a>
