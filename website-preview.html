@@ -165,7 +165,21 @@
   .strat-ring { fill: none; stroke: var(--brass-soft); stroke-width: 0.7; stroke-dasharray: 3 7; opacity: 0.35; transform-origin: 200px 220px; animation: ringspin 90s linear infinite; }
   @keyframes ringspin { to { transform: rotate(360deg); } }
   .strat-path-ghost { fill: none; stroke: var(--hairline); stroke-width: 1.2; }
-  .strat-path { fill: none; stroke: var(--brass); stroke-width: 1.8; transition: stroke-dashoffset 1.1s var(--ease); }
+  .strat-path { fill: none; stroke: url(#goldpath); stroke-width: 2.2; transition: stroke-dashoffset 1.1s var(--ease); }
+  .strat-path-glow { fill: none; stroke: var(--brass-soft); stroke-width: 5.5; opacity: 0.4; filter: url(#goldglow); transition: stroke-dashoffset 1.1s var(--ease); }
+  .strat-area { opacity: 0; transition: opacity 1.4s var(--ease); fill: url(#goldarea); }
+  .strat-ring.r2 { animation-direction: reverse; animation-duration: 64s; stroke-dasharray: 2 6; opacity: 0.22; }
+  .strat-node .orbit { fill: none; stroke: var(--brass-soft); stroke-width: 0.8; opacity: 0.25; stroke-dasharray: 3 5; transform-box: fill-box; transform-origin: center; animation: ringspin 26s linear infinite; transition: opacity 0.5s var(--ease); }
+  .strat-node.lit .orbit { opacity: 0.8; }
+  .strat-node .nm { font-family: var(--sans); font-size: 7.6px; font-weight: 600; letter-spacing: 0.17em; fill: var(--ink-soft); opacity: 0; transition: opacity 0.6s var(--ease) 0.25s, fill 0.6s var(--ease); }
+  .strat-node.lit .nm { opacity: 0.9; fill: var(--brass); }
+  .strat-burst { opacity: 0; transition: opacity 1s var(--ease) 0.5s; }
+  .strat-visual.done .strat-burst { opacity: 1; }
+  .strat-burst .arc { fill: none; stroke: var(--brass); stroke-width: 0.9; opacity: 0.65; }
+  .strat-burst .ray { stroke: var(--brass-soft); stroke-width: 1; opacity: 0.7; }
+  .strat-burst .spin { transform-box: fill-box; transform-origin: center; animation: ringspin 30s linear infinite; }
+  .strat-dot.trail.go { animation-delay: 0.16s; }
+  .strat-dot.trail.t2.go { animation-delay: 0.32s; }
   .strat-node circle.core { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.4; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); }
   .strat-node text { font-family: var(--serif); font-size: 13px; fill: var(--ink-soft); transition: fill 0.5s var(--ease); }
   .strat-node.lit circle.core { fill: var(--brass); stroke: var(--brass); }
@@ -383,6 +397,9 @@
     .v-card .img .v-zoom { animation: none; }
     .m-img img, .m-ring circle { animation: none; }
     .stat-line .n { animation: none; }
+    .strat-node .orbit, .strat-burst .spin { animation: none; }
+    .strat-area, .strat-burst { opacity: 1 !important; transition: none; }
+    .strat-path-glow { stroke-dashoffset: 0 !important; }
     .stat-line .n::after { transition: none; width: 100%; }
     .m-img { opacity: 1; transform: none; transition: none; }
     .s-step.live .s-medal::after { animation: none; }
@@ -463,9 +480,17 @@
               <pattern id="dotgrid" width="26" height="26" patternUnits="userSpaceOnUse">
                 <circle cx="1.2" cy="1.2" r="1.2" />
               </pattern>
+              <linearGradient id="goldpath" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#9A7B3F" /><stop offset="1" stop-color="#C2A468" />
+              </linearGradient>
+              <linearGradient id="goldarea" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#C2A468" stop-opacity="0.26" /><stop offset="1" stop-color="#C2A468" stop-opacity="0" />
+              </linearGradient>
+              <filter id="goldglow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" /></filter>
             </defs>
             <g class="strat-grid"><rect width="400" height="440" fill="url(#dotgrid)" opacity="0.55" /></g>
             <circle class="strat-ring" cx="200" cy="220" r="170" />
+            <circle class="strat-ring r2" cx="200" cy="220" r="148" />
             <path class="strat-contour" d="M 344 74 m -26 0 a 26 20 -18 1 0 52 0 a 26 20 -18 1 0 -52 0" />
             <path class="strat-contour" d="M 344 74 m -48 4 a 48 38 -18 1 0 96 0 a 48 38 -18 1 0 -96 0" />
             <path class="strat-contour" d="M 344 74 m -74 10 a 74 60 -18 1 0 148 0 a 74 60 -18 1 0 -148 0" />
@@ -479,14 +504,26 @@
               <text x="92" y="46">N</text>
             </g>
             <path class="strat-proj" d="M 344 74 C 358 60, 368 50, 386 32" />
-            <circle class="strat-proj-end" cx="390" cy="28" r="4.5" />
+            <circle class="strat-proj-end" cx="390" cy="28" r="5" />
+            <g class="strat-burst" transform="translate(390, 28)">
+              <g class="spin">
+                <path class="arc" d="M -13 0 A 13 13 0 0 1 13 0" /><path class="arc" d="M 13 0 A 13 13 0 0 1 -13 0" transform="rotate(120)" />
+                <path class="arc" d="M -20 0 A 20 20 0 0 1 20 0" transform="rotate(60)" /><path class="arc" d="M 20 0 A 20 20 0 0 1 -20 0" transform="rotate(200)" />
+              </g>
+              <line class="ray" x1="0" y1="-26" x2="0" y2="-32" /><line class="ray" x1="26" y1="0" x2="32" y2="0" />
+              <line class="ray" x1="0" y1="26" x2="0" y2="32" /><line class="ray" x1="-26" y1="0" x2="-32" y2="0" />
+            </g>
+            <path class="strat-area" id="stratArea" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74 L 344 386 Z" />
             <path class="strat-path-ghost" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
+            <path class="strat-path-glow" id="stratGlow" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
             <path class="strat-path" id="stratPath" d="M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74" />
-            <circle class="strat-dot" id="stratDot" r="3.4" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
-            <g class="strat-node" data-node="0" transform="translate(56, 386)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-30" y="5">I.</text></g>
-            <g class="strat-node" data-node="1" transform="translate(158, 268)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-32" y="5">II.</text></g>
-            <g class="strat-node" data-node="2" transform="translate(244, 176)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-36" y="5">III.</text></g>
-            <g class="strat-node" data-node="3" transform="translate(344, 74)"><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-38" y="5">IV.</text></g>
+            <circle class="strat-dot" id="stratDot" r="3.8" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
+            <circle class="strat-dot trail t1" r="2.3" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
+            <circle class="strat-dot trail t2" r="1.5" style="offset-path: path('M 56 386 C 120 356, 116 300, 158 268 C 200 236, 208 214, 244 176 C 280 138, 292 118, 344 74'); offset-rotate: 0deg;" />
+            <g class="strat-node" data-node="0" transform="translate(56, 386)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-30" y="5">I.</text><text class="nm" x="14" y="23">AUTOMATE</text></g>
+            <g class="strat-node" data-node="1" transform="translate(158, 268)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-32" y="5">II.</text><text class="nm" x="14" y="21">ATTRACT</text></g>
+            <g class="strat-node" data-node="2" transform="translate(244, 176)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-36" y="5">III.</text><text class="nm" x="14" y="21">CONVERT</text></g>
+            <g class="strat-node" data-node="3" transform="translate(344, 74)"><circle class="orbit" r="12" /><circle class="halo" r="8" /><circle class="core" r="6" /><text x="-38" y="5">IV.</text><text class="nm" x="-96" y="28">SCALE &amp; GROW</text></g>
           </svg>
         </div>
       </div>
@@ -774,9 +811,12 @@
     var stratDot = document.getElementById('stratDot');
     var stratNodes = document.querySelectorAll('.strat-node');
     var pathLen = stratPath ? stratPath.getTotalLength() : 0;
+    var stratGlow = document.getElementById('stratGlow');
+    var stratArea = document.getElementById('stratArea');
     if (stratPath) {
       stratPath.style.strokeDasharray = pathLen;
       stratPath.style.strokeDashoffset = pathLen;
+      if (stratGlow) { stratGlow.style.strokeDasharray = pathLen; stratGlow.style.strokeDashoffset = pathLen; }
     }
     function updateStrat() {
       if (!stratPath) return;
@@ -784,8 +824,10 @@
       steps.forEach(function (s, i) { if (s.classList.contains('live')) maxLive = Math.max(maxLive, i); });
       var progress = (maxLive + 1) / steps.length;
       stratPath.style.strokeDashoffset = pathLen * (1 - progress);
+      if (stratGlow) stratGlow.style.strokeDashoffset = pathLen * (1 - progress);
+      if (stratArea) stratArea.style.opacity = progress;
       stratNodes.forEach(function (n, i) { n.classList.toggle('lit', i <= maxLive); });
-      if (maxLive >= 0) stratDot.classList.add('go');
+      if (maxLive >= 0) document.querySelectorAll('.strat-dot').forEach(function (d) { d.classList.add('go'); });
       var vis = document.querySelector('.strat-visual');
       if (vis && maxLive >= steps.length - 1) vis.classList.add('done');
     }
@@ -799,6 +841,8 @@
       steps.forEach(function (s) { s.classList.add('live'); });
       stratNodes.forEach(function (n) { n.classList.add('lit'); });
       if (stratPath) stratPath.style.strokeDashoffset = 0;
+      if (stratGlow) stratGlow.style.strokeDashoffset = 0;
+      if (stratArea) stratArea.style.opacity = 1;
     }
 
     /* Reveals + counters, staggered */
