@@ -471,6 +471,15 @@
   .j-scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,11,13,0.94) 0%, rgba(11,11,13,0.82) 45%, rgba(11,11,13,0.9) 100%); }
   .jarvis h2 em { color: var(--brass-soft); font-style: italic; }
   .j-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 80px; align-items: center; }
+  @media (min-width: 901px) {
+    .j-grid { align-items: start; }
+    .j-stick { position: sticky; top: 110px; }
+    .j-grid .j-clone { margin-top: 84px; }
+    .j-grid .j-seq-head { margin-top: 80px; }
+    .j-grid .j-seq { grid-template-columns: 1fr; gap: 0; }
+    .j-grid .j-scope-grid { grid-template-columns: 1fr; gap: 0; }
+    .j-grid .j-impact { grid-template-columns: 1fr; gap: 26px; margin-top: 64px; padding: 36px 0; }
+  }
   .j-rows { margin-top: 42px; }
   .j-row { border-top: 1px solid var(--hairline-dark); padding: 24px 0; }
   .j-row .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
@@ -1132,21 +1141,7 @@
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch; margin-top: 22px;">Every practice runs on the same scarce resource: your hours. Jarvis breaks that constraint. He is an agentic AI operator who researches, verifies, writes, follows up, and books, around the clock, in your voice, under your rules.</p>
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch;">Not software you learn. <em style="color: var(--brass-soft);">A colleague you brief.</em></p>
         <div class="reveal" style="margin-top: 34px;"><a class="quiet-link" href="#contact" style="color: var(--cream);">Ask me about Jarvis</a></div>
-      </div>
-      <div class="reveal">
-        <div class="j-core" aria-hidden="true">
-          <span class="j-ticks"></span>
-          <span class="j-sweep"></span>
-          <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
-          <span class="j-orb o1"></span><span class="j-orb o2"></span>
-          <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
-          <span class="j-glint" aria-hidden="true"></span><span class="j-dot"></span>
-        </div>
-        <div class="j-label">J A R V I S</div>
-      </div>
-    </div>
-
-    <div class="j-clone">
+        <div class="j-clone">
       <div class="eyebrow reveal">An Extension of You</div>
       <p class="jc jc-hook reveal">What if you could clone yourself, three times over?</p>
       <p class="jc jc-hook reveal"><em>What would that be worth?</em></p>
@@ -1190,6 +1185,21 @@
       <div class="reveal"><div class="ji"><em>Zero</em> forgotten follow-ups. Ever.</div></div>
       <div class="reveal"><div class="ji">Your calendar fills <em>while you sleep.</em></div></div>
     </div>
+      </div>
+      <div class="reveal j-stick">
+        <div class="j-core" aria-hidden="true">
+          <span class="j-ticks"></span>
+          <span class="j-sweep"></span>
+          <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
+          <span class="j-orb o1"></span><span class="j-orb o2"></span>
+          <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
+          <span class="j-glint" aria-hidden="true"></span><span class="j-dot"></span>
+        </div>
+        <div class="j-label">J A R V I S</div>
+      </div>
+    </div>
+
+    
   </div>
 </section>
 
