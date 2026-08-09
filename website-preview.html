@@ -237,9 +237,7 @@
   .lever:hover::before { width: 100%; }
   @media (max-width: 860px) { .levers { grid-template-columns: 1fr 1fr; } .m-step { gap: 18px; } }
   /* Jarvis */
-  .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; overflow: hidden; position: relative; }
-  .jarvis video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; }
-  .j-scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,11,13,0.94) 0%, rgba(11,11,13,0.82) 45%, rgba(11,11,13,0.9) 100%); }
+  .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; overflow: hidden; }
   .jarvis h2 em { color: var(--brass-soft); font-style: italic; }
   .j-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 80px; align-items: center; }
   .j-rows { margin-top: 42px; }
@@ -269,6 +267,14 @@
   .j-step .jn { font-family: var(--serif); font-size: 1.3rem; color: var(--brass); flex: none; width: 42px; }
   .j-step .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
   .j-step p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 46ch; }
+  .j-scope { margin-top: 80px; }
+  .j-scope-lede { font-size: 1.05rem; color: rgba(242,237,225,0.75); max-width: 52ch; }
+  .j-scope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; margin-top: 26px; }
+  .js-item { position: relative; border-top: 1px solid var(--hairline-dark); padding: 18px 0 18px 30px; font-size: 15px; color: var(--cream); }
+  .js-item::before { content: ""; position: absolute; left: 2px; top: 26px; width: 12px; height: 2px; background: var(--brass); transition: width 0.5s var(--ease); }
+  .js-item:hover::before { width: 20px; }
+  .j-scope-close { margin-top: 34px; font-family: var(--serif); font-size: clamp(1.2rem, 2.2vw, 1.55rem); color: var(--brass-soft); font-style: italic; max-width: 40ch; }
+  @media (max-width: 860px) { .j-scope-grid { grid-template-columns: 1fr; } }
   .j-impact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px; border-top: 1px solid var(--hairline-dark); border-bottom: 1px solid var(--hairline-dark); padding: 44px 0; }
   .j-impact .ji { font-family: var(--serif); font-size: clamp(1.25rem, 2.2vw, 1.6rem); color: var(--cream); line-height: 1.3; }
   .j-impact .ji em { color: var(--brass-soft); font-style: italic; }
@@ -975,9 +981,7 @@
 
 <!-- CHAPTER VIc — JARVIS (noir): agentic technology -->
 <section class="jarvis" id="jarvis">
-  <video id="jarvisVid" autoplay muted loop playsinline></video>
-  <div class="j-scrim"></div>
-  <div class="wrap" style="position: relative; z-index: 2;">
+  <div class="wrap">
     <div class="j-grid">
       <div>
         <div class="eyebrow reveal">Agentic Technology</div>
@@ -1010,6 +1014,21 @@
       <div class="j-step reveal"><span class="jn">IV.</span><div><div class="t">Follow Up</div><p>The fortune is in the follow-up, and Jarvis has never forgotten one. Every conversation remembered, every promise kept, every quiet lead revived on schedule.</p></div></div>
       <div class="j-step reveal"><span class="jn">V.</span><div><div class="t">Book</div><p>Qualified conversations land on your calendar. You walk in prepared, because Jarvis briefed you before the meeting.</p></div></div>
       <div class="j-step reveal"><span class="jn">VI.</span><div><div class="t">Watch</div><p>While you sleep, Jarvis watches the whole machine. Pipeline health, reply flags, tomorrow&rsquo;s briefing already written when you wake.</p></div></div>
+    </div>
+
+    <div class="j-scope">
+      <p class="j-scope-lede reveal">The sequence is the spine. Around it, Jarvis carries the work an entire back office would.</p>
+      <div class="j-scope-grid">
+        <div class="js-item reveal">Writes and sends email in your voice</div>
+        <div class="js-item reveal">Runs your CRM and keeps it honest</div>
+        <div class="js-item reveal">Builds and maintains every campaign</div>
+        <div class="js-item reveal">Watches deliverability and pipeline health</div>
+        <div class="js-item reveal">Writes your morning briefing before you wake</div>
+        <div class="js-item reveal">Preps you before every meeting</div>
+        <div class="js-item reveal">Revives cold conversations on schedule</div>
+        <div class="js-item reveal">Builds the assets: pages, scripts, sequences</div>
+      </div>
+      <p class="j-scope-close reveal">One operator. The output of a marketing team, a research analyst, and an assistant who never sleeps.</p>
     </div>
 
     <div class="j-impact">
@@ -1248,8 +1267,6 @@
     var heroSrc = document.querySelector('#heroVid source');
     var band = document.getElementById('bandVid');
     if (heroSrc && band) { band.src = heroSrc.src; if (reduce) band.pause(); }
-    var jv = document.getElementById('jarvisVid');
-    if (heroSrc && jv) { jv.src = heroSrc.src; if (reduce) jv.pause(); }
 
     /* FS Oahu-style card carousel: arrows, drag, dots, gentle auto-advance */
     var track = document.getElementById('carTrack');
