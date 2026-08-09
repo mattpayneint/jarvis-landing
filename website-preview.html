@@ -726,6 +726,18 @@
   .cineband .line p { font-family: var(--serif); font-size: clamp(1.5rem, 3.4vw, 2.6rem); color: var(--cream); max-width: 26ch; margin: 0; text-shadow: 0 2px 24px rgba(0,0,0,0.5); }
   .cineband .line p em { color: var(--brass-soft); }
 
+  /* Phones: gear train permanently engaged (scroll-engine is desktop-only) */
+  @media (max-width: 860px) {
+    .gear .rot { animation-play-state: running !important; opacity: 0.38 !important; }
+    .gear circle, .gear line { stroke: var(--brass) !important; }
+    .gear .jewel { fill: var(--brass-soft) !important; }
+    .gear .nm { opacity: 0.9 !important; fill: var(--brass) !important; }
+    #dialNeedle { transform: rotate(62deg) !important; }
+    #stratPath, #stratGlow { stroke-dashoffset: 0 !important; }
+    #stratArea { opacity: 1 !important; }
+    .strat-burst { opacity: 1 !important; }
+  }
+
   /* Mobile containment: decorative rings/watermarks must never cause horizontal scroll */
   @media (max-width: 900px) {
     section, .cineband, .closing, footer { overflow-x: clip; }
