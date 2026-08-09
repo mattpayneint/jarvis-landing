@@ -455,7 +455,7 @@
   .lp-img .p-zoom { position: absolute; inset: 0; animation: lpdrift 11s ease-in-out infinite alternate; }
   @keyframes lpdrift { from { transform: scale(1.05) translate(0, 0); } to { transform: scale(1.22) translate(-3%, 2.4%); } }
   .lp-img img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.98); }
-  @media (max-width: 700px) { .lp-inner { flex-direction: column; align-items: flex-start; } .lp-mediaWrap { width: 100%; max-width: 320px; } }
+  @media (max-width: 700px) { .lp-inner { flex-direction: column; align-items: flex-start; } .lp-mediaWrap { width: 100%; max-width: 240px; } .lever-panel.open { max-height: 940px; } }
   .lp-inner h4 { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; margin: 0 0 10px; color: var(--ink); }
   .lp-inner p { font-size: 15px; color: var(--ink-soft); max-width: 60ch; margin: 0; }
   @media (max-width: 860px) { .levers { grid-template-columns: 1fr 1fr; } .m-step { gap: 18px; } }
@@ -621,7 +621,7 @@
   .quote .q::after { content: "”"; color: var(--brass-soft); }
   .quote .who { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brass-soft); }
   .quote .firm { font-size: 13px; color: var(--cream-soft); margin-top: 4px; }
-  .q-scroll { overflow: hidden; margin-top: 66px; }
+  .q-scroll { overflow: hidden; margin-top: 66px; padding-bottom: 22px; }
   .q-track { display: flex; gap: 28px; cursor: grab; will-change: transform; }
   .q-track .quote { flex: 0 0 min(430px, 84vw); box-sizing: border-box; padding: 38px 36px 34px; }
   .q-track .quote .q { font-size: 1.16rem; margin-bottom: 0; margin-top: 22px; }
@@ -1792,6 +1792,7 @@
         body.textContent = data[i][1];
         document.querySelectorAll('.lp-img').forEach(function (im, j) { im.classList.toggle('show', j === i); });
         panel.classList.add('open');
+        setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 350);
       });
     });
   })();
