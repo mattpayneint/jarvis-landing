@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://matthewpayneconsulting.com/sitemap.xml
