@@ -367,7 +367,7 @@
   .stage-frame:hover::before { transform: translate(6px, 6px); }
   .stage-clip { position: relative; z-index: 1; overflow: hidden; }
   .stage-clip .p-zoom { position: relative; inset: auto; animation: stagebreathe 14s ease-in-out infinite alternate; }
-  @keyframes stagebreathe { from { transform: scale(1); } to { transform: scale(1.15); } }
+  @keyframes stagebreathe { from { transform: scale(1.04) translate(0, 0); } to { transform: scale(1.2) translate(-2.2%, 1.6%); } }
   .stage-corners { position: absolute; inset: -18px; z-index: 2; pointer-events: none; }
   .stage-corners span { position: absolute; width: 48px; height: 48px; border: 3px solid var(--brass); opacity: 0.35; animation: cornerbreathe 5s var(--ease) infinite; }
   .stage-corners .c1 { top: 0; left: 0; border-right: none; border-bottom: none; --dx: -7px; --dy: -7px; }
@@ -375,8 +375,14 @@
   .stage-corners .c3 { bottom: 0; right: 0; border-left: none; border-top: none; --dx: 7px; --dy: 7px; animation-delay: 2.5s; }
   .stage-corners .c4 { bottom: 0; left: 0; border-right: none; border-top: none; --dx: -7px; --dy: 7px; animation-delay: 3.75s; }
   @keyframes cornerbreathe { 0%, 100% { opacity: 0.3; transform: translate(0, 0); } 50% { opacity: 1; transform: translate(var(--dx, 0), var(--dy, 0)); } }
-  .stage-clip img { width: 100%; display: block; filter: saturate(0.96); transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
-  .stage-frame:hover .stage-clip img { transform: scale(1.05); }
+  .stage-clip img { width: 100%; display: block; filter: saturate(0.96); transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s var(--ease); }
+  .stage-clip::after { content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 34%; background: linear-gradient(75deg, transparent, rgba(255,244,214,0.16), transparent); transform: skewX(-12deg) translateX(-180%); animation: stagesheen 8s ease-in-out infinite; z-index: 2; pointer-events: none; }
+  @keyframes stagesheen { 0%, 52% { transform: skewX(-12deg) translateX(-180%); } 74% { transform: skewX(-12deg) translateX(480%); } 100% { transform: skewX(-12deg) translateX(480%); } }
+  .room-grid { perspective: 1100px; }
+  .stage-frame { transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.7s var(--ease); }
+  .room-grid .stage-frame.reveal.in:hover { transform: rotateX(2.5deg) rotateY(-2deg) translateY(-12px) scale(1.04) !important; filter: drop-shadow(0 34px 60px rgba(88,70,38,0.3)); }
+  .stage-frame:hover .stage-corners span { animation-duration: 2s; }
+  .stage-frame:hover .stage-clip img { transform: scale(1.1); filter: saturate(1.08) brightness(1.06); }
   @media (max-width: 860px) { .room-grid { grid-template-columns: 1fr; gap: 44px; } }
   .m-scroll { overflow: hidden; margin-top: 64px; }
   .m-track { display: flex; gap: 26px; cursor: grab; will-change: transform; perspective: 1200px; }
@@ -778,6 +784,7 @@
     .stage-frame::before, .stage-clip .p-zoom, .lever::before { animation: none; }
     .lp-orb, .lp-img .p-zoom, .lever.active { animation: none; }
     .stage-corners span { animation: none; opacity: 0.7; }
+    .stage-clip::after { animation: none; opacity: 0; }
     .lv-medal .lr1, .lv-medal .lr2, .lv-medal .lva { animation: none; }
     .cal-opt::before { animation: none; }
     .lv-face img { animation: none; }
