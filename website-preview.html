@@ -132,11 +132,6 @@
   /* Chapter II — capital over Chicago dusk */
   .capital .scrim { background: linear-gradient(90deg, rgba(11,11,13,0.88) 0%, rgba(11,11,13,0.55) 46%, rgba(11,11,13,0.2) 100%), linear-gradient(0deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 30%); }
   .capital-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 80px; align-items: end; }
-  .cap-band { display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; margin-top: 70px; border-top: 1px solid rgba(242,237,225,0.18); padding-top: 26px; }
-  .cap-row { position: relative; padding-left: 26px; font-size: 14px; line-height: 1.5; color: rgba(242,237,225,0.82); }
-  @media (max-width: 860px) { .cap-band { grid-template-columns: 1fr; gap: 18px; } }
-  .cap-row::before { content: ""; position: absolute; left: 0; top: 9px; width: 13px; height: 2px; background: var(--brass-soft); transition: width 0.5s var(--ease); }
-  .cap-row:hover::before { width: 20px; }
   .stat-line { border-top: 1px solid rgba(242,237,225,0.22); padding: 24px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
   .stat-line:last-child { border-bottom: 1px solid rgba(242,237,225,0.22); }
   .stat-line .n { font-family: var(--serif); font-size: clamp(2.3rem, 3.8vw, 3.2rem); color: var(--cream); font-variant-numeric: tabular-nums; position: relative; display: inline-block; padding-bottom: 6px; animation: statglow 4.5s ease-in-out infinite alternate; }
@@ -720,11 +715,6 @@
           <div class="stat-line reveal"><span class="n" data-count="60">$<span class="v">0</span>M</span><span class="l">Raised · Chris's Story</span></div>
           <div class="stat-line reveal"><span class="n" data-count="35">$<span class="v">0</span>M</span><span class="l">Raised · Todd's Story</span></div>
         </div>
-      </div>
-      <div class="cap-band">
-        <div class="cap-row reveal">We identify and verify the exact allocators your raise needs.</div>
-        <div class="cap-row reveal">We reach them in your name. Peer to peer, no spray.</div>
-        <div class="cap-row reveal">You walk in already warm, already wanted.</div>
       </div>
     </div>
   </div>
