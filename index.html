@@ -544,9 +544,13 @@
   .closing-copy p { color: var(--ink-soft); max-width: 46ch; margin: 22px 0 42px; }
   .cal-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; max-width: 430px; perspective: 800px; }
   .cal-opt { position: relative; display: flex; flex-direction: column; gap: 4px; text-decoration: none; border: 1px solid var(--hairline); background: #FFFDF8; padding: 20px 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(88,70,38,0.08), 0 8px 22px rgba(88,70,38,0.08); transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease); }
-  .cal-opt::before { content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 46px; background: var(--brass); transition: width 0.7s var(--ease); }
+  @property --calA { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .cal-opt::before { content: ""; position: absolute; inset: 0; padding: 2px; background: conic-gradient(from var(--calA), rgba(194,164,104,0) 0deg 278deg, rgba(194,164,104,0.6) 312deg, #E9CD90 332deg, rgba(194,164,104,0.6) 352deg, rgba(194,164,104,0) 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; animation: calspin 6.5s linear infinite; pointer-events: none; }
+  .cal-opt:nth-child(2)::before { animation-delay: -2.2s; }
+  .cal-opt:nth-child(3)::before { animation-delay: -4.4s; }
+  @keyframes calspin { to { --calA: 360deg; } }
   .cal-opt:hover { transform: rotateX(5deg) rotateY(-3deg) translateY(-6px) scale(1.02); border-color: var(--brass-soft); box-shadow: 0 4px 10px rgba(88,70,38,0.12), 0 24px 54px rgba(88,70,38,0.2), 0 42px 88px rgba(88,70,38,0.1); }
-  .cal-opt:hover::before { width: 100%; }
+  .cal-opt:hover::before { animation-duration: 2.2s; }
   .cal-opt .ck { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); }
   .cal-opt .cs { font-size: 13.5px; color: var(--ink-soft); }
   .cal-opt::after { content: "\2192"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); color: var(--brass); font-size: 18px; transition: transform 0.45s var(--ease); }
@@ -643,6 +647,7 @@
     .lp-orb, .lp-img .p-zoom, .lever.active { animation: none; }
     .stage-corners span { animation: none; opacity: 0.7; }
     .lv-medal .lr1, .lv-medal .lr2, .lv-medal .lva { animation: none; }
+    .cal-opt::before { animation: none; }
     .lv-face img { animation: none; }
     .m-spine { height: 100% !important; transition: none; }
     .j-dot { animation: none; }
