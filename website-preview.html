@@ -352,7 +352,8 @@
   .j-row { border-top: 1px solid var(--hairline-dark); padding: 24px 0; }
   .j-row .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
   .j-row p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 52ch; }
-  .j-core { position: relative; width: min(360px, 78vw); aspect-ratio: 1; margin: 0 auto; }
+  .j-core { position: relative; width: min(360px, 78vw); aspect-ratio: 1; margin: 0 auto; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
+  .reveal.in .j-core { transform: scale(1); opacity: 1; }
   .j-ring { position: absolute; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.55); }
   .jr1 { inset: 0; animation: ringspin 44s linear infinite; }
   .jr2 { inset: 13%; border-color: rgba(194,164,104,0.4); animation: ringspin 30s linear infinite reverse; }
@@ -981,13 +982,13 @@
     <div class="j-grid">
       <div>
         <div class="eyebrow reveal">Agentic Technology</div>
-        <h2 class="reveal" style="font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream);">Meet Jarvis. <em>The machine behind the machine.</em></h2>
+        <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream);"><span class="aw" style="transition-delay: 0ms">Meet</span> <span class="aw" style="transition-delay: 80ms">Jarvis.</span> <span class="aw" style="transition-delay: 160ms"><em>The</em></span> <span class="aw" style="transition-delay: 240ms"><em>machine</em></span> <span class="aw" style="transition-delay: 320ms"><em>behind</em></span> <span class="aw" style="transition-delay: 400ms"><em>the</em></span> <span class="aw" style="transition-delay: 480ms"><em>machine.</em></span></h2>
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch; margin-top: 22px;">Every practice runs on the same scarce resource: your hours. Jarvis breaks that constraint. He is an agentic AI operator who researches, verifies, writes, follows up, and books, around the clock, in your voice, under your rules.</p>
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch;">Not software you learn. <em style="color: var(--brass-soft);">A colleague you brief.</em></p>
         <div class="reveal" style="margin-top: 34px;"><a class="quiet-link" href="#contact" style="color: var(--cream);">Ask me about Jarvis</a></div>
       </div>
       <div class="reveal">
-        <div class="j-core" data-plx="0.06" aria-hidden="true">
+        <div class="j-core" aria-hidden="true">
           <span class="j-ticks"></span>
           <span class="j-sweep"></span>
           <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
