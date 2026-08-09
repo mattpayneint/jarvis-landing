@@ -228,7 +228,7 @@
   .hero .sub { font-size: 1.1rem; color: rgba(242,237,225,0.75); max-width: 46ch; margin-top: 26px; opacity: 0; animation: rise 1s var(--ease) 1.3s forwards; }
   .hero-actions { display: flex; gap: 30px; align-items: center; margin-top: 38px; opacity: 0; animation: rise 1s var(--ease) 1.55s forwards; }
   .hero-actions .quiet-link { color: rgba(242,237,225,0.8); }
-  .hero-jbadge { display: inline-flex; align-items: center; gap: 10px; margin-top: 30px; width: fit-content; font-size: 10.5px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; color: var(--brass-soft); border: 1px solid rgba(194,164,104,0.35); padding: 10px 18px; opacity: 0; animation: rise 1s var(--ease) 1.85s forwards; transition: border-color 0.4s var(--ease), background 0.4s var(--ease); }
+  .hero-jbadge { display: inline-flex; align-items: center; gap: 10px; margin-top: 30px; width: fit-content; font-size: 10.5px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; color: var(--brass-soft); border: 1px solid rgba(194,164,104,0.35); padding: 13px 20px; opacity: 0; animation: rise 1s var(--ease) 1.85s forwards; transition: border-color 0.4s var(--ease), background 0.4s var(--ease); }
   .hero-jbadge .dot { color: var(--cream); }
   .hero-jbadge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 8px rgba(194,164,104,0.9); animation: jpulse 3.2s var(--ease) infinite; }
   .hero-jbadge:hover { border-color: var(--brass-soft); background: rgba(194,164,104,0.1); }
@@ -1804,6 +1804,38 @@
       var src = document.querySelector('.lp-img[data-img="' + img.getAttribute('data-face') + '"] img');
       if (src) img.src = src.src;
     });
+  })();
+</script>
+<script>
+  (function () {
+    /* Phones: the pinned scrollytelling is static, so present the gear train fully engaged */
+    if (window.matchMedia('(max-width: 860px)').matches) {
+      document.querySelectorAll('.gear').forEach(function (g) { g.classList.add('on'); });
+      var n = document.getElementById('dialNeedle');
+      if (n) n.setAttribute('transform', 'rotate(62)');
+      var p = document.getElementById('stratPath'), gl = document.getElementById('stratGlow'), a = document.getElementById('stratArea');
+      if (p) p.style.strokeDashoffset = 0;
+      if (gl) gl.style.strokeDashoffset = 0;
+      if (a) a.style.opacity = 1;
+      var v = document.querySelector('.strat-visual');
+      if (v) v.classList.add('done');
+    }
+    /* Videos: re-play whenever they come into view (mobile browsers pause offscreen video) */
+    if ('IntersectionObserver' in window) {
+      var vio = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting && e.target.paused) { e.target.play().catch(function () {}); } });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('video').forEach(function (vd) { vio.observe(vd); });
+      /* Glide-track children sit off-screen sideways; reveal them when their track arrives */
+      var tio = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.querySelectorAll('.reveal:not(.in)').forEach(function (el) { el.classList.add('in'); });
+          tio.unobserve(e.target);
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.q-scroll, .m-scroll, .car-track').forEach(function (t) { tio.observe(t); });
+    }
   })();
 </script>
 
