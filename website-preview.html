@@ -75,6 +75,8 @@
   .nav-social { display: flex; gap: 14px; align-items: center; margin: 0 6px; }
   .nav-social a { color: rgba(242,237,225,0.7); display: flex; transition: color 0.35s var(--ease), transform 0.35s var(--ease); }
   .nav-social a:hover { color: var(--brass-soft); transform: translateY(-2px); }
+  .nav-social a.soon { opacity: 0.45; cursor: default; }
+  .nav-social a.soon:hover { color: rgba(242,237,225,0.7); transform: none; }
   .nav-social svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   @media (max-width: 900px) { .nav-social { display: none; } }
   .nav-links .cta { border: 1px solid rgba(242,237,225,0.55); padding: 12px 24px; transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease); }
@@ -651,9 +653,9 @@
     <a href="#audio">Audio</a>
     <div class="nav-social" aria-label="Social media">
       <a href="https://www.linkedin.com/in/matthewpayneconsulting/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><path d="M7.5 10.5 V17 M7.5 7.2 v.01 M11.5 17 v-4 c0-2.6 4.5-2.8 4.5 0 V17"/></svg></a>
-      <a href="https://www.instagram.com/mattpayneint/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8 v.01"/></svg></a>
-      <a href="https://www.youtube.com/@matthewpayneconsulting1411" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10.2 9.3 L15 12 L10.2 14.7 Z"/></svg></a>
-      <a href="https://www.facebook.com/MatthewPayneConsulting" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M15.5 5 h-2.2 a2.6 2.6 0 0 0 -2.6 2.6 V19 M8.4 11.8 h6"/></svg></a>
+      <a class="soon" role="img" aria-label="Instagram (coming soon)" title="Instagram — coming soon"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8 v.01"/></svg></a>
+      <a class="soon" role="img" aria-label="YouTube (coming soon)" title="YouTube — coming soon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10.2 9.3 L15 12 L10.2 14.7 Z"/></svg></a>
+      <a class="soon" role="img" aria-label="Facebook (coming soon)" title="Facebook — coming soon"><svg viewBox="0 0 24 24"><path d="M15.5 5 h-2.2 a2.6 2.6 0 0 0 -2.6 2.6 V19 M8.4 11.8 h6"/></svg></a>
     </div>
     <a href="#contact" class="cta">Schedule A Call</a>
   </div>
