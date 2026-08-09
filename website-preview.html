@@ -264,11 +264,18 @@
   .m-step:hover h3 { color: var(--brass); }
   .m-step p { font-size: 15px; color: var(--ink-soft); max-width: 62ch; margin: 0; }
   .levers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 54px; }
-  .lever { position: relative; background: #FFFDF8; border: 1px solid var(--hairline); padding: 22px 24px 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); overflow: hidden; transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
+  .lever { cursor: pointer; font-family: var(--sans); text-align: left; position: relative; background: #FFFDF8; border: 1px solid var(--hairline); padding: 22px 24px 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); overflow: hidden; transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease); }
   .lever::before { content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 40px; background: var(--brass); transition: width 0.7s var(--ease); animation: accentbreathe 5s ease-in-out infinite; }
   .lever:nth-child(2)::before { animation-delay: 0.5s; } .lever:nth-child(3)::before { animation-delay: 1s; } .lever:nth-child(4)::before { animation-delay: 1.5s; }
   .lever:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(88,70,38,0.12); }
   .lever:hover::before { width: 100%; }
+  .lever.active { border-color: var(--brass-soft); color: var(--brass); }
+  .lever.active::before { width: 100%; }
+  .lever-panel { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.7s var(--ease), opacity 0.6s var(--ease); }
+  .lever-panel.open { max-height: 300px; opacity: 1; }
+  .lp-inner { border-left: 2px solid var(--brass); padding: 26px 0 6px 30px; margin-top: 26px; }
+  .lp-inner h4 { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; margin: 0 0 10px; color: var(--ink); }
+  .lp-inner p { font-size: 15px; color: var(--ink-soft); max-width: 60ch; margin: 0; }
   @media (max-width: 860px) { .levers { grid-template-columns: 1fr 1fr; } .m-step { gap: 18px; } }
   /* Jarvis */
   .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; overflow: hidden; position: relative; }
@@ -1026,10 +1033,16 @@
       </div>
     </div>
     <div class="levers">
-      <div class="lever reveal">Psychology</div>
-      <div class="lever reveal">Strategy</div>
-      <div class="lever reveal">Habits</div>
-      <div class="lever reveal">Energy</div>
+      <button class="lever reveal" data-lever="0" type="button">Psychology</button>
+      <button class="lever reveal" data-lever="1" type="button">Strategy</button>
+      <button class="lever reveal" data-lever="2" type="button">Habits</button>
+      <button class="lever reveal" data-lever="3" type="button">Energy</button>
+    </div>
+    <div class="lever-panel" id="leverPanel" aria-live="polite">
+      <div class="lp-inner">
+        <h4 id="lpTitle"></h4>
+        <p id="lpBody"></p>
+      </div>
     </div>
   </div>
 </section>
@@ -1489,6 +1502,39 @@
     track.addEventListener('touchstart', function (e) { dragging = true; sx = e.touches[0].clientX; scur = cur; if (raf) { cancelAnimationFrame(raf); raf = 0; } }, { passive: true });
     track.addEventListener('touchmove', function (e) { if (!dragging) return; cur = Math.max(0, Math.min(maxShift(), scur - (e.touches[0].clientX - sx))); render(); }, { passive: true });
     track.addEventListener('touchend', function () { dragging = false; target = cur; });
+  })();
+</script>
+<script>
+  (function () {
+    var levers = document.querySelectorAll('.lever[data-lever]');
+    var panel = document.getElementById('leverPanel');
+    if (!levers.length || !panel) return;
+    var title = document.getElementById('lpTitle');
+    var body = document.getElementById('lpBody');
+    var data = [
+      ['Psychology', 'How you think, what you believe, and what you tell yourself under pressure. We recondition the inner game until confidence and clarity are your resting state, not your peak state.'],
+      ['Strategy', 'The order and sequence of the right moves. We think critically about your goals and build the precise plan that gets you there, on time and on purpose.'],
+      ['Habits', 'Your routines decide your direction. We consciously install and reinforce the daily patterns that compound into new levels of performance and joy.'],
+      ['Energy', 'Performance runs on physiology. We build the vitality, focus, and recovery that let you show up at full strength, in the boardroom and at home.']
+    ];
+    var active = -1;
+    levers.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var i = parseInt(btn.getAttribute('data-lever'), 10);
+        if (i === active) {
+          active = -1;
+          panel.classList.remove('open');
+          btn.classList.remove('active');
+          return;
+        }
+        active = i;
+        levers.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        title.textContent = data[i][0];
+        body.textContent = data[i][1];
+        panel.classList.add('open');
+      });
+    });
   })();
 </script>
 
