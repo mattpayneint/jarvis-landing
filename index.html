@@ -359,8 +359,8 @@
     #about .prog-grid { grid-template-columns: 0.75fr 1.25fr; gap: 64px; }
     .about-stage .portrait-frame { width: 105%; }
   }
-  .about-stage .portrait-frame:hover .portrait-clip { transform: scale(1.045); }
-  .about-stage .portrait-clip { transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
+  .portrait-clip { transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
+  .portrait-frame:hover .portrait-clip, .closing-img:hover .portrait-clip { transform: scale(1.08); }
   /* Coaching method */
   .room-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 70px; align-items: center; margin-top: 10px; }
   .room-pull { font-family: var(--serif); font-size: clamp(1.5rem, 2.9vw, 2.1rem); line-height: 1.35; color: var(--ink); margin-bottom: 24px; }
@@ -595,8 +595,8 @@
   .portrait-frame:hover::before { transform: translate(6px, 6px); }
   @keyframes framebreathe { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
   .portrait-clip { position: relative; z-index: 1; overflow: hidden; }
-  .portrait-frame img { width: 100%; display: block; mix-blend-mode: multiply; filter: saturate(0.92); animation: portraitzoom 24s ease-in-out infinite alternate; }
-  @keyframes portraitzoom { from { transform: scale(1); } to { transform: scale(1.045); } }
+  .portrait-frame img { width: 100%; display: block; mix-blend-mode: multiply; filter: saturate(0.92); animation: portraitzoom 18s ease-in-out infinite alternate; }
+  @keyframes portraitzoom { from { transform: scale(1); } to { transform: scale(1.09); } }
   .programs { display: flex; flex-direction: column; gap: 26px; }
   .program {
     background: #FFFDF8; border: 1px solid var(--hairline); position: relative; overflow: hidden;
@@ -628,6 +628,8 @@
   .prog-ring { position: absolute; top: 50%; left: 50%; width: 132%; height: auto; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; overflow: visible; }
   .prog-ring circle { fill: none; stroke: var(--brass); stroke-width: 1.6; stroke-dasharray: 4 9; opacity: 0.6; transform-origin: 200px 220px; animation: ringspin 40s linear infinite; }
   .prog-ring .r2 { stroke-width: 1.1; stroke-dasharray: 2 6; animation-duration: 30s; animation-direction: reverse; opacity: 0.4; }
+  .prog-portrait-stage:hover .prog-ring circle { animation-duration: 16s; }
+  .prog-portrait-stage:hover .prog-ring .r2 { animation-duration: 11s; }
   .prog-portrait-stage .portrait-frame { position: relative; z-index: 1; }
   .p-body { padding: 34px 38px 32px; flex: 1 1 auto; min-width: 0; }
   .program .k { font-size: 10.5px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); margin-bottom: 16px; transition: letter-spacing 0.7s var(--ease); }
@@ -704,7 +706,8 @@
   .cal-opt .cs { font-size: 13.5px; color: var(--ink-soft); }
   .cal-opt::after { content: "\2192"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); color: var(--brass); font-size: 18px; transition: transform 0.45s var(--ease); }
   .closing-img { position: relative; overflow: hidden; }
-  .closing-img img { width: 100%; height: 114%; object-fit: cover; object-position: 92% 14%; mix-blend-mode: multiply; filter: saturate(0.92); display: block; will-change: transform; }
+  .closing-img .ci-plx, .closing-img .portrait-clip { width: 100%; height: 100%; }
+  .closing-img img { width: 100%; height: 114%; object-fit: cover; object-position: 92% 14%; mix-blend-mode: multiply; filter: saturate(0.92); display: block; will-change: transform; animation: portraitzoom 18s ease-in-out infinite alternate; }
   .closing-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--paper) 0%, rgba(250,246,239,0) 30%); }
   @media (max-width: 860px) { .closing-grid { grid-template-columns: 1fr; } .closing-copy { padding: 80px 24px 40px; } .closing-img { height: 58vh; } }
 
@@ -796,7 +799,7 @@
     .hero-jbadge::before { animation: none; }
     .cine .bg.zoom img { animation: none; }
     .scroll-cue::after, .album::before { animation: none; }
-    .portrait-frame::before, .portrait-frame img, .program::before { animation: none; }
+    .portrait-frame::before, .portrait-frame img, .program::before, .closing-img img { animation: none; }
     .p-img img, .prog-portrait-stage::before, .prog-ring circle { animation: none; }
     .v-card .img .v-zoom { animation: none; }
     .m-img img, .m-ring circle { animation: none; }
@@ -1232,7 +1235,7 @@
           <circle class="strat-ring" cx="200" cy="220" r="172"/>
           <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
         </svg>
-      <div class="portrait-frame reveal"><div class="portrait-clip" data-plx="0.05"><img loading="lazy" decoding="async" src="assets/a10-25c9678fd6.jpg" alt="Matthew Payne" /></div></div>
+      <div class="portrait-frame reveal"><div class="ap-plx" data-plx="0.05"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a10-25c9678fd6.jpg" alt="Matthew Payne" /></div></div></div>
       </div>
     </div>
   </div>
@@ -1458,7 +1461,7 @@
         <a class="cal-opt reveal" href="https://calendly.com/matthewpayneconsulting/attorney-strategy-call" target="_blank" rel="noopener"><span class="ck">Estate &amp; Business Attorneys</span><span class="cs">Book an attorney strategy call</span></a>
       </div>
     </div>
-    <div class="closing-img"><img loading="lazy" decoding="async" src="assets/a34-8ff63ef1e7.jpg" alt="Matthew Payne" data-plx="0.1" /></div>
+    <div class="closing-img"><div class="ci-plx" data-plx="0.1"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a34-8ff63ef1e7.jpg" alt="Matthew Payne" /></div></div></div>
   </div>
 </div>
 
