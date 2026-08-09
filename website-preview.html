@@ -125,6 +125,10 @@
   /* Chapter II — capital over Chicago dusk */
   .capital .scrim { background: linear-gradient(90deg, rgba(11,11,13,0.88) 0%, rgba(11,11,13,0.55) 46%, rgba(11,11,13,0.2) 100%), linear-gradient(0deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 30%); }
   .capital-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 80px; align-items: end; }
+  .cap-rows { margin-top: 30px; max-width: 46ch; }
+  .cap-row { position: relative; border-top: 1px solid rgba(242,237,225,0.18); padding: 14px 0 14px 28px; font-size: 15px; color: rgba(242,237,225,0.88); }
+  .cap-row::before { content: ""; position: absolute; left: 0; top: 22px; width: 13px; height: 2px; background: var(--brass-soft); transition: width 0.5s var(--ease); }
+  .cap-row:hover::before { width: 20px; }
   .stat-line { border-top: 1px solid rgba(242,237,225,0.22); padding: 24px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
   .stat-line:last-child { border-bottom: 1px solid rgba(242,237,225,0.22); }
   .stat-line .n { font-family: var(--serif); font-size: clamp(2.3rem, 3.8vw, 3.2rem); color: var(--cream); font-variant-numeric: tabular-nums; position: relative; display: inline-block; padding-bottom: 6px; animation: statglow 4.5s ease-in-out infinite alternate; }
@@ -638,7 +642,12 @@
         <div>
           <div class="eyebrow reveal">Raising Capital</div>
           <h2 class="reveal">The allocators you want to meet, <em style="color: var(--brass-soft); font-style: italic;">wanting to meet you.</em></h2>
-          <p class="lede reveal">Funds and firms do not need more introductions. They need standing, peer to peer, with real allocators and real high net worth investors. We build the high-trust relationships that put you in those conversations. Invited, not pitching.</p>
+          <p class="lede reveal">Funds and firms do not need more introductions. They need standing, peer to peer, with real allocators and real high net worth investors who want the meeting.</p>
+          <div class="cap-rows">
+            <div class="cap-row reveal">We identify and verify the exact allocators and investors your raise needs.</div>
+            <div class="cap-row reveal">We reach them in your name, peer to peer. No cold pitch, no spray.</div>
+            <div class="cap-row reveal">You walk into qualified conversations already warm, already wanted.</div>
+          </div>
           <div class="reveal" style="margin-top: 40px;"><a class="btn" href="#contact">Start The Conversation</a></div>
         </div>
         <div>
