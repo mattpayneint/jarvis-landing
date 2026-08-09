@@ -281,7 +281,14 @@
   .levers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 64px; perspective: 900px; justify-items: center; }
   .lever { cursor: pointer; font-family: var(--sans); background: none; border: none; padding: 6px 0 0; display: flex; flex-direction: column; align-items: center; gap: 20px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
   .lv-medal { position: relative; width: 118px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #E8E4DA, #CDC9BB); box-shadow: inset 0 1px 0 rgba(255,255,255,0.75), 0 2px 4px rgba(88,70,38,0.14), 0 12px 28px rgba(88,70,38,0.18), 0 26px 52px rgba(88,70,38,0.1); display: flex; align-items: center; justify-content: center; transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease), background 0.55s var(--ease); }
-  .lv-medal svg { position: absolute; inset: -11px; width: calc(100% + 22px); height: calc(100% + 22px); overflow: visible; }
+  .lv-face { position: absolute; inset: 5px; border-radius: 50%; overflow: hidden; z-index: 0; }
+  .lv-face img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.9); animation: medzoom 18s ease-in-out infinite alternate; transition: filter 0.6s var(--ease); }
+  .lever:nth-child(2) .lv-face img { animation-duration: 22s; animation-delay: -7s; }
+  .lever:nth-child(3) .lv-face img { animation-duration: 20s; animation-delay: -12s; }
+  .lever:nth-child(4) .lv-face img { animation-duration: 24s; animation-delay: -4s; }
+  .lv-face::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 28%, rgba(11,11,13,0.3), rgba(11,11,13,0.74) 78%); transition: background 0.6s var(--ease); }
+  .lever:hover .lv-face img, .lever.active .lv-face img { filter: saturate(1.05) brightness(1.08); }
+  .lv-medal svg { position: absolute; inset: -11px; width: calc(100% + 22px); height: calc(100% + 22px); overflow: visible; z-index: 1; }
   .lv-medal .lr1 { fill: none; stroke: var(--brass); stroke-width: 1; stroke-dasharray: 4 8; opacity: 0.5; transform-origin: 60px 60px; animation: ringspin 34s linear infinite; }
   .lv-medal .lr2 { fill: none; stroke: var(--brass-soft); stroke-width: 0.7; stroke-dasharray: 2 6; opacity: 0.35; transform-origin: 60px 60px; animation: ringspin 26s linear infinite reverse; }
   .lv-medal .lva { fill: none; stroke: #E9CD90; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 46 306; opacity: 0.9; transform-origin: 60px 60px; animation: ringspin 6.5s linear infinite; filter: drop-shadow(0 0 6px rgba(233,205,144,0.8)); }
@@ -289,7 +296,7 @@
   .lever:hover .lva, .lever.active .lva { animation-duration: 2.4s; }
   .lever:hover .lv-medal, .lever.active .lv-medal { transform: rotateX(6deg) rotateY(-6deg) translateY(-9px) scale(1.05); background: radial-gradient(circle at 34% 28%, #FFF7E8, #DCD5C2); box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 10px rgba(88,70,38,0.16), 0 26px 56px rgba(88,70,38,0.26), 0 46px 92px rgba(88,70,38,0.13); }
   .lever .lv { position: relative; z-index: 3; transition: letter-spacing 0.6s var(--ease); }
-  .lever .gl { position: relative; z-index: 1; width: 54px; height: 54px; color: rgba(154,123,63,0.7); pointer-events: none; animation: glfloat 8s ease-in-out infinite alternate; transition: transform 0.9s var(--ease), color 0.6s var(--ease); }
+  .lever .gl { position: relative; z-index: 2; width: 54px; height: 54px; color: rgba(154,123,63,0.7); pointer-events: none; animation: glfloat 8s ease-in-out infinite alternate; transition: transform 0.9s var(--ease), color 0.6s var(--ease); }
   .lever .sym path, .lever .sym circle { fill: none; stroke: url(#symgold); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
   .lever .sym .fillmark { fill: url(#symgold); stroke: none; }
   .lever .sym { filter: url(#symemboss); }
@@ -604,6 +611,7 @@
     .lp-orb, .lp-img .p-zoom, .lever.active { animation: none; }
     .stage-corners span { animation: none; opacity: 0.7; }
     .lv-medal .lr1, .lv-medal .lr2, .lv-medal .lva { animation: none; }
+    .lv-face img { animation: none; }
     .m-spine { height: 100% !important; transition: none; }
     .j-dot { animation: none; }
     .about-sig path { stroke-dashoffset: 0; transition: none; }
@@ -1095,10 +1103,10 @@
       </filter>
     </defs></svg>
     <div class="levers">
-      <button class="lever reveal" data-lever="0" type="button"><span class="lv-medal"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 7 V57 M18 23 H46"/></svg></span><span class="lv">Psychology</span></button>
-      <button class="lever reveal" data-lever="1" type="button"><span class="lv-medal"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><polygon class="fillmark" points="32,7 35,30 32,36 29,30"/><polygon class="fillmark" points="57,32 36,34.5 31,32 36,29.5" opacity="0.65"/><circle cx="32" cy="32" r="3" class="fillmark"/></svg></span><span class="lv">Strategy</span></button>
-      <button class="lever reveal" data-lever="2" type="button"><span class="lv-medal"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="7"/><circle cx="32" cy="32" r="14.5" opacity="0.65"/><circle cx="32" cy="32" r="22" opacity="0.35"/></svg></span><span class="lv">Habits</span></button>
-      <button class="lever reveal" data-lever="3" type="button"><span class="lv-medal"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 V18 M32 46 V56 M8 32 H18 M46 32 H56 M15 15 L22 22 M42 42 L49 49 M49 15 L42 22 M22 42 L15 49"/><circle cx="32" cy="32" r="3" class="fillmark"/></svg></span><span class="lv">Energy</span></button>
+      <button class="lever reveal" data-lever="0" type="button"><span class="lv-medal"><span class="lv-face"><img data-face="0" alt=""></span><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 7 V57 M18 23 H46"/></svg></span><span class="lv">Psychology</span></button>
+      <button class="lever reveal" data-lever="1" type="button"><span class="lv-medal"><span class="lv-face"><img data-face="1" alt=""></span><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><polygon class="fillmark" points="32,7 35,30 32,36 29,30"/><polygon class="fillmark" points="57,32 36,34.5 31,32 36,29.5" opacity="0.65"/><circle cx="32" cy="32" r="3" class="fillmark"/></svg></span><span class="lv">Strategy</span></button>
+      <button class="lever reveal" data-lever="2" type="button"><span class="lv-medal"><span class="lv-face"><img data-face="2" alt=""></span><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="7"/><circle cx="32" cy="32" r="14.5" opacity="0.65"/><circle cx="32" cy="32" r="22" opacity="0.35"/></svg></span><span class="lv">Habits</span></button>
+      <button class="lever reveal" data-lever="3" type="button"><span class="lv-medal"><span class="lv-face"><img data-face="3" alt=""></span><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="lr1" cx="60" cy="60" r="56"/><circle class="lr2" cx="60" cy="60" r="48"/><circle class="lva" cx="60" cy="60" r="56"/></svg><svg class="gl sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 V18 M32 46 V56 M8 32 H18 M46 32 H56 M15 15 L22 22 M42 42 L49 49 M49 15 L42 22 M22 42 L15 49"/><circle cx="32" cy="32" r="3" class="fillmark"/></svg></span><span class="lv">Energy</span></button>
     </div>
     <div class="lever-panel" id="leverPanel" aria-live="polite">
       <div class="lp-inner">
@@ -1626,6 +1634,14 @@
         document.querySelectorAll('.lp-img').forEach(function (im, j) { im.classList.toggle('show', j === i); });
         panel.classList.add('open');
       });
+    });
+  })();
+</script>
+<script>
+  (function () {
+    document.querySelectorAll('.lv-face img[data-face]').forEach(function (img) {
+      var src = document.querySelector('.lp-img[data-img="' + img.getAttribute('data-face') + '"] img');
+      if (src) img.src = src.src;
     });
   })();
 </script>
