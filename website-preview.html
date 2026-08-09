@@ -751,6 +751,9 @@
   .cineband .line p { font-family: var(--serif); font-size: clamp(1.5rem, 3.4vw, 2.6rem); color: var(--cream); max-width: 26ch; margin: 0; text-shadow: 0 2px 24px rgba(0,0,0,0.5); }
   .cineband .line p em { color: var(--brass-soft); }
 
+  /* All widths: sections never spill sideways (fly-in ghosts + ring decorations clip at edges) */
+  section, .cineband, .closing, footer { overflow-x: clip; }
+
   /* Phones: gear train permanently engaged (scroll-engine is desktop-only) */
   @media (max-width: 860px) {
     .gear .rot { animation-play-state: running !important; opacity: 0.38 !important; }
