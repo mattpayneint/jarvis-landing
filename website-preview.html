@@ -551,7 +551,7 @@
   .cal-opt:nth-child(2)::before { animation-delay: -2.2s; }
   .cal-opt:nth-child(3)::before { animation-delay: -4.4s; }
   @keyframes calspin { to { --calA: 360deg; } }
-  .cal-opt:hover { transform: translateX(18px) translateY(-5px) scale(1.03); border-color: var(--brass-soft); box-shadow: 0 6px 14px rgba(88,70,38,0.14), 0 26px 58px rgba(88,70,38,0.22), 0 46px 96px rgba(88,70,38,0.11); }
+  .cal-grid .cal-opt.reveal.in:hover, .cal-grid .cal-opt:hover { transform: translateX(18px) translateY(-5px) scale(1.03) !important; border-color: var(--brass-soft); box-shadow: 0 6px 14px rgba(88,70,38,0.14), 0 26px 58px rgba(88,70,38,0.22), 0 46px 96px rgba(88,70,38,0.11); }
   .cal-opt:hover::after { transform: translateY(-50%) translateX(10px); }
   .cal-opt:hover::before { animation-duration: 2.2s; }
   .cal-opt .ck { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); }
