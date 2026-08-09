@@ -602,6 +602,22 @@
   .cineband .line p { font-family: var(--serif); font-size: clamp(1.5rem, 3.4vw, 2.6rem); color: var(--cream); max-width: 26ch; margin: 0; text-shadow: 0 2px 24px rgba(0,0,0,0.5); }
   .cineband .line p em { color: var(--brass-soft); }
 
+  /* Mobile containment: decorative rings/watermarks must never cause horizontal scroll */
+  @media (max-width: 900px) {
+    section, .cineband, .closing, footer { overflow-x: clip; }
+    .prog-ring { width: 106%; }
+    .strat-visual svg { overflow: hidden; }
+    .hero-actions { flex-wrap: wrap; gap: 18px; }
+    .hero-content { padding-left: 24px; padding-right: 24px; }
+    .j-core { width: min(280px, 70vw); }
+    .m-track .m-card { flex-basis: min(280px, 76vw); }
+    .stage-frame::before { inset: 14px -12px -14px 14px; }
+    .stage-corners { inset: -10px; }
+    .stage-corners span { width: 34px; height: 34px; border-width: 2.5px; }
+    .about-wm { font-size: clamp(5rem, 24vw, 9rem); }
+    .car-head { flex-direction: column; align-items: flex-start; }
+  }
+
   /* Reveal system */
   .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
   .reveal.in { opacity: 1; transform: none; }
