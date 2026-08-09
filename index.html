@@ -476,19 +476,27 @@
   .j-row { border-top: 1px solid var(--hairline-dark); padding: 24px 0; }
   .j-row .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
   .j-row p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 52ch; }
-  .j-core { position: relative; width: min(360px, 78vw); aspect-ratio: 1; margin: 0 auto; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
+  .j-grid > .reveal { perspective: 1200px; }
+  .j-core { position: relative; width: min(360px, 78vw); aspect-ratio: 1; margin: 0 auto; transform-style: preserve-3d; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
+  .j-core::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -9%; height: 7%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); filter: blur(7px); }
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
   .j-ring { position: absolute; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.55); }
-  .jr1 { inset: 0; animation: ringspin 44s linear infinite; }
-  .jr2 { inset: 13%; border-color: rgba(194,164,104,0.4); animation: ringspin 30s linear infinite reverse; }
+  .jr1 { inset: 0; animation: gyroX 16s linear infinite; }
+  @keyframes gyroX { from { transform: rotateX(62deg) rotateZ(0deg); } to { transform: rotateX(62deg) rotateZ(360deg); } }
+  .jr2 { inset: 13%; border-color: rgba(194,164,104,0.4); animation: gyroY 21s linear infinite; }
+  @keyframes gyroY { from { transform: rotateY(62deg) rotateZ(360deg); } to { transform: rotateY(62deg) rotateZ(0deg); } }
   .jr3 { inset: 27%; border-style: solid; border-color: rgba(194,164,104,0.18); animation: ringspin 60s linear infinite; }
-  .j-orb { position: absolute; inset: 6.5%; animation: ringspin 18s linear infinite; }
+  .j-orb { position: absolute; inset: 6.5%; transform: translateZ(26px); animation: orbspin 18s linear infinite; }
+  @keyframes orbspin { from { transform: translateZ(26px) rotate(0deg); } to { transform: translateZ(26px) rotate(360deg); } }
   .j-orb.o2 { inset: 20%; animation-duration: 26s; animation-direction: reverse; }
+  .j-core:hover .jr1 { animation-duration: 7s; }
+  .j-core:hover .jr2 { animation-duration: 9s; }
+  .j-core:hover .j-sweep { animation-duration: 4s; }
   .j-orb::before { content: ""; position: absolute; top: -3px; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 12px rgba(194,164,104,0.8); }
-  .j-dot { position: absolute; top: 50%; left: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--brass-soft); animation: jpulse 3.2s var(--ease) infinite; }
+  .j-dot { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: var(--brass-soft); transform: translateZ(52px); animation: jpulse 3.2s var(--ease) infinite; }
   @keyframes jpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(194,164,104,0.5), 0 0 24px rgba(194,164,104,0.9); } 50% { box-shadow: 0 0 0 26px rgba(194,164,104,0), 0 0 34px rgba(194,164,104,1); } }
-  .j-ticks { position: absolute; inset: -5%; border-radius: 50%; background: repeating-conic-gradient(rgba(194,164,104,0.55) 0deg 0.5deg, transparent 0.9deg 6deg); -webkit-mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); animation: ringspin 120s linear infinite; }
-  .j-sweep { position: absolute; inset: 3%; border-radius: 50%; background: conic-gradient(from 0deg, rgba(194,164,104,0.3), rgba(194,164,104,0.05) 55deg, transparent 75deg); -webkit-mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); animation: ringspin 9s linear infinite; }
+  .j-ticks { position: absolute; inset: -5%; border-radius: 50%; transform: translateZ(-34px); background: repeating-conic-gradient(rgba(194,164,104,0.55) 0deg 0.5deg, transparent 0.9deg 6deg); -webkit-mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); animation: ringspin 120s linear infinite; }
+  .j-sweep { position: absolute; inset: 3%; border-radius: 50%; transform: translateZ(-34px); background: conic-gradient(from 0deg, rgba(194,164,104,0.3), rgba(194,164,104,0.05) 55deg, transparent 75deg); -webkit-mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); animation: ringspin 9s linear infinite; }
   .j-pip { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--brass-soft); animation: pipblink 4s var(--ease) infinite; }
   .j-pip.p1 { top: 18%; left: 74%; } .j-pip.p2 { top: 66%; left: 12%; animation-delay: 1.3s; } .j-pip.p3 { top: 82%; left: 62%; animation-delay: 2.6s; }
   @keyframes pipblink { 0%, 100% { opacity: 0.2; box-shadow: none; } 50% { opacity: 1; box-shadow: 0 0 10px rgba(194,164,104,0.9); } }
@@ -782,6 +790,7 @@
     .about-h2 .aw { opacity: 1; transform: none; transition: none; }
     .j-ring, .j-orb { animation: none; }
     .j-sweep, .j-ticks, .j-pip { animation: none; }
+    .jr1, .jr2, .j-orb { animation: none; }
     .stage-frame::before, .stage-clip .p-zoom, .lever::before { animation: none; }
     .lp-orb, .lp-img .p-zoom, .lever.active { animation: none; }
     .stage-corners span { animation: none; opacity: 0.7; }
