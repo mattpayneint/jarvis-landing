@@ -512,11 +512,18 @@
               <linearGradient id="goldpath" x1="0" y1="1" x2="1" y2="0">
                 <stop offset="0" stop-color="#9A7B3F" /><stop offset="1" stop-color="#C2A468" />
               </linearGradient>
+              <linearGradient id="goldarea" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#C2A468" stop-opacity="0.18" /><stop offset="1" stop-color="#C2A468" stop-opacity="0" />
+              </linearGradient>
               <filter id="goldglow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" /></filter>
             </defs>
             <g class="strat-grid"><rect width="400" height="440" fill="url(#dotgrid)" opacity="0.55" /></g>
             <circle class="strat-ring" cx="200" cy="220" r="170" />
             <circle class="strat-ring r2" cx="200" cy="220" r="148" />
+            <path class="strat-area" id="stratArea" d="M 80 356 C 110 320, 130 290, 163 258 C 200 220, 205 222, 238 190 C 272 158, 275 145, 300 118 C 315 100, 322 80, 330 62 L 330 356 Z" />
+            <path class="strat-path-ghost" d="M 80 356 C 110 320, 130 290, 163 258 C 200 220, 205 222, 238 190 C 272 158, 275 145, 300 118 C 315 100, 322 80, 330 62" />
+            <path class="strat-path-glow" id="stratGlow" d="M 80 356 C 110 320, 130 290, 163 258 C 200 220, 205 222, 238 190 C 272 158, 275 145, 300 118 C 315 100, 322 80, 330 62" />
+            <path class="strat-path" id="stratPath" d="M 80 356 C 110 320, 130 290, 163 258 C 200 220, 205 222, 238 190 C 272 158, 275 145, 300 118 C 315 100, 322 80, 330 62" />
             <g class="gear" data-gear="0" transform="translate(80, 356)" style="--gd: 14s">
             <g class="rot">
             <circle class="rim" r="30" />
@@ -697,6 +704,9 @@
                 <line class="ray" x1="0" y1="-56" x2="0" y2="-62" /><line class="ray" x1="56" y1="0" x2="62" y2="0" /><line class="ray" x1="-56" y1="0" x2="-62" y2="0" />
               </g>
             </g>
+            <circle class="strat-dot" id="stratDot" r="3.8" style="offset-path: path('M 80 356 C 110 320, 130 290, 163 258 C 200 220, 205 222, 238 190 C 272 158, 275 145, 300 118 C 315 100, 322 80, 330 62'); offset-rotate: 0deg;" />
+            <circle class="strat-dot trail t1" r="2.3" style="offset-path: path('M 80 356 C 110 320, 130 290, 163 258 C 200 220, 205 222, 238 190 C 272 158, 275 145, 300 118 C 315 100, 322 80, 330 62'); offset-rotate: 0deg;" />
+            <circle class="strat-dot trail t2" r="1.5" style="offset-path: path('M 80 356 C 110 320, 130 290, 163 258 C 200 220, 205 222, 238 190 C 272 158, 275 145, 300 118 C 315 100, 322 80, 330 62'); offset-rotate: 0deg;" />
           </svg>
         </div>
       </div>
@@ -983,12 +993,25 @@
     var gearEls = document.querySelectorAll('.gear:not([data-gear="99"])');
     var idler = document.querySelector('.gear[data-gear="99"]');
     var dialNeedle = document.getElementById('dialNeedle');
+    var stratPath = document.getElementById('stratPath');
+    var stratGlow = document.getElementById('stratGlow');
+    var stratArea = document.getElementById('stratArea');
+    var pathLen = stratPath ? stratPath.getTotalLength() : 0;
+    if (stratPath) {
+      stratPath.style.strokeDasharray = pathLen;
+      stratPath.style.strokeDashoffset = pathLen;
+      if (stratGlow) { stratGlow.style.strokeDasharray = pathLen; stratGlow.style.strokeDashoffset = pathLen; }
+    }
     function updateStrat() {
       var maxLive = -1;
       steps.forEach(function (s, i) { if (s.classList.contains('live')) maxLive = Math.max(maxLive, i); });
       var progress = (maxLive + 1) / steps.length;
       gearEls.forEach(function (g, i) { g.classList.toggle('on', i <= maxLive); });
       if (idler) idler.classList.toggle('on', maxLive >= 0);
+      if (stratPath) stratPath.style.strokeDashoffset = pathLen * (1 - progress);
+      if (stratGlow) stratGlow.style.strokeDashoffset = pathLen * (1 - progress);
+      if (stratArea) stratArea.style.opacity = progress;
+      if (maxLive >= 0) document.querySelectorAll('.strat-dot').forEach(function (d) { d.classList.add('go'); });
       if (dialNeedle) dialNeedle.setAttribute('transform', 'rotate(' + (-62 + 124 * progress) + ')');
       var vis = document.querySelector('.strat-visual');
       if (vis && maxLive >= steps.length - 1) vis.classList.add('done');
@@ -1002,6 +1025,9 @@
     } else {
       steps.forEach(function (s) { s.classList.add('live'); });
       document.querySelectorAll('.gear').forEach(function (g) { g.classList.add('on'); });
+      if (stratPath) stratPath.style.strokeDashoffset = 0;
+      if (stratGlow) stratGlow.style.strokeDashoffset = 0;
+      if (stratArea) stratArea.style.opacity = 1;
       if (dialNeedle) dialNeedle.setAttribute('transform', 'rotate(62)');
       var vis0 = document.querySelector('.strat-visual');
       if (vis0) vis0.classList.add('done');
