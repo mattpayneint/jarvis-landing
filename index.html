@@ -243,7 +243,7 @@
   .scroll-cue { position: absolute; bottom: 40px; left: 46px; z-index: 4; font-size: 10px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(242,237,225,0.6); display: flex; align-items: center; gap: 14px; }
   .scroll-cue::after { content: ""; width: 1px; height: 52px; background: linear-gradient(var(--brass-soft), transparent); animation: cuepulse 2.6s var(--ease) infinite; transform-origin: top; }
   @keyframes cuepulse { 0%, 100% { transform: scaleY(0.55); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
-  @media (max-width: 860px) { .hero-content { padding-bottom: 150px; } .hero-note { display: none; } .scroll-cue { bottom: 44px; } }
+  @media (max-width: 860px) { .hero-content { justify-content: flex-start; padding-top: 128px; padding-bottom: 40px; } .hero .kicker { margin-bottom: 26px; } .hero .sub { margin-top: 18px; } .hero-actions { margin-top: 24px; } .hero-jbadge { margin-top: 18px; } .hero-note { display: none; } .scroll-cue { bottom: 44px; } }
 
   /* ————— Full-bleed image chapters ————— */
   .cine { position: relative; min-height: 92vh; display: flex; align-items: center; overflow: hidden; }
