@@ -94,6 +94,10 @@
   .hero .sub { font-size: 1.1rem; color: rgba(242,237,225,0.75); max-width: 46ch; margin-top: 26px; opacity: 0; animation: rise 1s var(--ease) 1.3s forwards; }
   .hero-actions { display: flex; gap: 30px; align-items: center; margin-top: 38px; opacity: 0; animation: rise 1s var(--ease) 1.55s forwards; }
   .hero-actions .quiet-link { color: rgba(242,237,225,0.8); }
+  .hero-jbadge { display: inline-flex; align-items: center; gap: 10px; margin-top: 30px; width: fit-content; font-size: 10.5px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; color: var(--brass-soft); border: 1px solid rgba(194,164,104,0.35); padding: 10px 18px; opacity: 0; animation: rise 1s var(--ease) 1.85s forwards; transition: border-color 0.4s var(--ease), background 0.4s var(--ease); }
+  .hero-jbadge .dot { color: var(--cream); }
+  .hero-jbadge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 8px rgba(194,164,104,0.9); animation: jpulse 3.2s var(--ease) infinite; }
+  .hero-jbadge:hover { border-color: var(--brass-soft); background: rgba(194,164,104,0.1); }
   .hero-meta { position: absolute; bottom: 40px; right: 46px; z-index: 4; display: flex; align-items: center; gap: 18px; }
   .vid-toggle {
     width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(242,237,225,0.4); background: rgba(11,11,13,0.3);
@@ -460,7 +464,8 @@
     .reveal, .s-step { opacity: 1; transform: none; transition: none; }
     .hero video { display: none; }
     .hero .fallback { display: block; }
-    .hero .kicker, .hero h1 .w, .hero .sub, .hero-actions { opacity: 1; transform: none; animation: none; }
+    .hero .kicker, .hero h1 .w, .hero .sub, .hero-actions, .hero-jbadge { opacity: 1; transform: none; animation: none; }
+    .hero-jbadge::before { animation: none; }
     .cine .bg.zoom img { animation: none; }
     .scroll-cue::after, .album::before { animation: none; }
     .portrait-frame::before, .portrait-frame img, .program::before { animation: none; }
@@ -513,6 +518,7 @@
       <a class="btn" href="#contact">Schedule A Call</a>
       <a class="quiet-link" href="#capital">Raising capital?</a>
     </div>
+    <a class="hero-jbadge" href="#jarvis">Agentic Technology <span class="dot">·</span> Jarvis</a>
   </div>
   <div class="scroll-cue">Scroll</div>
   <div class="hero-meta">
