@@ -355,8 +355,10 @@
   .about-sig { display: block; width: 200px; margin-top: 34px; overflow: visible; }
   .about-sig path { fill: none; stroke: var(--brass); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 300; stroke-dashoffset: 300; transition: stroke-dashoffset 1.5s var(--ease) 0.5s; opacity: 0.8; }
   .about-sig.in path { stroke-dashoffset: 0; }
-  #about .prog-grid { grid-template-columns: 0.75fr 1.25fr; gap: 64px; }
-  .about-stage .portrait-frame { width: 105%; }
+  @media (min-width: 861px) {
+    #about .prog-grid { grid-template-columns: 0.75fr 1.25fr; gap: 64px; }
+    .about-stage .portrait-frame { width: 105%; }
+  }
   .about-stage .portrait-frame:hover .portrait-clip { transform: scale(1.045); }
   .about-stage .portrait-clip { transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
   /* Coaching method */
