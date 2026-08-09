@@ -246,6 +246,9 @@
   .m-card:nth-child(2)::before { animation-delay: 0.4s; } .m-card:nth-child(3)::before { animation-delay: 0.8s; } .m-card:nth-child(4)::before { animation-delay: 1.2s; } .m-card:nth-child(5)::before { animation-delay: 1.6s; }
   .m-card:hover { transform: rotateX(2deg) rotateY(-2deg) translateY(-14px) scale(1.045); border-color: var(--brass-soft); box-shadow: 0 3px 6px rgba(88,70,38,0.12), 0 28px 64px rgba(88,70,38,0.2), 0 52px 110px rgba(88,70,38,0.13); z-index: 2; }
   .m-card:hover::before { width: 100%; }
+  .m-card.reveal.in:not(.active) { transform: translateY(16px) scale(0.97); opacity: 0.72; }
+  .m-card.active { transform: none; opacity: 1; border-color: rgba(154,123,63,0.35); }
+  .m-track .m-card:hover { transform: rotateX(2deg) rotateY(-2deg) translateY(-14px) scale(1.045); opacity: 1; }
   .m-card .img { aspect-ratio: 1; overflow: hidden; position: relative; }
   .m-card .img .p-zoom { position: absolute; inset: 0; animation: mdrift 16s ease-in-out infinite alternate; }
   @keyframes mdrift { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-2.5%, 1.8%); } }
@@ -1515,25 +1518,51 @@
     if (!track) return;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var vp = track.parentElement;
-    var target = 0, cur = 0, raf = 0, dragging = false, sx = 0, scur = 0;
+    var cards = Array.prototype.slice.call(track.children);
+    var target = 0, cur = 0, raf = 0, dragging = false, sx = 0, scur = 0, idx = 0, autoTimer = null, hovering = false;
+    function cardStep() { return cards[0].getBoundingClientRect().width + 26; }
     function maxShift() { return Math.max(0, track.scrollWidth - vp.clientWidth); }
-    function render() { track.style.transform = 'translateX(' + (-cur) + 'px)'; }
+    function setActive(i) {
+      idx = Math.max(0, Math.min(cards.length - 1, i));
+      cards.forEach(function (c, j) { c.classList.toggle('active', j === idx); });
+    }
+    function render() {
+      track.style.transform = 'translateX(' + (-cur) + 'px)';
+      setActive(Math.round(cur / cardStep()));
+    }
     function step() {
       cur += (target - cur) * 0.07;
       render();
       if (Math.abs(target - cur) > 0.5) raf = requestAnimationFrame(step); else raf = 0;
     }
+    function glideTo(shift) {
+      target = Math.max(0, Math.min(maxShift(), shift));
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    function restartAuto() {
+      if (reduce) return;
+      clearInterval(autoTimer);
+      autoTimer = setInterval(function () {
+        if (hovering || dragging) return;
+        var next = idx + 1 > cards.length - 1 ? 0 : idx + 1;
+        glideTo(Math.min(next * cardStep(), maxShift()));
+        setActive(next);
+      }, 5200);
+    }
+    vp.addEventListener('mouseenter', function () { hovering = true; });
+    vp.addEventListener('mouseleave', function () { hovering = false; });
     vp.addEventListener('mousemove', function (e) {
       if (dragging || reduce) return;
       var r = vp.getBoundingClientRect();
       var t = (e.clientX - r.left) / r.width;
       t = Math.max(0, Math.min(1, t * 1.16 - 0.08));
-      target = t * maxShift();
-      if (!raf) raf = requestAnimationFrame(step);
+      glideTo(t * maxShift());
     });
     track.addEventListener('touchstart', function (e) { dragging = true; sx = e.touches[0].clientX; scur = cur; if (raf) { cancelAnimationFrame(raf); raf = 0; } }, { passive: true });
     track.addEventListener('touchmove', function (e) { if (!dragging) return; cur = Math.max(0, Math.min(maxShift(), scur - (e.touches[0].clientX - sx))); render(); }, { passive: true });
-    track.addEventListener('touchend', function () { dragging = false; target = cur; });
+    track.addEventListener('touchend', function () { dragging = false; target = cur; restartAuto(); });
+    setActive(0);
+    restartAuto();
   })();
 </script>
 <script>
