@@ -492,21 +492,23 @@
   .lp-inner p { font-size: 15px; color: var(--ink-soft); max-width: 60ch; margin: 0; }
   @media (max-width: 860px) { .levers { grid-template-columns: 1fr 1fr; } .m-step { gap: 18px; } }
   /* Jarvis */
-  .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; overflow: clip; position: relative; }
+  .jarvis { background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 130px 0; position: relative; }
+  .j-bg-clip { position: absolute; inset: 0; overflow: clip; }
   .jarvis video { position: absolute; inset: -12% 0; width: 100%; height: 124%; object-fit: cover; opacity: 0.45; will-change: transform; }
   .j-scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,11,13,0.94) 0%, rgba(11,11,13,0.82) 45%, rgba(11,11,13,0.9) 100%); }
   .jarvis h2 em { color: var(--brass-soft); font-style: italic; }
-  .j-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 80px; align-items: center; }
+  .j-sticky-wrap { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 80px; align-items: stretch; }
+  .j-sticky-stage { position: relative; }
+  .j-stick-inner { position: sticky; top: 130px; perspective: 1200px; }
+  @media (max-width: 900px) { .j-stick-inner { position: static; } }
   .j-rows { margin-top: 42px; }
   .j-row { border-top: 1px solid var(--hairline-dark); padding: 24px 0; }
   .j-row .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
   .j-row p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 52ch; }
-  .j-grid > .reveal { perspective: 1200px; }
   .j-core { position: relative; width: min(360px, 78vw); aspect-ratio: 1; margin: 0 auto; transform-style: preserve-3d; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
   .j-core::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -9%; height: 7%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); filter: blur(7px); transform: translateX(var(--shx, 0px)); }
   .j-glint { position: absolute; inset: 6%; border-radius: 50%; background: radial-gradient(circle at var(--gx, 32%) var(--gy, 26%), rgba(233,205,144,0.28), rgba(194,164,104,0.1) 30%, transparent 48%); transform: translateZ(44px); pointer-events: none; }
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
-  .j-core-echo { opacity: 1; transform: scale(1); transition: none; }
   .j-ring { position: absolute; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.55); }
   .jr1 { inset: 0; animation: gyroX 16s linear infinite; }
   @keyframes gyroX { from { transform: rotateX(62deg) rotateZ(0deg); } to { transform: rotateX(62deg) rotateZ(360deg); } }
@@ -528,10 +530,7 @@
   .j-pip.p1 { top: 18%; left: 74%; } .j-pip.p2 { top: 66%; left: 12%; animation-delay: 1.3s; } .j-pip.p3 { top: 82%; left: 62%; animation-delay: 2.6s; }
   @keyframes pipblink { 0%, 100% { opacity: 0.2; box-shadow: none; } 50% { opacity: 1; box-shadow: 0 0 10px rgba(194,164,104,0.9); } }
   .j-label { text-align: center; margin-top: 28px; font-size: 11px; font-weight: 600; letter-spacing: 0.5em; color: var(--brass-soft); opacity: 0.85; }
-  .j-clone { position: relative; margin-top: 100px; max-width: 720px; border-left: 2px solid var(--brass); padding-left: 44px; }
-  .j-clone .j-echo { position: absolute; top: 48%; right: -260px; transform: translateY(-50%) scale(0.62); transform-origin: right center; opacity: 0; transition: opacity 3.6s var(--ease); pointer-events: none; }
-  .j-clone .j-echo.in { opacity: 1; }
-  @media (max-width: 1080px) { .j-echo { display: none; } }
+  .j-clone { margin-top: 70px; border-left: 2px solid var(--brass); padding-left: 44px; }
   .j-clone .jc { font-family: var(--serif); font-size: clamp(1.3rem, 2.5vw, 1.8rem); line-height: 1.45; color: var(--cream); margin: 0 0 26px; }
   .j-clone .jc:last-child { margin-bottom: 0; }
   .j-clone .jc em { color: var(--brass-soft); font-style: italic; }
@@ -562,7 +561,7 @@
   .j-impact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px; border-top: 1px solid var(--hairline-dark); border-bottom: 1px solid var(--hairline-dark); padding: 44px 0; }
   .j-impact .ji { font-family: var(--serif); font-size: clamp(1.25rem, 2.2vw, 1.6rem); color: var(--cream); line-height: 1.3; }
   .j-impact .ji em { color: var(--brass-soft); font-style: italic; }
-  @media (max-width: 860px) { .j-grid { grid-template-columns: 1fr; gap: 56px; } .j-seq { grid-template-columns: 1fr; } .j-impact { grid-template-columns: 1fr; gap: 24px; } }
+  @media (max-width: 860px) { .j-sticky-wrap { grid-template-columns: 1fr; gap: 56px; } .j-seq { grid-template-columns: 1fr; } .j-impact { grid-template-columns: 1fr; gap: 24px; } }
   .strat-node circle.core { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.4; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); }
   .strat-node text { font-family: var(--serif); font-size: 13px; fill: var(--ink-soft); transition: fill 0.5s var(--ease); }
   .strat-node.lit circle.core { fill: var(--brass); stroke: var(--brass); }
@@ -786,6 +785,8 @@
 
   /* All widths: sections never spill sideways (fly-in ghosts + ring decorations clip at edges) */
   section, .cineband, .closing, footer { overflow-x: clip; }
+  /* .jarvis needs the sticky Jarvis core to escape section-level clipping on desktop (where sticky is active); the video/scrim wrapper (.j-bg-clip) handles its own overflow instead. Mobile keeps the universal clip below since sticky is disabled there. */
+  @media (min-width: 901px) { .jarvis { overflow-x: visible; } }
 
   /* Phones: gear train permanently engaged (scroll-engine is desktop-only) */
   @media (max-width: 860px) {
@@ -1189,49 +1190,43 @@
 </section>
 
 <section class="jarvis" id="jarvis">
-  <video id="jarvisVid" data-plx="0.1" autoplay muted loop playsinline></video>
-  <div class="j-scrim"></div>
+  <div class="j-bg-clip">
+    <video id="jarvisVid" data-plx="0.1" autoplay muted loop playsinline></video>
+    <div class="j-scrim"></div>
+  </div>
   <div class="wrap" style="position: relative; z-index: 2;">
-    <div class="j-grid">
-      <div>
+    <div class="j-sticky-wrap">
+      <div class="j-sticky-copy">
         <div class="eyebrow reveal">Agentic Technology</div>
         <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream);"><span class="aw" style="transition-delay: 0ms">Meet</span> <span class="aw" style="transition-delay: 80ms">Jarvis.</span> <span class="aw" style="transition-delay: 160ms"><em>The</em></span> <span class="aw" style="transition-delay: 240ms"><em>machine</em></span> <span class="aw" style="transition-delay: 320ms"><em>behind</em></span> <span class="aw" style="transition-delay: 400ms"><em>the</em></span> <span class="aw" style="transition-delay: 480ms"><em>machine.</em></span></h2>
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch; margin-top: 22px;">Every practice runs on the same scarce resource: your hours. Jarvis breaks that constraint. He is an agentic AI operator who researches, verifies, writes, follows up, and books, around the clock, in your voice, under your rules.</p>
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch;">Not software you learn. <em style="color: var(--brass-soft);">A colleague you brief.</em></p>
         <div class="reveal" style="margin-top: 34px;"><a class="quiet-link" href="#contact" style="color: var(--cream);">Ask me about Jarvis</a></div>
-      </div>
-      <div class="reveal">
-        <div class="j-core" aria-hidden="true">
-          <span class="j-ticks"></span>
-          <span class="j-sweep"></span>
-          <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
-          <span class="j-orb o1"></span><span class="j-orb o2"></span>
-          <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
-          <span class="j-glint" aria-hidden="true"></span><span class="j-dot"></span>
-        </div>
-        <div class="j-label">J A R V I S</div>
-      </div>
-    </div>
 
-    <div class="j-clone">
-      <div class="j-echo" aria-hidden="true">
-        <div class="j-core j-core-echo">
-          <span class="j-ticks"></span>
-          <span class="j-sweep"></span>
-          <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
-          <span class="j-orb o1"></span><span class="j-orb o2"></span>
-          <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
-          <span class="j-glint" aria-hidden="true"></span><span class="j-dot"></span>
+        <div class="j-clone">
+          <div class="eyebrow reveal">An Extension of You</div>
+          <p class="jc jc-hook reveal">What if you could clone yourself, three times over?</p>
+          <p class="jc jc-hook reveal"><em>What would that be worth?</em></p>
+          <p class="jc reveal">That is what Jarvis is. An executive mind, <em>working for you around the clock.</em></p>
+          <p class="jc reveal">He is built as an extension of you: your personality, your vocabulary, your thesis, your value proposition, <em>a lifetime of experience and nuance.</em></p>
+          <p class="jc reveal">And he carries real judgment. He reasons, decides, and delegates like a chief of staff, and he runs your computer with his own hands: the research, the writing, the follow-up, the data entry, the CRM, the forms. The work that eats a practice alive, done at machine speed. <em>Your week comes back to you.</em></p>
+          <p class="jc reveal">Every reply is studied, articulated, and delivered in your voice, <em>unique to the person and the moment.</em></p>
+          <p class="jc reveal">Written the way you would have written it. <em>On your best day.</em></p>
         </div>
       </div>
-      <div class="eyebrow reveal">An Extension of You</div>
-      <p class="jc jc-hook reveal">What if you could clone yourself, three times over?</p>
-      <p class="jc jc-hook reveal"><em>What would that be worth?</em></p>
-      <p class="jc reveal">That is what Jarvis is. An executive mind, <em>working for you around the clock.</em></p>
-      <p class="jc reveal">He is built as an extension of you: your personality, your vocabulary, your thesis, your value proposition, <em>a lifetime of experience and nuance.</em></p>
-      <p class="jc reveal">And he carries real judgment. He reasons, decides, and delegates like a chief of staff, and he runs your computer with his own hands: the research, the writing, the follow-up, the data entry, the CRM, the forms. The work that eats a practice alive, done at machine speed. <em>Your week comes back to you.</em></p>
-      <p class="jc reveal">Every reply is studied, articulated, and delivered in your voice, <em>unique to the person and the moment.</em></p>
-      <p class="jc reveal">Written the way you would have written it. <em>On your best day.</em></p>
+      <div class="j-sticky-stage">
+        <div class="j-stick-inner reveal">
+          <div class="j-core" aria-hidden="true">
+            <span class="j-ticks"></span>
+            <span class="j-sweep"></span>
+            <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
+            <span class="j-orb o1"></span><span class="j-orb o2"></span>
+            <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
+            <span class="j-glint" aria-hidden="true"></span><span class="j-dot"></span>
+          </div>
+          <div class="j-label">J A R V I S</div>
+        </div>
+      </div>
     </div>
 
     <div class="j-seq-head">
@@ -1970,7 +1965,7 @@
     if (!core) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (window.matchMedia('(max-width: 900px)').matches) return;
-    var zone = core.closest('.j-grid') || core.parentElement;
+    var zone = core.closest('.j-sticky-wrap') || core.parentElement;
     var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, engaged = false;
     function step() {
       cx += (tx - cx) * 0.08;
@@ -1996,26 +1991,6 @@
       tx = 0; ty = 0;
       if (!raf) raf = requestAnimationFrame(step);
     });
-  })();
-</script>
-<script>
-  (function () {
-    var trigger = document.querySelector('.j-clone');
-    var echo = document.querySelector('.j-echo');
-    if (!trigger || !echo) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
-      echo.classList.add('in');
-      return;
-    }
-    var jio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          echo.classList.add('in');
-          jio.unobserve(trigger);
-        }
-      });
-    }, { threshold: 0.02 });
-    jio.observe(trigger);
   })();
 </script>
 
