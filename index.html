@@ -1762,8 +1762,9 @@
     var heroSrc = document.querySelector('#heroVid source');
     var band = document.getElementById('bandVid');
     if (heroSrc && band) { band.src = heroSrc.src; if (reduce) band.pause(); }
+    /* Jarvis section keeps the cyan network video regardless of what the hero uses - locked independently per Matt's call. */
     var jv = document.getElementById('jarvisVid');
-    if (heroSrc && jv) { jv.src = heroSrc.src; if (reduce) jv.pause(); }
+    if (jv) { jv.src = 'assets/a02-9b1e02cfec.mp4'; if (reduce) jv.pause(); }
 
     /* FS Oahu-style card carousel: arrows, drag, dots, gentle auto-advance */
     var track = document.getElementById('carTrack');
