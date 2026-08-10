@@ -748,12 +748,17 @@
   @media (max-width: 860px) { .foot-grid { grid-template-columns: 1fr; } .foot-base { flex-direction: column; gap: 12px; } }
 
   /* ————— FS-style AnimatedCardCarousel: verticals ————— */
-  .verticals { background: var(--noir); padding: 130px 0 120px; overflow: hidden; border-top: 1px solid var(--hairline-dark); }
+  .verticals { background: var(--noir); padding: 0 0 120px; overflow: hidden; border-top: 1px solid var(--hairline-dark); }
+  .v-meet-grid { display: grid; grid-template-columns: 1fr 0.8fr; gap: 80px; align-items: center; padding: 150px 0 100px; }
+  .v-meet-copy .eyebrow { color: var(--brass-soft); font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 24px; }
+  .v-meet-copy h2 { font-size: clamp(2.4rem, 4.8vw, 3.8rem); color: var(--cream); margin: 0 0 26px; }
+  .v-meet-copy .lede { font-size: 1.1rem; color: rgba(242,237,225,0.8); max-width: 46ch; margin: 0; }
+  .v-meet-portrait .portrait-frame { width: 100%; max-width: 380px; margin: 0 auto; }
+  @media (max-width: 900px) { .v-meet-grid { grid-template-columns: 1fr; gap: 50px; padding: 110px 0 60px; text-align: left; } .v-meet-portrait { order: -1; } .v-meet-portrait .portrait-frame { max-width: 280px; } }
   .car-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; margin-bottom: 56px; }
-  .car-head h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream); }
-  .car-byline { display: flex; align-items: center; gap: 22px; }
-  .car-face { flex: none; width: 60px; height: 60px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(194,164,104,0.4); box-shadow: 0 0 0 4px rgba(194,164,104,0.08); }
-  .car-face img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.92); }
+  .car-head h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream); margin: 0; }
+  .car-head-slim { margin-bottom: 40px; }
+  .car-head-slim .eyebrow { color: var(--brass-soft); font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; }
   .car-nav { display: flex; gap: 12px; }
   .car-btn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(242,237,225,0.35); background: transparent; color: var(--cream); font-size: 16px; cursor: pointer; transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease); }
   .car-btn:hover { border-color: var(--brass-soft); background: rgba(194,164,104,0.12); transform: translateY(-2px); }
@@ -963,17 +968,23 @@
   </div>
 </section>
 
-<!-- CHAPTER Vb — WHO I WORK WITH: FS Oahu-style animated card carousel -->
+<!-- CHAPTER Vb — WHO I WORK WITH: split intro (portrait + copy) + FS Oahu-style animated card carousel -->
 <section class="verticals" id="verticals">
   <div class="wrap">
-    <div class="car-head">
-      <div class="car-byline reveal">
-        <span class="car-face"><img loading="lazy" decoding="async" src="assets/a35-matt-byline.jpg" alt="Matthew Payne" /></span>
-        <div>
-          <div class="eyebrow">Who I Work With</div>
-          <h2>Three practices. One standard.</h2>
-        </div>
+    <div class="v-meet-grid">
+      <div class="v-meet-copy reveal">
+        <div class="eyebrow">Who I Work With</div>
+        <h2>Three practices. One standard.</h2>
+        <p class="lede">Matthew Payne. Twenty years building the high-trust relationships that move capital, grow practices, and earn the clients who matter.</p>
       </div>
+      <div class="v-meet-portrait reveal">
+        <div class="portrait-frame"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a36-matt-vest.jpg" alt="Matthew Payne" /></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="car-head car-head-slim">
+      <div class="eyebrow reveal">Three Practices</div>
       <div class="car-nav reveal">
         <button class="car-btn" id="carPrev" aria-label="Previous">←</button>
         <button class="car-btn" id="carNext" aria-label="Next">→</button>
