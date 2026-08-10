@@ -508,7 +508,6 @@
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
   .j-field { position: absolute; inset: -24%; pointer-events: none; transform: translateZ(-70px); transform-style: preserve-3d; }
   @media (max-width: 860px) { .j-field { inset: -14%; } }
-  .j-orbit-outer { position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.2); animation: ringspin 100s linear infinite; }
   .j-node-wrap { position: absolute; inset: 0; animation: ringspin 30s linear infinite; }
   .j-node-wrap.nw2 { animation-duration: 42s; animation-direction: reverse; inset: 8%; }
   .j-node-wrap.nw3 { animation-duration: 54s; inset: -8%; }
@@ -520,7 +519,7 @@
   .g2 { inset: 13%; animation: precessY 32s ease-in-out infinite alternate; }
   @keyframes precessY { from { transform: rotateY(48deg); } to { transform: rotateY(76deg); } }
   .g1 .jr1, .g2 .jr2, .g3 .jr4 { position: absolute; inset: 0; }
-  .jr1 { animation: ringspin 16s linear infinite; }
+  .jr1 { border-width: 3px; border-color: rgba(194,164,104,0.75); animation: ringspin 16s linear infinite; }
   .jr2 { border-color: rgba(194,164,104,0.4); animation: ringspin 21s linear infinite reverse; }
   .jr3 { inset: 27%; border-style: solid; border-color: rgba(194,164,104,0.18); transform: translateZ(-18px); animation: ringspin 60s linear infinite; }
   .g3 { inset: 9%; animation: precessDiag 38s ease-in-out infinite alternate; }
@@ -848,7 +847,7 @@
     .j-ring, .j-orb { animation: none; }
     .j-sweep, .j-ticks, .j-pip { animation: none; }
     .jr1, .jr2, .j-orb { animation: none; }
-    .j-gyro, .j-field, .j-orbit-outer, .j-node-wrap { animation: none; }
+    .j-gyro, .j-field, .j-node-wrap { animation: none; }
     .j-seq .j-step.reveal, .j-scope .js-item.reveal, .j-impact > .reveal { opacity: 1; transform: none; transition: none; }
     .stage-frame::before, .stage-clip .p-zoom, .lever::before { animation: none; }
     .lp-orb, .lp-img .p-zoom, .lever.active { animation: none; }
@@ -1215,7 +1214,6 @@
       <div class="reveal">
         <div class="j-core" aria-hidden="true">
           <span class="j-field" aria-hidden="true">
-            <span class="j-orbit-outer"></span>
             <span class="j-node-wrap nw1"><span class="j-node"></span></span>
             <span class="j-node-wrap nw2"><span class="j-node"></span></span>
             <span class="j-node-wrap nw3"><span class="j-node"></span></span>
