@@ -210,6 +210,30 @@
   .nav-links .cta:hover { background: var(--cream); color: var(--noir); border-color: var(--cream); }
   @media (max-width: 900px) { .nav-links > a:not(.cta) { display: none; } }
 
+  .nav-toggle { display: none; }
+  @media (max-width: 900px) {
+    .nav-toggle {
+      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+      width: 30px; height: 30px; padding: 0; background: none; border: none; cursor: pointer;
+    }
+    .nav-toggle span { display: block; width: 20px; height: 1.5px; background: var(--cream); transition: transform 0.4s var(--ease), opacity 0.3s var(--ease); }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 55; background: rgba(11,11,13,0.98); backdrop-filter: blur(10px);
+      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 38px;
+      opacity: 0; visibility: hidden; transform: translateY(-14px);
+      transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), visibility 0.5s;
+    }
+    .mobile-menu.open { opacity: 1; visibility: visible; transform: none; }
+    .mm-links { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+    .mm-links a { font-family: var(--serif); font-size: 1.7rem; color: var(--cream); text-decoration: none; opacity: 0.88; transition: opacity 0.3s var(--ease), color 0.3s var(--ease); }
+    .mm-links a:hover { color: var(--brass-soft); opacity: 1; }
+    .mobile-menu .nav-social { display: flex; margin: 6px 0 0; }
+  }
+  body.menu-open { overflow: hidden; }
+
   /* ————— CHAPTER I — VIDEO HERO ————— */
   .hero { position: relative; height: 100vh; min-height: 640px; overflow: hidden; background: var(--noir); }
   .hero video, .hero .fallback {
@@ -834,6 +858,7 @@
 <nav id="nav">
   <a class="mark" href="#top" aria-label="Matthew Payne Consulting">MPC</a>
   <div class="nav-links">
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <a href="#capital">Capital</a>
     <a href="#about">About</a>
     <a href="#process">Approach</a>
@@ -850,6 +875,25 @@
     <a href="#contact" class="cta">Schedule A Call</a>
   </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mm-links">
+    <a href="#capital">Capital</a>
+    <a href="#about">About</a>
+    <a href="#process">Approach</a>
+    <a href="#programs">Programs</a>
+    <a href="#coaching">Coaching</a>
+    <a href="#jarvis">Agentic Technology</a>
+    <a href="#audio">Audio</a>
+  </div>
+  <a class="btn" href="#contact">Schedule A Call</a>
+  <div class="nav-social" aria-label="Social media">
+    <a href="https://www.linkedin.com/in/matthewpayneconsulting/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><path d="M7.5 10.5 V17 M7.5 7.2 v.01 M11.5 17 v-4 c0-2.6 4.5-2.8 4.5 0 V17"/></svg></a>
+    <a class="soon" role="img" aria-label="Instagram (coming soon)" title="Instagram — coming soon"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8 v.01"/></svg></a>
+    <a class="soon" role="img" aria-label="YouTube (coming soon)" title="YouTube — coming soon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10.2 9.3 L15 12 L10.2 14.7 Z"/></svg></a>
+    <a class="soon" role="img" aria-label="Facebook (coming soon)" title="Facebook — coming soon"><svg viewBox="0 0 24 24"><path d="M15.5 5 h-2.2 a2.6 2.6 0 0 0 -2.6 2.6 V19 M8.4 11.8 h6"/></svg></a>
+  </div>
+</div>
 
 <!-- CHAPTER I — VIDEO HERO (placeholder aerial footage; swaps for Artgrid / Matt's own production reel) -->
 <div class="hero" id="top">
@@ -1500,6 +1544,25 @@
     function navState() { nav.classList.toggle('solid', window.scrollY > 60); }
     window.addEventListener('scroll', navState, { passive: true });
     navState();
+
+    /* Mobile menu toggle */
+    var navToggle = document.getElementById('navToggle');
+    var mobileMenu = document.getElementById('mobileMenu');
+    function closeMenu() {
+      navToggle.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      mobileMenu.classList.remove('open');
+      document.body.classList.remove('menu-open');
+    }
+    navToggle.addEventListener('click', function () {
+      var opening = !mobileMenu.classList.contains('open');
+      navToggle.classList.toggle('open', opening);
+      navToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      mobileMenu.classList.toggle('open', opening);
+      document.body.classList.toggle('menu-open', opening);
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+    window.addEventListener('resize', function () { if (window.innerWidth > 900) closeMenu(); });
 
     /* Video pause/play (Four Seasons-style restraint control) */
     var vid = document.getElementById('heroVid');
