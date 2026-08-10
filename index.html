@@ -552,8 +552,8 @@
   .j-seq .j-step.reveal.in { opacity: 1; transform: none; }
   .j-scope .js-item.reveal { opacity: 0; transform: translateX(-48px); transition: opacity 0.7s var(--ease), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1); }
   .j-scope .js-item.reveal.in { opacity: 1; transform: none; }
-  .j-impact > .reveal { opacity: 0; transform: translateY(40px) scale(0.95); transition: opacity 0.8s var(--ease), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1); }
-  .j-impact > .reveal.in { opacity: 1; transform: none; }
+  .j-impact-early.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s var(--ease), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1); }
+  .j-impact-early.reveal.in { opacity: 1; transform: none; }
   .j-step { display: flex; gap: 22px; border-top: 1px solid var(--hairline-dark); padding: 28px 0; align-items: flex-start; }
   .j-step .jn { font-family: var(--serif); font-size: 1.3rem; color: var(--brass); flex: none; width: 42px; }
   .j-step .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
@@ -566,10 +566,10 @@
   .js-item:hover::before { width: 20px; }
   .j-scope-close { margin-top: 34px; font-family: var(--serif); font-size: clamp(1.2rem, 2.2vw, 1.55rem); color: var(--brass-soft); font-style: italic; max-width: 40ch; }
   @media (max-width: 860px) { .j-scope-grid { grid-template-columns: 1fr; } }
-  .j-impact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px; border-top: 1px solid var(--hairline-dark); border-bottom: 1px solid var(--hairline-dark); padding: 44px 0; }
-  .j-impact .ji { font-family: var(--serif); font-size: clamp(1.25rem, 2.2vw, 1.6rem); color: var(--cream); line-height: 1.3; }
-  .j-impact .ji em { color: var(--brass-soft); font-style: italic; }
-  @media (max-width: 860px) { .j-sticky-wrap { grid-template-columns: 1fr; gap: 56px; } .j-seq { grid-template-columns: 1fr; } .j-impact { grid-template-columns: 1fr; gap: 24px; } }
+  .j-impact-early { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--hairline-dark); display: flex; flex-direction: column; gap: 13px; max-width: 54ch; }
+  .j-impact-early .jie { font-family: var(--serif); font-size: clamp(1.05rem, 1.7vw, 1.3rem); color: var(--cream); line-height: 1.35; }
+  .j-impact-early .jie em { color: var(--brass-soft); font-style: italic; }
+  @media (max-width: 860px) { .j-sticky-wrap { grid-template-columns: 1fr; gap: 56px; } .j-seq { grid-template-columns: 1fr; } }
   .strat-node circle.core { fill: var(--paper); stroke: var(--brass-soft); stroke-width: 1.4; transition: fill 0.5s var(--ease), stroke 0.5s var(--ease); }
   .strat-node text { font-family: var(--serif); font-size: 13px; fill: var(--ink-soft); transition: fill 0.5s var(--ease); }
   .strat-node.lit circle.core { fill: var(--brass); stroke: var(--brass); }
@@ -875,7 +875,7 @@
     .j-ring, .j-orb { animation: none; }
     .j-sweep, .j-ticks, .j-pip { animation: none; }
     .jr1, .jr2, .j-orb { animation: none; }
-    .j-seq .j-step.reveal, .j-scope .js-item.reveal, .j-impact > .reveal { opacity: 1; transform: none; transition: none; }
+    .j-seq .j-step.reveal, .j-scope .js-item.reveal, .j-impact-early.reveal { opacity: 1; transform: none; transition: none; }
     .stage-frame::before, .stage-clip .p-zoom, .lever::before { animation: none; }
     .lp-orb, .lp-img .p-zoom, .lever.active { animation: none; }
     .stage-corners span { animation: none; opacity: 0.7; }
@@ -1317,17 +1317,20 @@
         <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream);"><span class="aw" style="transition-delay: 0ms">Meet</span> <span class="aw" style="transition-delay: 80ms">Jarvis.</span> <span class="aw" style="transition-delay: 160ms"><em>The</em></span> <span class="aw" style="transition-delay: 240ms"><em>machine</em></span> <span class="aw" style="transition-delay: 320ms"><em>behind</em></span> <span class="aw" style="transition-delay: 400ms"><em>the</em></span> <span class="aw" style="transition-delay: 480ms"><em>machine.</em></span></h2>
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch; margin-top: 22px;">Every practice runs on the same scarce resource: your hours. Jarvis breaks that constraint. He is an agentic AI operator who researches, verifies, writes, follows up, and books, around the clock, in your voice, under your rules.</p>
         <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 54ch;">Not software you learn. <em style="color: var(--brass-soft);">A colleague you brief.</em></p>
-        <div class="reveal" style="margin-top: 34px;"><a class="quiet-link" href="#contact" style="color: var(--cream);">Ask me about Jarvis</a></div>
+        <div class="j-impact-early reveal">
+          <div class="jie">An operator on duty <em>168 hours</em> a week.</div>
+          <div class="jie">Your calendar fills <em>while you sleep.</em></div>
+          <div class="jie"><em>Zero</em> forgotten follow-ups. Ever.</div>
+        </div>
+        <div class="reveal" style="margin-top: 30px;"><a class="quiet-link" href="#contact" style="color: var(--cream);">Ask me about Jarvis</a></div>
 
         <div class="j-clone">
           <div class="eyebrow reveal">An Extension of You</div>
           <p class="jc jc-hook reveal">What if you could clone yourself, three times over?</p>
           <p class="jc jc-hook reveal"><em>What would that be worth?</em></p>
-          <p class="jc reveal">That is what Jarvis is. An executive mind, <em>working for you around the clock.</em></p>
-          <p class="jc reveal">He is built as an extension of you: your personality, your vocabulary, your thesis, your value proposition, <em>a lifetime of experience and nuance.</em></p>
-          <p class="jc reveal">And he carries real judgment. He reasons, decides, and delegates like a chief of staff, and he runs your computer with his own hands: the research, the writing, the follow-up, the data entry, the CRM, the forms. The work that eats a practice alive, done at machine speed. <em>Your week comes back to you.</em></p>
-          <p class="jc reveal">Every reply is studied, articulated, and delivered in your voice, <em>unique to the person and the moment.</em></p>
-          <p class="jc reveal">Written the way you would have written it. <em>On your best day.</em></p>
+          <p class="jc reveal">That is what Jarvis is: an executive mind working for you around the clock, built as an extension of you — your personality, your vocabulary, your thesis, <em>a lifetime of experience and nuance.</em></p>
+          <p class="jc reveal">He carries real judgment — reasoning, deciding, and delegating like a chief of staff, running your computer with his own hands: the research, the writing, the follow-up, the CRM, the forms that eat a practice alive. <em>Your week comes back to you.</em></p>
+          <p class="jc reveal">Every reply studied and delivered in your voice, unique to the moment — <em>written the way you'd have written it, on your best day.</em></p>
         </div>
       </div>
       <div class="j-sticky-stage">
@@ -1371,12 +1374,6 @@
         <div class="js-item reveal">Builds the assets: pages, scripts, sequences</div>
       </div>
       <p class="j-scope-close reveal">One operator. The output of a marketing team, a research analyst, and an assistant who never sleeps.</p>
-    </div>
-
-    <div class="j-impact">
-      <div class="reveal"><div class="ji">An operator on duty <em>168 hours</em> a week.</div></div>
-      <div class="reveal"><div class="ji"><em>Zero</em> forgotten follow-ups. Ever.</div></div>
-      <div class="reveal"><div class="ji">Your calendar fills <em>while you sleep.</em></div></div>
     </div>
   </div>
 </section>
