@@ -751,6 +751,9 @@
   .verticals { background: var(--noir); padding: 130px 0 120px; overflow: hidden; border-top: 1px solid var(--hairline-dark); }
   .car-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; margin-bottom: 56px; }
   .car-head h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream); }
+  .car-byline { display: flex; align-items: center; gap: 22px; }
+  .car-face { flex: none; width: 60px; height: 60px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(194,164,104,0.4); box-shadow: 0 0 0 4px rgba(194,164,104,0.08); }
+  .car-face img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.92); }
   .car-nav { display: flex; gap: 12px; }
   .car-btn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(242,237,225,0.35); background: transparent; color: var(--cream); font-size: 16px; cursor: pointer; transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease); }
   .car-btn:hover { border-color: var(--brass-soft); background: rgba(194,164,104,0.12); transform: translateY(-2px); }
@@ -964,9 +967,12 @@
 <section class="verticals" id="verticals">
   <div class="wrap">
     <div class="car-head">
-      <div>
-        <div class="eyebrow reveal">Who I Work With</div>
-        <h2 class="reveal">Three practices. One standard.</h2>
+      <div class="car-byline reveal">
+        <span class="car-face"><img loading="lazy" decoding="async" src="assets/a35-matt-byline.jpg" alt="Matthew Payne" /></span>
+        <div>
+          <div class="eyebrow">Who I Work With</div>
+          <h2>Three practices. One standard.</h2>
+        </div>
       </div>
       <div class="car-nav reveal">
         <button class="car-btn" id="carPrev" aria-label="Previous">←</button>
