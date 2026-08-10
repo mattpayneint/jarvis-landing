@@ -748,6 +748,9 @@
   @media (max-width: 860px) { .foot-grid { grid-template-columns: 1fr; } .foot-base { flex-direction: column; gap: 12px; } }
 
   /* ————— MEET MATTHEW (light) ————— */
+  #meet.light { background: #EFEBE7; }
+  .v-meet-wm { position: absolute; top: 4%; left: -2%; font-family: var(--serif); font-size: clamp(7rem, 17vw, 14rem); line-height: 0.9; color: transparent; -webkit-text-stroke: 1.2px rgba(88,70,38,0.09); letter-spacing: 0.05em; pointer-events: none; user-select: none; z-index: 0; will-change: transform; }
+  @media (max-width: 860px) { .v-meet-wm { font-size: clamp(5rem, 24vw, 9rem); } }
   .v-meet-grid { display: grid; grid-template-columns: 1fr 0.8fr; gap: 80px; align-items: center; }
   .v-meet-copy h2 { font-size: clamp(2.4rem, 4.8vw, 3.8rem); color: var(--ink); margin: 0 0 26px; }
   .v-meet-copy .lede { font-size: 1.1rem; color: var(--ink-soft); max-width: 46ch; margin: 0; }
@@ -970,8 +973,9 @@
 </section>
 
 <!-- CHAPTER Vb-i — MEET MATTHEW (light, portrait + copy, mirrors About/Programs portrait treatment) -->
-<section class="light" id="meet">
-  <div class="wrap">
+<section class="light" id="meet" style="position: relative; overflow: hidden;">
+  <div class="v-meet-wm" data-plx="0.05" aria-hidden="true">MATTHEW</div>
+  <div class="wrap" style="position: relative; z-index: 1;">
     <div class="v-meet-grid">
       <div class="v-meet-copy reveal">
         <div class="eyebrow">Who I Work With</div>
@@ -979,7 +983,13 @@
         <p class="lede">Matthew Payne. Twenty years building the high-trust relationships that move capital, grow practices, and earn the clients who matter.</p>
       </div>
       <div class="v-meet-portrait reveal">
-        <div class="portrait-frame"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a36-matt-vest.jpg" alt="Matthew Payne" /></div></div>
+        <div class="prog-portrait-stage">
+          <svg class="prog-ring" viewBox="0 0 400 440" aria-hidden="true">
+            <circle class="strat-ring" cx="200" cy="220" r="172"/>
+            <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
+          </svg>
+          <div class="portrait-frame"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a36-matt-vest.jpg" alt="Matthew Payne" /></div></div>
+        </div>
       </div>
     </div>
   </div>
