@@ -747,14 +747,15 @@
   .foot-base { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--hairline-dark); margin-top: 76px; padding-top: 30px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
   @media (max-width: 860px) { .foot-grid { grid-template-columns: 1fr; } .foot-base { flex-direction: column; gap: 12px; } }
 
-  /* ————— FS-style AnimatedCardCarousel: verticals ————— */
-  .verticals { background: var(--noir); padding: 0 0 120px; overflow: hidden; border-top: 1px solid var(--hairline-dark); }
-  .v-meet-grid { display: grid; grid-template-columns: 1fr 0.8fr; gap: 80px; align-items: center; padding: 150px 0 100px; }
-  .v-meet-copy .eyebrow { color: var(--brass-soft); font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 24px; }
-  .v-meet-copy h2 { font-size: clamp(2.4rem, 4.8vw, 3.8rem); color: var(--cream); margin: 0 0 26px; }
-  .v-meet-copy .lede { font-size: 1.1rem; color: rgba(242,237,225,0.8); max-width: 46ch; margin: 0; }
+  /* ————— MEET MATTHEW (light) ————— */
+  .v-meet-grid { display: grid; grid-template-columns: 1fr 0.8fr; gap: 80px; align-items: center; }
+  .v-meet-copy h2 { font-size: clamp(2.4rem, 4.8vw, 3.8rem); color: var(--ink); margin: 0 0 26px; }
+  .v-meet-copy .lede { font-size: 1.1rem; color: var(--ink-soft); max-width: 46ch; margin: 0; }
   .v-meet-portrait .portrait-frame { width: 100%; max-width: 380px; margin: 0 auto; }
-  @media (max-width: 900px) { .v-meet-grid { grid-template-columns: 1fr; gap: 50px; padding: 110px 0 60px; text-align: left; } .v-meet-portrait { order: -1; } .v-meet-portrait .portrait-frame { max-width: 280px; } }
+  @media (max-width: 900px) { .v-meet-grid { grid-template-columns: 1fr; gap: 50px; text-align: left; } .v-meet-portrait { order: -1; } .v-meet-portrait .portrait-frame { max-width: 280px; } }
+
+  /* ————— FS-style AnimatedCardCarousel: verticals ————— */
+  .verticals { background: var(--noir); padding: 130px 0 120px; overflow: hidden; border-top: 1px solid var(--hairline-dark); }
   .car-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; margin-bottom: 56px; }
   .car-head h2 { font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream); margin: 0; }
   .car-head-slim { margin-bottom: 40px; }
@@ -968,8 +969,8 @@
   </div>
 </section>
 
-<!-- CHAPTER Vb — WHO I WORK WITH: split intro (portrait + copy) + FS Oahu-style animated card carousel -->
-<section class="verticals" id="verticals">
+<!-- CHAPTER Vb-i — MEET MATTHEW (light, portrait + copy, mirrors About/Programs portrait treatment) -->
+<section class="light" id="meet">
   <div class="wrap">
     <div class="v-meet-grid">
       <div class="v-meet-copy reveal">
@@ -982,6 +983,10 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- CHAPTER Vb-ii — WHO I WORK WITH: FS Oahu-style animated card carousel -->
+<section class="verticals" id="verticals">
   <div class="wrap">
     <div class="car-head car-head-slim">
       <div class="eyebrow reveal">Three Practices</div>
