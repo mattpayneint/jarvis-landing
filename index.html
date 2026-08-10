@@ -772,9 +772,22 @@
   .v-card h3 { font-family: var(--serif); font-size: 1.6rem; color: var(--cream); margin-bottom: 12px; }
   .v-card p { font-size: 14.5px; color: var(--cream-soft); margin-bottom: 20px; }
   .v-card .quiet-link { color: var(--cream); font-size: 11px; }
+  .v-more { display: inline-block; margin-left: 24px; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(242,237,225,0.55); background: none; border: none; padding: 0 0 6px; cursor: pointer; position: relative; font-family: inherit; transition: color 0.35s var(--ease); }
+  .v-more::after { content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; background: var(--brass-soft); transform: scaleX(0); transform-origin: right; transition: transform 0.45s var(--ease); }
+  .v-more:hover, .v-more.active { color: var(--cream); }
+  .v-more:hover::after, .v-more.active::after { transform: scaleX(1); transform-origin: left; }
   .car-dots { display: flex; gap: 10px; margin-top: 44px; }
   .car-dots i { width: 34px; height: 2px; background: rgba(242,237,225,0.2); transition: background 0.4s var(--ease); }
   .car-dots i.on { background: var(--brass-soft); }
+  .v-panel { overflow: hidden; max-height: 0; opacity: 0; margin-top: 0; transition: max-height 0.7s var(--ease), opacity 0.6s var(--ease), margin-top 0.7s var(--ease); }
+  .v-panel.open { max-height: 420px; opacity: 1; margin-top: 40px; }
+  .v-panel-inner { display: flex; gap: 40px; align-items: center; background: var(--noir-2); border: 1px solid var(--hairline-dark); padding: 34px; }
+  .v-panel-media { flex: none; width: 220px; aspect-ratio: 1; overflow: hidden; }
+  .v-panel-media img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.95); }
+  .v-panel-k { font-size: 10px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--brass-soft); margin-bottom: 12px; }
+  .v-panel-copy h4 { font-family: var(--serif); font-size: 1.5rem; color: var(--cream); margin: 0 0 14px; }
+  .v-panel-copy p { font-size: 15px; color: var(--cream-soft); margin: 0; max-width: 56ch; }
+  @media (max-width: 700px) { .v-panel-inner { flex-direction: column; align-items: flex-start; } .v-panel-media { width: 100%; max-width: 240px; } .v-panel.open { max-height: 820px; } }
 
   /* ————— Mid-page ambient cinema band (reuses hero footage at runtime, no extra weight) ————— */
   .cineband { position: relative; height: 64vh; min-height: 420px; overflow: hidden; }
@@ -941,6 +954,65 @@
           <div class="stat-line reveal"><span class="n" data-count="100">$<span class="v">0</span>M</span><span class="l">Raised · Pete's Story</span></div>
           <div class="stat-line reveal"><span class="n" data-count="60">$<span class="v">0</span>M</span><span class="l">Raised · Chris's Story</span></div>
           <div class="stat-line reveal"><span class="n" data-count="35">$<span class="v">0</span>M</span><span class="l">Raised · Todd's Story</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER Vb — WHO I WORK WITH: FS Oahu-style animated card carousel -->
+<section class="verticals" id="verticals">
+  <div class="wrap">
+    <div class="car-head">
+      <div>
+        <div class="eyebrow reveal">Who I Work With</div>
+        <h2 class="reveal">Three practices. One standard.</h2>
+      </div>
+      <div class="car-nav reveal">
+        <button class="car-btn" id="carPrev" aria-label="Previous">←</button>
+        <button class="car-btn" id="carNext" aria-label="Next">→</button>
+      </div>
+    </div>
+    <div class="car-track" id="carTrack">
+      <div class="v-card">
+        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="" data-src-from="towers" alt="Glass towers" /></div></div>
+        <div class="body">
+          <div class="k">Vertical · 01</div>
+          <h3>Financial Advisors</h3>
+          <p>High net worth clients, not more appointments. Build the practice around the caliber of client you actually want.</p>
+          <a class="quiet-link" href="https://calendly.com/matthewpayneconsulting/advisor-strategy-call" target="_blank" rel="noopener">Book A Strategy Call</a>
+          <button class="v-more" data-vertical="0" type="button">Learn More</button>
+        </div>
+      </div>
+      <div class="v-card">
+        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="" data-src-from="city" alt="City skyline at dusk" /></div></div>
+        <div class="body">
+          <div class="k">Vertical · 02</div>
+          <h3>VC &amp; Fund Managers</h3>
+          <p>New LP relationships without begging your network for intros. Capital raised through high-trust connection.</p>
+          <a class="quiet-link" href="https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call" target="_blank" rel="noopener">Book A Strategy Call</a>
+          <button class="v-more" data-vertical="1" type="button">Learn More</button>
+        </div>
+      </div>
+      <div class="v-card">
+        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="assets/a14-0123f510e8.jpg" alt="Classical law library with marble busts" /></div></div>
+        <div class="body">
+          <div class="k">Vertical · 03</div>
+          <h3>Estate &amp; Business Attorneys</h3>
+          <p>High net worth families and business owners who need real counsel. The clients you want, not whoever walks in.</p>
+          <a class="quiet-link" href="https://calendly.com/matthewpayneconsulting/attorney-strategy-call" target="_blank" rel="noopener">Book A Strategy Call</a>
+          <button class="v-more" data-vertical="2" type="button">Learn More</button>
+        </div>
+      </div>
+    </div>
+    <div class="car-dots" id="carDots"></div>
+    <div class="v-panel" id="vPanel" aria-live="polite">
+      <div class="v-panel-inner">
+        <div class="v-panel-media"><img id="vPanelImg" src="" alt="" /></div>
+        <div class="v-panel-copy">
+          <div class="v-panel-k" id="vPanelK"></div>
+          <h4 id="vPanelTitle"></h4>
+          <p id="vPanelBody"></p>
         </div>
       </div>
     </div>
@@ -1329,52 +1401,6 @@
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- CHAPTER Vb — WHO I WORK WITH: FS Oahu-style animated card carousel -->
-<section class="verticals" id="verticals">
-  <div class="wrap">
-    <div class="car-head">
-      <div>
-        <div class="eyebrow reveal">Who I Work With</div>
-        <h2 class="reveal">Three practices. One standard.</h2>
-      </div>
-      <div class="car-nav reveal">
-        <button class="car-btn" id="carPrev" aria-label="Previous">←</button>
-        <button class="car-btn" id="carNext" aria-label="Next">→</button>
-      </div>
-    </div>
-    <div class="car-track" id="carTrack">
-      <div class="v-card">
-        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="" data-src-from="towers" alt="Glass towers" /></div></div>
-        <div class="body">
-          <div class="k">Vertical · 01</div>
-          <h3>Financial Advisors</h3>
-          <p>High net worth clients, not more appointments. Build the practice around the caliber of client you actually want.</p>
-          <a class="quiet-link" href="https://calendly.com/matthewpayneconsulting/advisor-strategy-call" target="_blank" rel="noopener">Book A Strategy Call</a>
-        </div>
-      </div>
-      <div class="v-card">
-        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="" data-src-from="city" alt="City skyline at dusk" /></div></div>
-        <div class="body">
-          <div class="k">Vertical · 02</div>
-          <h3>VC &amp; Fund Managers</h3>
-          <p>New LP relationships without begging your network for intros. Capital raised through high-trust connection.</p>
-          <a class="quiet-link" href="https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call" target="_blank" rel="noopener">Book A Strategy Call</a>
-        </div>
-      </div>
-      <div class="v-card">
-        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="assets/a14-0123f510e8.jpg" alt="Classical law library with marble busts" /></div></div>
-        <div class="body">
-          <div class="k">Vertical · 03</div>
-          <h3>Estate &amp; Business Attorneys</h3>
-          <p>High net worth families and business owners who need real counsel. The clients you want, not whoever walks in.</p>
-          <a class="quiet-link" href="https://calendly.com/matthewpayneconsulting/attorney-strategy-call" target="_blank" rel="noopener">Book A Strategy Call</a>
-        </div>
-      </div>
-    </div>
-    <div class="car-dots" id="carDots"></div>
   </div>
 </section>
 
@@ -1784,6 +1810,41 @@
       track.classList.remove('scrub');
       go(Math.max(0, Math.min(cards.length - 1, Math.round(panCur / cardStep()))));
       restartAuto();
+    });
+
+    /* Vertical detail panel: click "Learn More" to expand what Matthew does for that practice */
+    var vData = [
+      { k: 'Financial Advisors', title: 'A practice built around the client you actually want', body: 'Most advisor marketing chases volume: more leads, more appointments, more noise. That is not what moves a book of business forward. What moves it is precision, the right high net worth prospects, engaged the right way, at the right cadence, so your calendar fills with conversations worth having. Whether it is the weekly seat at the table or the full attraction and conversion system running in the background, the goal is the same: fewer, better clients, and a practice that compounds instead of just churns.' },
+      { k: 'VC & Fund Managers', title: 'Standing with allocators, not chasing them', body: 'Raising capital should not mean burning your own network on cold intros. It should mean showing up as a peer, recognized and trusted, already part of the conversation before the pitch ever starts. That is the network being built here: real allocators and real high net worth investors, engaged peer to peer, so the next raise starts from standing instead of from zero.' },
+      { k: 'Estate & Business Attorneys', title: 'The clients you want, not whoever walks in', body: 'Estate and business law runs on referrals and reputation, and both take years to build passively. The alternative is deliberate: the right high net worth families and business owners, identified and engaged proactively, so your practice attracts the caliber of client your expertise actually deserves, not just whoever finds you first.' }
+    ];
+    var vPanel = document.getElementById('vPanel');
+    var vImg = document.getElementById('vPanelImg');
+    var vK = document.getElementById('vPanelK');
+    var vTitle = document.getElementById('vPanelTitle');
+    var vBody = document.getElementById('vPanelBody');
+    var vBtns = Array.prototype.slice.call(document.querySelectorAll('.v-more'));
+    var vActive = -1;
+    vBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var i = parseInt(btn.getAttribute('data-vertical'), 10);
+        if (i === vActive) {
+          vActive = -1;
+          vPanel.classList.remove('open');
+          vBtns.forEach(function (b) { b.classList.remove('active'); });
+          return;
+        }
+        vActive = i;
+        vBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var cardImg = cards[i].querySelector('.img img');
+        if (cardImg) vImg.src = cardImg.src;
+        vK.textContent = vData[i].k;
+        vTitle.textContent = vData[i].title;
+        vBody.textContent = vData[i].body;
+        vPanel.classList.add('open');
+        setTimeout(function () { vPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 350);
+      });
     });
 
     go(0);
