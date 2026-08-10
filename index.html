@@ -530,8 +530,8 @@
   @keyframes pipblink { 0%, 100% { opacity: 0.2; box-shadow: none; } 50% { opacity: 1; box-shadow: 0 0 10px rgba(194,164,104,0.9); } }
   .j-label { text-align: center; margin-top: 28px; font-size: 11px; font-weight: 600; letter-spacing: 0.5em; color: var(--brass-soft); opacity: 0.85; }
   .j-clone { position: relative; margin-top: 100px; max-width: 720px; border-left: 2px solid var(--brass); padding-left: 44px; }
-  .j-clone .j-echo { position: absolute; top: 16%; right: -220px; transform: scale(0.56); transform-origin: top right; opacity: 0; transition: opacity 2.2s var(--ease); pointer-events: none; }
-  .j-clone .j-echo.in { opacity: 1; transform: scale(0.56); }
+  .j-clone .j-echo { position: absolute; top: 48%; right: -260px; transform: translateY(-50%) scale(0.62); transform-origin: right center; opacity: 0; transition: opacity 3.6s var(--ease); pointer-events: none; }
+  .j-clone .j-echo.in { opacity: 1; }
   @media (max-width: 1080px) { .j-echo { display: none; } }
   .j-clone .jc { font-family: var(--serif); font-size: clamp(1.3rem, 2.5vw, 1.8rem); line-height: 1.45; color: var(--cream); margin: 0 0 26px; }
   .j-clone .jc:last-child { margin-bottom: 0; }
@@ -821,7 +821,6 @@
   .reveal.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
     .reveal, .s-step { opacity: 1; transform: none; transition: none; }
-    .j-clone .j-echo { transform: scale(0.56); }
     .hero video { display: none; }
     .hero .fallback { display: block; }
     .hero .kicker, .hero h1 .w, .hero .sub, .hero-actions, .hero-jbadge { opacity: 1; transform: none; animation: none; }
@@ -1216,7 +1215,7 @@
     </div>
 
     <div class="j-clone">
-      <div class="j-echo reveal" aria-hidden="true">
+      <div class="j-echo" aria-hidden="true">
         <div class="j-core j-core-echo">
           <span class="j-ticks"></span>
           <span class="j-sweep"></span>
@@ -1998,6 +1997,26 @@
       tx = 0; ty = 0;
       if (!raf) raf = requestAnimationFrame(step);
     });
+  })();
+</script>
+<script>
+  (function () {
+    var trigger = document.querySelector('.j-clone');
+    var echo = document.querySelector('.j-echo');
+    if (!trigger || !echo) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      echo.classList.add('in');
+      return;
+    }
+    var jio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          echo.classList.add('in');
+          jio.unobserve(trigger);
+        }
+      });
+    }, { threshold: 0.02 });
+    jio.observe(trigger);
   })();
 </script>
 
