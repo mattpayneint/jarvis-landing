@@ -412,7 +412,13 @@
   .stage-frame:hover .stage-corners span { animation-duration: 2s; }
   .stage-frame:hover .stage-clip img { transform: scale(1.15); filter: saturate(1.1) brightness(1.08); }
   @media (max-width: 860px) { .room-grid { grid-template-columns: 1fr; gap: 44px; } }
-  .m-scroll { overflow: hidden; margin-top: 64px; }
+  .m-head { display: flex; justify-content: space-between; align-items: center; margin-top: 64px; }
+  .m-head-label { font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--brass); }
+  .car-nav.on-light .car-btn { border-color: rgba(36,31,23,0.22); color: var(--ink); }
+  .car-nav.on-light .car-btn:hover { border-color: var(--brass-soft); background: rgba(154,123,63,0.08); }
+  .car-dots.on-light i { background: rgba(36,31,23,0.15); }
+  .car-dots.on-light i.on { background: var(--brass); }
+  .m-scroll { overflow: hidden; margin-top: 28px; }
   .m-track { display: flex; gap: 26px; cursor: grab; will-change: transform; perspective: 1200px; }
   .m-card { flex: 0 0 min(320px, 80vw); background: #FFFDF8; border: 1px solid var(--hairline); position: relative; overflow: hidden; box-shadow: 0 1px 2px rgba(88,70,38,0.07), 0 6px 20px rgba(88,70,38,0.07); transition: box-shadow 0.55s var(--ease), transform 0.55s var(--ease), border-color 0.55s var(--ease); }
   .m-card::before { content: ""; position: absolute; top: 0; left: 0; width: 54px; height: 2px; background: var(--brass); z-index: 2; transition: width 0.8s var(--ease); animation: accentbreathe 5s ease-in-out infinite; }
@@ -771,6 +777,7 @@
   .car-track.dragging, .car-track.scrub { cursor: grab; transition: none; }
   .car-track.dragging { cursor: grabbing; }
   .v-card { flex: 0 0 min(420px, 82vw); background: var(--noir-2); border: 1px solid var(--hairline-dark); overflow: hidden; transform: translateY(16px) scale(0.97); opacity: 0.55; transition: transform 0.6s var(--ease), opacity 0.6s var(--ease), border-color 0.4s var(--ease), box-shadow 0.5s var(--ease); }
+  @media (max-width: 860px) { .v-card { flex-basis: min(420px, 74vw); } }
   .v-card.active { transform: none; opacity: 1; border-color: rgba(194,164,104,0.4); box-shadow: 0 26px 70px rgba(0,0,0,0.55); }
   .v-card .img { height: 250px; overflow: hidden; }
   .v-card .img .v-zoom { width: 100%; height: 100%; animation: vcardzoom 14s ease-in-out infinite alternate; }
@@ -1478,6 +1485,13 @@
         <div class="stage-clip" data-plx="0.07"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a16-3e092fa7a3.jpg" alt="Rowing crew in sync at golden hour"></div></div>
       </div>
     </div>
+    <div class="m-head">
+      <span class="m-head-label">Five Steps</span>
+      <div class="car-nav on-light reveal">
+        <button class="car-btn" id="mPrev" aria-label="Previous step">←</button>
+        <button class="car-btn" id="mNext" aria-label="Next step">→</button>
+      </div>
+    </div>
     <div class="m-scroll">
       <div class="m-track" id="mTrack">
         <div class="m-card reveal"><div class="img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a17-99afb07f0b.jpg" alt=""></div></div><div class="body"><span class="mn">I.</span><h3>Crystalize your goals and values</h3><p>Clarity coupled with consistent focus is power. When you know what you want most and why, laid out in a measurable, visual plan, follow-through becomes automatic.</p></div></div>
@@ -1487,6 +1501,7 @@
         <div class="m-card reveal"><div class="img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a21-c9eee95cb4.jpg" alt=""></div></div><div class="body"><span class="mn">V.</span><h3>Implement the strategies that change results</h3><p>Your approach is the most crucial variable. Best practice strategy, applied hand in hand, every single week.</p></div></div>
       </div>
     </div>
+    <div class="car-dots on-light" id="mDots"></div>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
       <linearGradient id="symgold" x1="0" y1="0" x2="0.35" y2="1">
         <stop offset="0" stop-color="#F4E3B2"/><stop offset="0.45" stop-color="#CBAC61"/><stop offset="1" stop-color="#8A6D33"/>
@@ -1936,11 +1951,19 @@
     var vp = track.parentElement;
     var cards = Array.prototype.slice.call(track.children);
     var target = 0, cur = 0, raf = 0, dragging = false, sx = 0, scur = 0, idx = 0, autoTimer = null, hovering = false;
+    var dotsWrap = document.getElementById('mDots');
+    cards.forEach(function (_, i) {
+      var d = document.createElement('i');
+      if (i === 0) d.className = 'on';
+      dotsWrap.appendChild(d);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
     function cardStep() { return cards[0].getBoundingClientRect().width + 26; }
     function maxShift() { return Math.max(0, track.scrollWidth - vp.clientWidth); }
     function setActive(i) {
       idx = Math.max(0, Math.min(cards.length - 1, i));
       cards.forEach(function (c, j) { c.classList.toggle('active', j === idx); });
+      dots.forEach(function (d, j) { d.classList.toggle('on', j === idx); });
     }
     function render() {
       track.style.transform = 'translateX(' + (-cur) + 'px)';
@@ -1977,6 +2000,9 @@
     track.addEventListener('touchstart', function (e) { dragging = true; sx = e.touches[0].clientX; scur = cur; if (raf) { cancelAnimationFrame(raf); raf = 0; } }, { passive: true });
     track.addEventListener('touchmove', function (e) { if (!dragging) return; cur = Math.max(0, Math.min(maxShift(), scur - (e.touches[0].clientX - sx))); render(); }, { passive: true });
     track.addEventListener('touchend', function () { dragging = false; target = cur; restartAuto(); });
+    var mPrev = document.getElementById('mPrev'), mNext = document.getElementById('mNext');
+    if (mPrev) mPrev.addEventListener('click', function () { var n = Math.max(0, idx - 1); glideTo(n * cardStep()); setActive(n); restartAuto(); });
+    if (mNext) mNext.addEventListener('click', function () { var n = Math.min(cards.length - 1, idx + 1); glideTo(n * cardStep()); setActive(n); restartAuto(); });
     setActive(0);
     restartAuto();
   })();
