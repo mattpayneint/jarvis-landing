@@ -811,6 +811,8 @@
 
   /* All widths: sections never spill sideways (fly-in ghosts + ring decorations clip at edges) */
   section, .cineband, .closing, footer { overflow-x: clip; }
+  /* Fixed nav sits at z-index:60 over everything; without this, jumping to a nav anchor tucks the section's headline behind the bar. */
+  section[id], .closing[id] { scroll-margin-top: 110px; }
   /* .jarvis needs the sticky Jarvis core to escape section-level clipping on desktop (where sticky is active); the video/scrim wrapper (.j-bg-clip) handles its own overflow instead. Mobile keeps the universal clip below since sticky is disabled there. */
   @media (min-width: 901px) { .jarvis { overflow-x: visible; } }
 
@@ -1392,7 +1394,7 @@
           <circle class="strat-ring" cx="200" cy="220" r="172"/>
           <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
         </svg>
-      <div class="portrait-frame reveal"><div class="ap-plx" data-plx="0.05"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a10-25c9678fd6.jpg" alt="Matthew Payne" /></div></div></div>
+      <div class="portrait-frame reveal"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a37-matt-about.jpg" alt="Matthew Payne" /></div></div>
       </div>
     </div>
   </div>
@@ -1407,7 +1409,7 @@
           <circle class="strat-ring" cx="200" cy="220" r="172"/>
           <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
         </svg>
-              <div class="portrait-frame reveal"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a11-4faa44270a.jpg" alt="Matthew Payne" /></div></div></div>
+              <div class="portrait-frame reveal"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a38-matt-programs.jpg" alt="Matthew Payne" /></div></div></div>
       <div>
         <div class="eyebrow reveal">Programs</div>
         <h2 class="reveal" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 40px;">Two ways we work together</h2>
@@ -1588,7 +1590,6 @@
     </div>
     <div class="foot-base">
       <span>© 2026 Matthew Payne Consulting</span>
-      <span>Mockup · Direction A v3 · The Gallery</span>
     </div>
   </div>
 </footer>
