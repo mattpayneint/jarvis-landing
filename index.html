@@ -1606,13 +1606,13 @@
           <div class="om-stat"><div class="n" data-count="8"><span class="v">0</span><span class="plus">+</span></div><div class="l">Hours</div></div>
         </div>
         <div class="om-optin reveal">
-          <p class="om-lead">Where should I send your access?</p>
+          <p class="om-lead">Where should I send Section One?</p>
           <!-- TODO: wire to n8n opt-in webhook; interim submit opens a prefilled email to Matt -->
           <form class="om-form" data-om-form novalidate>
             <input type="email" name="email" required placeholder="you@email.com" aria-label="Your email address" />
             <button class="btn" type="submit">Send Me The Program</button>
           </form>
-          <p class="om-note">Free access to the complete program. Every volume, every track.</p>
+          <p class="om-note">Ten volumes. I'll start you with Section One, The Power of Your Unconscious Mind. When you're ready for the rest, just ask.</p>
         </div>
         <div class="om-more reveal"><a class="om-link" href="audio/"><span class="tx">See Everything Inside &middot; All 95 Tracks</span><span class="ar">&rarr;</span></a></div>
       </div>
@@ -2211,7 +2211,7 @@
         done.className = 'om-done';
         done.innerHTML = 'One last tap. Your mail app just opened with a note to me. Hit send and your access is on its way. Nothing opened? Email me at <a href="mailto:matt@matthewpayneconsulting.com">matt@matthewpayneconsulting.com</a> and I\'ll handle it personally.';
         wrap.appendChild(done);
-        window.location.href = 'mailto:matt@matthewpayneconsulting.com?subject=' + encodeURIComponent("Send me The Owner's Manual to the Mind") + '&body=' + encodeURIComponent('My email: ' + email + '\n\nSend me free access to the complete program.');
+        window.location.href = 'mailto:matt@matthewpayneconsulting.com?subject=' + encodeURIComponent("Send me Section One of The Owner's Manual to the Mind") + '&body=' + encodeURIComponent('My email: ' + email + '\n\nSend me Section One of The Owner\'s Manual to the Mind.');
       });
     });
   })();
