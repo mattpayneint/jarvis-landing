@@ -890,6 +890,7 @@
   @media (prefers-reduced-motion: reduce) {
     .reveal, .s-step { opacity: 1; transform: none; transition: none; }
     .hero video { display: none; }
+    .vid-toggle { display: none; }
     .hero .fallback { display: block; }
     .hero .kicker, .hero h1 .w, .hero .sub, .hero-actions, .hero-jbadge { opacity: 1; transform: none; animation: none; }
     .hero-jbadge::before { animation: none; }
@@ -1696,8 +1697,8 @@
     var toggle = document.getElementById('vidToggle');
     if (reduce) { vid.pause(); }
     toggle.addEventListener('click', function () {
-      if (vid.paused) { vid.play(); toggle.textContent = '❚❚'; toggle.setAttribute('aria-label', 'Pause background video'); }
-      else { vid.pause(); toggle.textContent = '▶'; toggle.setAttribute('aria-label', 'Play background video'); }
+      if (vid.paused) { delete vid.dataset.userPaused; vid.play(); toggle.textContent = '❚❚'; toggle.setAttribute('aria-label', 'Pause background video'); }
+      else { vid.dataset.userPaused = '1'; vid.pause(); toggle.textContent = '▶'; toggle.setAttribute('aria-label', 'Play background video'); }
     });
 
     /* Parallax on chapter backgrounds + closing portrait */
@@ -2145,8 +2146,12 @@
     /* Videos: re-play whenever they come into view (mobile browsers pause offscreen video) */
     if ('IntersectionObserver' in window) {
       var vio = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (e.isIntersecting && e.target.paused) { e.target.play().catch(function () {}); } });
-      }, { threshold: 0.1 });
+        es.forEach(function (e) {
+          if (e.isIntersecting) {
+            if (e.target.paused && !e.target.dataset.userPaused) { e.target.play().catch(function () {}); }
+          } else if (!e.target.paused) { e.target.pause(); }
+        });
+      }, { threshold: 0.08 });
       document.querySelectorAll('video').forEach(function (vd) { vio.observe(vd); });
       /* Glide-track children sit off-screen sideways; reveal them when their track arrives */
       var tio = new IntersectionObserver(function (es) {
