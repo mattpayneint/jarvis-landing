@@ -7,7 +7,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Matthew Payne Consulting">
 <meta property="og:title" content="The Owner's Manual to the Mind | The Complete Audio Program">
-<meta property="og:description" content="Six sections. Ten volumes. Ninety five tracks. Over eight hours on the unconscious mind, mentality, procrastination, high performance living, and success habits. Recorded live, remastered in 2026.">
+<meta property="og:description" content="Six sections. Ten volumes. Ninety five tracks. Over eight hours on the unconscious mind, mentality, overcoming procrastination, high performance living, and success habits. Recorded live, remastered in 2026.">
 <meta property="og:url" content="https://matthewpayneconsulting.com/audio/">
 <meta property="og:image" content="https://matthewpayneconsulting.com/assets/a36-961ee53d33.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -45,7 +45,8 @@
   .audio .bg { position: absolute; inset: -8% 0; z-index: 0; }
   .audio .bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; will-change: transform; animation: audzoom 26s ease-in-out infinite alternate; }
   .audio .bg .bg-couple { object-position: 50% 42%; opacity: 0.72; filter: saturate(0.82) contrast(1.06) brightness(0.85); }
-  .audio .bg .bg-mic { object-position: 10% 30%; opacity: 0.5; filter: saturate(0.75) contrast(1.15) brightness(0.92); -webkit-mask-image: linear-gradient(270deg, transparent 30%, #000 58%); mask-image: linear-gradient(270deg, transparent 30%, #000 58%); animation-direction: alternate-reverse; }
+  .audio .bg .bg-mic { object-position: 10% 30%; opacity: 0.5; filter: saturate(0.75) contrast(1.15) brightness(0.92); -webkit-mask-image: linear-gradient(270deg, transparent 30%, #000 58%); mask-image: linear-gradient(270deg, transparent 30%, #000 58%); animation-name: audzoommic; animation-direction: alternate-reverse; }
+  @keyframes audzoommic { from { transform: scale(1.02) rotate(-3deg); } to { transform: scale(1.09) rotate(-3deg); } }
   @keyframes audzoom { from { transform: scale(1.0); } to { transform: scale(1.07); } }
   .audio::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(11,11,13,0.93), rgba(11,11,13,0.42) 42%, rgba(11,11,13,0.93)); }
   .audio .wrap { position: relative; z-index: 3; }

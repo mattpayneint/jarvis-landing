@@ -704,7 +704,8 @@
   .audio .bg { position: absolute; inset: -8% 0; z-index: 0; }
   .audio .bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; will-change: transform; animation: audzoom 26s ease-in-out infinite alternate; }
   .audio .bg .bg-couple { object-position: 50% 42%; opacity: 0.72; filter: saturate(0.82) contrast(1.06) brightness(0.85); }
-  .audio .bg .bg-mic { object-position: 10% 30%; opacity: 0.5; filter: saturate(0.75) contrast(1.15) brightness(0.92); -webkit-mask-image: linear-gradient(270deg, transparent 30%, #000 58%); mask-image: linear-gradient(270deg, transparent 30%, #000 58%); animation-direction: alternate-reverse; }
+  .audio .bg .bg-mic { object-position: 10% 30%; opacity: 0.5; filter: saturate(0.75) contrast(1.15) brightness(0.92); -webkit-mask-image: linear-gradient(270deg, transparent 30%, #000 58%); mask-image: linear-gradient(270deg, transparent 30%, #000 58%); animation-name: audzoommic; animation-direction: alternate-reverse; }
+  @keyframes audzoommic { from { transform: scale(1.02) rotate(-3deg); } to { transform: scale(1.09) rotate(-3deg); } }
   @keyframes audzoom { from { transform: scale(1.0); } to { transform: scale(1.07); } }
   .audio::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(11,11,13,0.93), rgba(11,11,13,0.42) 42%, rgba(11,11,13,0.93)); }
   .audio .wrap { position: relative; z-index: 3; }
@@ -1597,7 +1598,7 @@
       <div class="product-copy">
         <div class="eyebrow reveal">The Audio Program</div>
         <h2 class="reveal">Your mind came without a manual. <em>Until now.</em></h2>
-        <p class="reveal">My complete personal development program, recorded live and remastered in 2026. The unconscious mind, mentality, procrastination, high performance living, and the habits that shape everything downstream. The inner game I teach privately, in ten volumes.</p>
+        <p class="reveal">My complete personal development program, recorded live and remastered in 2026. The unconscious mind, mentality, overcoming procrastination, high performance living, and the habits that shape everything downstream. The inner game I teach privately, in ten volumes.</p>
         <div class="om-stats reveal">
           <div class="om-stat"><div class="n" data-count="6"><span class="v">0</span></div><div class="l">Sections</div></div>
           <div class="om-stat"><div class="n" data-count="10"><span class="v">0</span></div><div class="l">Volumes</div></div>
