@@ -42,11 +42,11 @@
 
   /* Chapter VIII — audio program (cinematic noir) */
   .audio { position: relative; background: var(--noir); border-top: 1px solid var(--hairline-dark); padding: 150px 0 140px; overflow: clip; }
-  .audio .bg { position: absolute; inset: -14% 0; z-index: 0; }
+  .audio .bg { position: absolute; inset: -8% 0; z-index: 0; }
   .audio .bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; will-change: transform; animation: audzoom 26s ease-in-out infinite alternate; }
-  .audio .bg .bg-couple { object-position: 32% 45%; opacity: 0.7; filter: saturate(0.82) contrast(1.06) brightness(0.85); }
+  .audio .bg .bg-couple { object-position: 50% 42%; opacity: 0.72; filter: saturate(0.82) contrast(1.06) brightness(0.85); }
   .audio .bg .bg-mic { object-position: 10% 30%; opacity: 0.3; filter: saturate(0.7) contrast(1.12) brightness(0.82); -webkit-mask-image: linear-gradient(270deg, transparent 42%, #000 74%); mask-image: linear-gradient(270deg, transparent 42%, #000 74%); animation-direction: alternate-reverse; }
-  @keyframes audzoom { from { transform: scale(1.02); } to { transform: scale(1.15); } }
+  @keyframes audzoom { from { transform: scale(1.0); } to { transform: scale(1.07); } }
   .audio::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(11,11,13,0.93), rgba(11,11,13,0.42) 42%, rgba(11,11,13,0.93)); }
   .audio .wrap { position: relative; z-index: 3; }
   .om-river { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
