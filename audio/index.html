@@ -470,16 +470,38 @@
         e.preventDefault();
         var email = form.querySelector('input[type="email"]').value.trim();
         if (!email || email.indexOf('@') < 1) { form.querySelector('input').focus(); return; }
-        /* TODO: swap for n8n opt-in webhook POST once delivery automation is live */
-        var wrap = form.parentElement;
-        form.style.display = 'none';
-        var note = wrap.querySelector('.om-note');
-        if (note) note.style.display = 'none';
-        var done = document.createElement('p');
-        done.className = 'om-done';
-        done.innerHTML = 'One last tap. Your mail app just opened with a note to me. Hit send and your access is on its way. Nothing opened? Email me at <a href="mailto:matt@matthewpayneconsulting.com">matt@matthewpayneconsulting.com</a> and I\'ll handle it personally.';
-        wrap.appendChild(done);
-        window.location.href = 'mailto:matt@matthewpayneconsulting.com?subject=' + encodeURIComponent("Send me Section One of The Owner's Manual to the Mind") + '&body=' + encodeURIComponent('My email: ' + email + '\n\nSend me Section One of The Owner\'s Manual to the Mind.');
+        var btn = form.querySelector('button');
+        var btnText = btn.textContent;
+        btn.textContent = 'Sending…';
+        btn.disabled = true;
+        fetch('https://mattpayneint.app.n8n.cloud/webhook/om-audio-optin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, source: 'audio-page' })
+        }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok && j.ok !== false, j: j }; }); })
+          .then(function (res) {
+            if (!res.ok) throw new Error((res.j && res.j.error) || 'failed');
+            var wrap = form.parentElement;
+            form.style.display = 'none';
+            var note = wrap.querySelector('.om-note');
+            if (note) note.style.display = 'none';
+            var done = document.createElement('p');
+            done.className = 'om-done';
+            done.innerHTML = 'Done. Section One is on its way to your inbox right now. If it hasn’t landed in a few minutes, check your spam folder, or email me at <a href="mailto:matt@matthewpayneconsulting.com">matt@matthewpayneconsulting.com</a> and I’ll handle it personally.';
+            wrap.appendChild(done);
+          })
+          .catch(function () {
+            btn.textContent = btnText;
+            btn.disabled = false;
+            var wrap = form.parentElement;
+            var err = wrap.querySelector('.om-err');
+            if (!err) {
+              err = document.createElement('p');
+              err.className = 'om-done om-err';
+              wrap.appendChild(err);
+            }
+            err.innerHTML = 'Hmm, that didn’t go through. Try again in a moment, or email me at <a href="mailto:matt@matthewpayneconsulting.com">matt@matthewpayneconsulting.com</a> and I’ll send it personally.';
+          });
       });
     });
   })();
