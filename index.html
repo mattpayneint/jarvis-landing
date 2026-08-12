@@ -270,7 +270,7 @@
   .hero-scrim { position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(0deg, rgba(11,11,13,0.92) 0%, rgba(11,11,13,0.35) 30%, rgba(11,11,13,0.18) 55%, rgba(11,11,13,0.55) 100%);
   }
-  .hero-content { position: relative; z-index: 3; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; max-width: 1200px; margin: 0 auto; padding: 0 44px 130px; box-sizing: border-box; }
+  .hero-content { position: relative; z-index: 3; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; max-width: 1200px; margin: 0 auto; padding: 0 44px 220px; box-sizing: border-box; }
   .hero .kicker { font-size: clamp(16px, 1.3vw, 21px); font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--brass-soft); text-shadow: 0 2px 18px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 18px; margin-bottom: 42px; opacity: 0; animation: rise 1s var(--ease) 0.3s forwards; }
   .hero .kicker::before { content: ""; height: 2px; width: 64px; background: linear-gradient(90deg, var(--brass), var(--brass-soft)); flex: none; }
   .hero h1 { font-size: clamp(2.4rem, 4.6vw, 4.2rem); line-height: 1.08; max-width: 20ch; color: var(--cream); text-shadow: 0 2px 30px rgba(0,0,0,0.45); }
@@ -295,23 +295,15 @@
   .scroll-cue::after { content: ""; width: 1px; height: 52px; background: linear-gradient(var(--brass-soft), transparent); animation: cuepulse 2.6s var(--ease) infinite; transform-origin: top; }
   @keyframes cuepulse { 0%, 100% { transform: scaleY(0.55); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
   @media (max-width: 860px) { .hero-content { justify-content: flex-start; padding-top: 128px; padding-bottom: 40px; } .hero .kicker { margin-bottom: 26px; } .hero .sub { margin-top: 18px; } .hero-actions { margin-top: 24px; } .hero-jbadge { margin-top: 18px; } .hero-note { display: none; } .scroll-cue { bottom: 44px; } }
-  /* Short desktop windows: hero content was tall enough to push the kicker into the fixed nav. Compact the whole column. */
-  @media (min-width: 861px) and (max-height: 1000px) {
-    .hero-content { padding-bottom: 70px; }
-    .hero .kicker { margin-bottom: 20px; }
-    .hero h1 { font-size: clamp(1.9rem, 4vw, 3rem); }
-    .hero .sub { margin-top: 14px; }
-    .hero-actions { margin-top: 20px; }
-    .hero-jbadge { margin-top: 14px; }
-    .hero-stats { margin-top: 20px; }
-    .hero-stats .n { font-size: 1.4rem; }
-    .hero-stats .l { font-size: 8.5px; margin-top: 4px; }
-    .hero-stats .numbers { gap: 30px; }
+  /* Short desktop windows: the hero's core copy (kicker/h1/sub/actions/badge) always keeps full,
+     consistent type sizing - it never shrinks. If a window is too short to also fit the stats
+     row without crowding, the stats simply hide rather than forcing everything smaller. */
+  @media (min-width: 861px) and (max-height: 960px) {
+    .hero-content { padding-bottom: 100px; }
+    .hero-stats, .scroll-cue { display: none; }
   }
-  @media (min-width: 861px) and (max-height: 700px) {
-    .scroll-cue { display: none; }
-    .hero-meta { bottom: 20px; }
-    .hero-stats { display: none; }
+  @media (min-width: 861px) and (max-height: 750px) {
+    .hero-content { padding-bottom: 40px; }
   }
 
   /* ————— Full-bleed image chapters ————— */
@@ -350,7 +342,7 @@
   .towers .eyebrow { justify-content: center; }
   .numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; max-width: 900px; margin: 70px auto 0; }
   .hero-stats { margin-top: 44px; }
-  .hero-stats .numbers { display: flex; gap: 44px; max-width: none; margin: 0; }
+  .hero-stats .numbers { display: flex; justify-content: center; gap: 44px; max-width: none; margin: 0; text-align: center; }
   .hero-stats .n { font-size: clamp(1.5rem, 2.4vw, 2.1rem); text-shadow: 0 2px 18px rgba(0,0,0,0.5); }
   .hero-stats .l { color: rgba(242,237,225,0.6); margin-top: 8px; }
   @media (max-width: 700px) {
