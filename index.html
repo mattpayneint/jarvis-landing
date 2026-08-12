@@ -331,6 +331,10 @@
   .towers h2 em { color: var(--brass-soft); }
   .towers .eyebrow { justify-content: center; }
   .numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; max-width: 900px; margin: 70px auto 0; }
+  .proof-strip { position: relative; z-index: 5; background: var(--noir); border-bottom: 1px solid var(--hairline-dark); padding: 56px 0; }
+  .proof-strip .numbers { margin: 0 auto; text-align: center; }
+  .proof-strip .numbers .l { color: rgba(242,237,225,0.55); }
+  @media (max-width: 700px) { .proof-strip { padding: 40px 0; } .proof-strip .numbers { gap: 26px 18px; } }
   .numbers .n { font-family: var(--serif); font-size: clamp(2.2rem, 4.4vw, 3.6rem); line-height: 1; color: var(--cream); font-variant-numeric: tabular-nums; }
   .numbers .n .plus { color: var(--brass-soft); }
   .numbers .l { font-size: 10.5px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(242,237,225,0.6); margin-top: 12px; }
@@ -1032,6 +1036,18 @@
     <button class="vid-toggle" id="vidToggle" aria-label="Pause background video">❚❚</button>
   </div>
 </div>
+
+<!-- PROOF STRIP — quantified credibility, immediately after the hero -->
+<section class="proof-strip">
+  <div class="wrap">
+    <div class="numbers">
+      <div class="reveal"><div class="n" data-count="20"><span class="v">0</span><span class="plus">+</span></div><div class="l">Years Consulting</div></div>
+      <div class="reveal"><div class="n" data-count="3000"><span class="v">0</span><span class="plus">+</span></div><div class="l">Trainings &amp; Seminars</div></div>
+      <div class="reveal"><div class="n" data-count="325"><span class="v">0</span><span class="plus">+</span></div><div class="l">Clients Served</div></div>
+      <div class="reveal"><div class="n" data-count="107"><span class="v">0</span><span class="plus"></span></div><div class="l">Industries</div></div>
+    </div>
+  </div>
+</section>
 
 <!-- CHAPTER II — CAPITAL over Chicago dusk, parallax + slow zoom -->
 <section class="cine capital" id="capital">
