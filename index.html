@@ -212,28 +212,52 @@
   .nav-links .cta:hover { background: var(--cream); color: var(--noir); border-color: var(--cream); }
   @media (max-width: 900px) { .nav-links > a:not(.cta) { display: none; } }
 
-  .nav-toggle { display: none; }
-  .mobile-menu { display: none; }
-  @media (max-width: 900px) {
-    .nav-toggle {
-      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
-      width: 30px; height: 30px; padding: 0; background: none; border: none; cursor: pointer;
-    }
-    .nav-toggle span { display: block; width: 20px; height: 1.5px; background: var(--cream); transition: transform 0.4s var(--ease), opacity 0.3s var(--ease); }
-    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .nav-toggle.open span:nth-child(2) { opacity: 0; }
-    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-    .mobile-menu {
-      position: fixed; inset: 0; z-index: 55; background: rgba(11,11,13,0.98); backdrop-filter: blur(10px);
-      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 38px;
-      opacity: 0; visibility: hidden; transform: translateY(-14px);
-      transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), visibility 0.5s;
-    }
-    .mobile-menu.open { opacity: 1; visibility: visible; transform: none; }
-    .mm-links { display: flex; flex-direction: column; align-items: center; gap: 24px; }
-    .mm-links a { font-family: var(--serif); font-size: 1.7rem; color: var(--cream); text-decoration: none; opacity: 0.88; transition: opacity 0.3s var(--ease), color 0.3s var(--ease); }
-    .mm-links a:hover { color: var(--brass-soft); opacity: 1; }
-    .mobile-menu .nav-social { display: flex; margin: 6px 0 0; }
+  /* ————— Full-screen menu takeover (all breakpoints) ————— */
+  .nav-toggle {
+    display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+    width: 30px; height: 30px; padding: 0; background: none; border: none; cursor: pointer; flex: none;
+  }
+  .nav-toggle span { display: block; width: 20px; height: 1.5px; background: var(--cream); transition: transform 0.4s var(--ease), opacity 0.3s var(--ease); }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  @media (min-width: 901px) { .nav-toggle { margin-left: 8px; } }
+
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 70; background: var(--noir); overflow-y: auto;
+    display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.6s var(--ease), visibility 0.6s;
+  }
+  .mobile-menu.open { opacity: 1; visibility: visible; }
+  .mm-vign { position: absolute; inset: 0; background: radial-gradient(circle at 78% 22%, rgba(194,164,104,0.16), transparent 55%), radial-gradient(circle at 12% 88%, rgba(194,164,104,0.1), transparent 50%); pointer-events: none; }
+  .mm-inner { position: relative; z-index: 1; width: min(1200px, 92vw); margin: 0 auto; padding: 120px 0 60px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
+  .mm-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: auto; }
+  .mm-kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--brass-soft); }
+  .mm-links { display: flex; flex-direction: column; gap: 6px; margin: 40px 0; }
+  .mm-links a {
+    font-family: var(--serif); font-size: clamp(2.1rem, 7vw, 4.6rem); line-height: 1.28; font-weight: 400;
+    color: var(--cream); text-decoration: none; opacity: 0; transform: translateY(0.4em);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), color 0.3s var(--ease);
+  }
+  .mobile-menu.open .mm-links a { opacity: 1; transform: none; }
+  .mm-links a:hover, .mm-links a:focus-visible { color: var(--brass-soft); }
+  .mm-links a .mi { display: inline-block; font-family: ui-monospace, "SF Mono", monospace; font-size: 0.35em; color: var(--brass-soft); vertical-align: super; margin-right: 0.25em; opacity: 0.8; }
+  .mm-links a:nth-child(1) { transition-delay: 0.05s; }
+  .mm-links a:nth-child(2) { transition-delay: 0.11s; }
+  .mm-links a:nth-child(3) { transition-delay: 0.17s; }
+  .mm-links a:nth-child(4) { transition-delay: 0.23s; }
+  .mm-links a:nth-child(5) { transition-delay: 0.29s; }
+  .mm-links a:nth-child(6) { transition-delay: 0.35s; }
+  .mm-links a:nth-child(7) { transition-delay: 0.41s; }
+  .mm-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; padding-top: 30px; border-top: 1px solid var(--hairline-dark); }
+  .mm-bottom .btn { opacity: 0; transform: translateY(10px); transition: opacity 0.7s var(--ease) 0.5s, transform 0.7s var(--ease) 0.5s, background 0.35s var(--ease), color 0.35s var(--ease); }
+  .mobile-menu.open .mm-bottom .btn { opacity: 1; transform: none; }
+  .mobile-menu .nav-social { opacity: 0; transition: opacity 0.7s var(--ease) 0.6s; }
+  .mobile-menu.open .nav-social { opacity: 1; }
+  @media (max-width: 700px) {
+    .mm-inner { padding: 110px 0 40px; }
+    .mm-links { gap: 2px; }
+    .mm-top .mm-kicker:last-child { display: none; }
   }
   body.menu-open { overflow: hidden; }
 
@@ -904,6 +928,9 @@
     .strat-node .orbit, .strat-burst .spin { animation: none; }
     .gear .rot { animation: none; opacity: 0.38 !important; }
     .about-h2 .aw { opacity: 1; transform: none; transition: none; }
+    .mm-links a, .mm-bottom .btn, .mobile-menu .nav-social, .mobile-menu { transition: none; }
+    .mm-links a { opacity: 1; transform: none; }
+    .mm-bottom .btn, .mobile-menu .nav-social { opacity: 1; transform: none; }
     .j-ring, .j-orb { animation: none; }
     .j-sweep, .j-ticks, .j-pip { animation: none; }
     .jr1, .jr2, .j-orb { animation: none; }
@@ -950,21 +977,30 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <div class="mm-links">
-    <a href="#capital">Capital</a>
-    <a href="#about">About</a>
-    <a href="#process">Approach</a>
-    <a href="#programs">Programs</a>
-    <a href="#coaching">Coaching</a>
-    <a href="#jarvis">Agentic Technology</a>
-    <a href="#audio">Audio</a>
-  </div>
-  <a class="btn" href="#contact">Schedule A Call</a>
-  <div class="nav-social" aria-label="Social media">
-    <a href="https://www.linkedin.com/in/matthewpayneconsulting/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><path d="M7.5 10.5 V17 M7.5 7.2 v.01 M11.5 17 v-4 c0-2.6 4.5-2.8 4.5 0 V17"/></svg></a>
-    <a class="soon" role="img" aria-label="Instagram (coming soon)" title="Instagram — coming soon"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8 v.01"/></svg></a>
-    <a class="soon" role="img" aria-label="YouTube (coming soon)" title="YouTube — coming soon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10.2 9.3 L15 12 L10.2 14.7 Z"/></svg></a>
-    <a class="soon" role="img" aria-label="Facebook (coming soon)" title="Facebook — coming soon"><svg viewBox="0 0 24 24"><path d="M15.5 5 h-2.2 a2.6 2.6 0 0 0 -2.6 2.6 V19 M8.4 11.8 h6"/></svg></a>
+  <div class="mm-vign" aria-hidden="true"></div>
+  <div class="mm-inner">
+    <div class="mm-top">
+      <span class="mm-kicker">Matthew Payne Consulting</span>
+      <span class="mm-kicker">Menu</span>
+    </div>
+    <div class="mm-links" role="navigation" aria-label="Full site menu">
+      <a href="#capital"><span class="mi">01</span>Capital</a>
+      <a href="#about"><span class="mi">02</span>About</a>
+      <a href="#process"><span class="mi">03</span>Approach</a>
+      <a href="#programs"><span class="mi">04</span>Programs</a>
+      <a href="#coaching"><span class="mi">05</span>Coaching</a>
+      <a href="#jarvis"><span class="mi">06</span>Agentic Technology</a>
+      <a href="#audio"><span class="mi">07</span>Audio</a>
+    </div>
+    <div class="mm-bottom">
+      <a class="btn" href="#contact">Schedule A Call</a>
+      <div class="nav-social" aria-label="Social media">
+        <a href="https://www.linkedin.com/in/matthewpayneconsulting/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><path d="M7.5 10.5 V17 M7.5 7.2 v.01 M11.5 17 v-4 c0-2.6 4.5-2.8 4.5 0 V17"/></svg></a>
+        <a class="soon" role="img" aria-label="Instagram (coming soon)" title="Instagram — coming soon"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8 v.01"/></svg></a>
+        <a class="soon" role="img" aria-label="YouTube (coming soon)" title="YouTube — coming soon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10.2 9.3 L15 12 L10.2 14.7 Z"/></svg></a>
+        <a class="soon" role="img" aria-label="Facebook (coming soon)" title="Facebook — coming soon"><svg viewBox="0 0 24 24"><path d="M15.5 5 h-2.2 a2.6 2.6 0 0 0 -2.6 2.6 V19 M8.4 11.8 h6"/></svg></a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1690,7 +1726,7 @@
       document.body.classList.toggle('menu-open', opening);
     });
     mobileMenu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeMenu); });
-    window.addEventListener('resize', function () { if (window.innerWidth > 900) closeMenu(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu(); });
 
     /* Video pause/play (Four Seasons-style restraint control) */
     var vid = document.getElementById('heroVid');
