@@ -478,7 +478,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email, source: 'audio-page' })
-        }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok && j.ok !== false, j: j }; }); })
+        }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok && j.ok === true, j: j }; }); })
           .then(function (res) {
             if (!res.ok) throw new Error((res.j && res.j.error) || 'failed');
             var wrap = form.parentElement;
