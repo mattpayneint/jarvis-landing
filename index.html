@@ -311,6 +311,9 @@
 
   /* Chapter II — capital over Chicago dusk */
   .capital .scrim { background: linear-gradient(90deg, rgba(11,11,13,0.88) 0%, rgba(11,11,13,0.55) 46%, rgba(11,11,13,0.2) 100%), linear-gradient(0deg, rgba(11,11,13,0.85) 0%, rgba(11,11,13,0) 30%); }
+  .capital .bg video, .capital .bg .fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .capital .bg .fallback { display: none; }
+  .cap-tone { position: absolute; inset: 0; background: rgba(11,11,13,0.38); pointer-events: none; }
   .capital-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 80px; align-items: end; }
   .stat-line { border-top: 1px solid rgba(242,237,225,0.22); padding: 24px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
   .stat-line:last-child { border-bottom: 1px solid rgba(242,237,225,0.22); }
@@ -918,6 +921,8 @@
     .hero .fallback { display: block; }
     .hero .kicker, .hero h1 .w, .hero .sub, .hero-actions, .hero-jbadge { opacity: 1; transform: none; animation: none; }
     .hero-jbadge::before { animation: none; }
+    .capital .bg video { display: none; }
+    .capital .bg .fallback { display: block; }
     .cine .bg.zoom img { animation: none; }
     .scroll-cue::after, .orc ul, .audio .bg img, .om-form::before { animation: none; }
     .portrait-frame::before, .portrait-frame img, .program::before, .closing-img img { animation: none; }
@@ -1030,7 +1035,13 @@
 
 <!-- CHAPTER II — CAPITAL over Chicago dusk, parallax + slow zoom -->
 <section class="cine capital" id="capital">
-  <div class="bg zoom" data-plx="0.19"><img loading="lazy" decoding="async" src="assets/a01-860fa06ade.jpg" alt="City skyline at dusk" /></div>
+  <div class="bg zoom" data-plx="0.19">
+    <video id="capitalVid" autoplay muted loop playsinline poster="assets/a45-f9e2c4e4ef.jpg">
+      <source src="assets/a44-60435f6768.mp4" type="video/mp4" />
+    </video>
+    <img class="fallback" loading="lazy" decoding="async" src="assets/a45-f9e2c4e4ef.jpg" alt="Manhattan skyline over the East River" />
+  </div>
+  <div class="cap-tone" aria-hidden="true"></div>
   <div class="scrim"></div>
   <div class="content">
     <div class="wrap">
@@ -1096,7 +1107,7 @@
         </div>
       </div>
       <div class="v-card">
-        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="" data-src-from="city" alt="City skyline at dusk" /></div></div>
+        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="" data-src-from="city" alt="Manhattan skyline over the East River" /></div></div>
         <div class="body">
           <div class="k">Vertical · 02</div>
           <h3>VC &amp; Fund Managers</h3>
