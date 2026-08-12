@@ -1871,6 +1871,9 @@
     /* Jarvis section keeps the cyan network video regardless of what the hero uses - locked independently per Matt's call. */
     var jv = document.getElementById('jarvisVid');
     if (jv) { jv.src = 'assets/a02-9b1e02cfec.mp4'; if (reduce) jv.pause(); }
+    /* Real drone footage plays a touch too brisk for a background loop - ease it down. */
+    var capVid = document.getElementById('capitalVid');
+    if (capVid) { capVid.playbackRate = 0.6; }
 
     /* FS Oahu-style card carousel: arrows, drag, dots, gentle auto-advance */
     var track = document.getElementById('carTrack');
