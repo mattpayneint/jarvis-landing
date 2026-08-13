@@ -1,19 +1,46 @@
 /* Matthew Payne Consulting — VSL landing page
-   Clean/light variant: editorial serif + tracked sans, gold accent, generous white space.
-   Typography and accent color inherited from BRICK design system; palette flipped light per Matt's direction 2026-08-07. */
+   Dark/noir variant: editorial serif + tracked sans, gold accent, full-bleed
+   city-skyline background. Matches the main site's Capital section treatment
+   per Matt's direction 2026-08-13 — supersedes the 2026-08-07 light-palette
+   override for these specific pages. */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Jost:wght@300;400;500&display=swap');
 
 :root {
+  --bg: #0B0B0D;
+  --bg-soft: #1A1714;
+  --bg-deep: #100E0B;
+  --ink: #F2EDE1;
+  --ink-soft: rgba(242,237,225,0.72);
+  --gold: #C6A667;
+  --hairline: rgba(255,255,255,0.14);
+
+  /* Layered elevation system — near+far shadows stacked read as real
+     lift, a single soft shadow reads flat no matter how large it is. */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 2px 4px rgba(0,0,0,0.22), 0 10px 20px rgba(0,0,0,0.24);
+  --shadow-lg: 0 2px 4px rgba(0,0,0,0.22), 0 10px 20px rgba(0,0,0,0.26), 0 28px 56px rgba(0,0,0,0.34);
+  --shadow-xl: 0 2px 6px rgba(0,0,0,0.26), 0 16px 32px rgba(0,0,0,0.32), 0 48px 90px rgba(0,0,0,0.44);
+  --shadow-gold-md: 0 2px 6px rgba(198,166,103,0.26), 0 8px 16px rgba(198,166,103,0.2);
+  --shadow-gold-lg: 0 4px 10px rgba(198,166,103,0.3), 0 20px 40px rgba(198,166,103,0.34);
+}
+
+/* Video pages (vc/advisor/attorney) go back to the light palette — the
+   full-strength dark skyline works great behind the opt-in page's text
+   and form, but behind an actual video player it reads as "a video
+   inside a busy photo," competing with the thing visitors are there to
+   watch. Same tokens as the pre-2026-08-13 light build, so every
+   component (already all token-driven) flips back automatically. */
+body.video-page {
   --bg: #FFFFFF;
   --bg-soft: #FAF9F6;
+  --bg-deep: #FFFFFF;
   --ink: #16213E;
   --ink-soft: #454D62;
   --gold: #A08A52;
   --hairline: #E7E4DC;
-
-  /* Layered elevation system — near+far shadows stacked read as real
-     lift, a single soft shadow reads flat no matter how large it is. */
+  --photo-peak: 0.16;
+  --scrim: rgba(255,255,255,0.86);
   --shadow-sm: 0 1px 2px rgba(22,33,62,0.05);
   --shadow-md: 0 2px 4px rgba(22,33,62,0.05), 0 10px 20px rgba(22,33,62,0.07);
   --shadow-lg: 0 2px 4px rgba(22,33,62,0.04), 0 10px 20px rgba(22,33,62,0.06), 0 28px 56px rgba(22,33,62,0.12);
@@ -26,12 +53,7 @@
 
 body {
   position: relative;
-  background:
-    radial-gradient(ellipse 900px 460px at 50% -8%, rgba(160,138,82,0.07), transparent 62%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
-    var(--bg);
-  background-repeat: no-repeat, repeat, no-repeat;
-  animation: ambient-drift 16s ease-in-out infinite;
+  background: var(--bg);
   color: var(--ink);
   font-family: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 300;
@@ -39,55 +61,48 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-@keyframes ambient-drift {
-  0%, 100% { background-position: 50% 0, 0 0, 0 0; }
-  50% { background-position: 54% 2%, 0 0, 0 0; }
-}
-
-/* Background photograph, confined to the hero band only, duotone-blended
-   rather than desaturated/brightened. A full-viewport photo blended via
-   opacity+filter under body text reads muddy no matter how it's tuned —
-   opacity scales every pixel toward the page color uniformly, and
-   brightness/grayscale crush the tonal range that gave it edges/detail
-   in the first place, so there's no opacity value that's both visible
-   AND sharp. Fixed that structurally instead of re-tuning numbers:
-   (1) confined to a bounded top zone with a mask-fade edge, so it never
-   competes with body copy below the hero; (2) color-mapped through the
-   brand gold via a multiply blend against the photo's own near-full
-   native contrast, instead of lightening/desaturating it — the tint
-   does the "atmosphere" work, not a wash. */
+/* Full-bleed background photograph, same technique as the main site's
+   Capital section: real color image, ZERO filter/grayscale/brightness on
+   the photo itself (that's what made an earlier pass read soft/muddy no
+   matter how it was tuned — compositing overhead + crushed contrast) —
+   all the toning happens on a separate flat-color scrim layered on top.
+   Fixed so it stays put as a backdrop for the whole page, not just the
+   hero, matching Matt's "just like my Capital section" direction. */
 body::before {
   content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 520px;
-  z-index: -1;
-  background-image:
-    linear-gradient(180deg, rgba(160,138,82,0.34) 0%, rgba(160,138,82,0.1) 55%, transparent 100%),
-    url('a45-f9e2c4e4ef.jpg');
-  background-blend-mode: multiply, normal;
-  background-size: 100% 100%, cover;
-  background-position: 0 0, center 30%;
-  background-repeat: no-repeat, no-repeat;
-  mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 94%);
-  -webkit-mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 94%);
+  position: fixed;
+  inset: -3%;
+  z-index: -2;
+  background-image: url('a45-f9e2c4e4ef.jpg');
+  background-size: cover;
+  background-position: center 30%;
   opacity: 0;
   pointer-events: none;
-  animation: bg-photo-in 1.8s ease-out 0.15s forwards, bg-photo-drift 42s ease-in-out 1.8s infinite;
+  animation: bg-photo-in 1.6s ease-out 0.1s forwards, bg-photo-drift 46s ease-in-out 1.6s infinite;
+}
+/* Flat scrim over the photo. Default (opt-in page): a moderate dark
+   single-tone darken so the gold/cream letterhead stands out without
+   flattening the skyline into an unreadable silhouette. Video pages
+   override both this and --photo-peak below to fade the whole thing
+   down to a ghost of itself — see the .video-page block above. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--scrim, rgba(11,11,13,0.58));
+  pointer-events: none;
 }
 @keyframes bg-photo-in {
   from { opacity: 0; transform: scale(1.04); }
-  to { opacity: 1; transform: scale(1); }
+  to { opacity: var(--photo-peak, 1); transform: scale(1); }
 }
 @keyframes bg-photo-drift {
   0%, 100% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.03) translate(-1%, 1%); }
-}
-@media (max-width: 600px) {
-  body::before { height: 380px; }
+  50% { transform: scale(1.035) translate(-1%, 1%); }
 }
 @media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; opacity: 1; transform: none; }
+  body::before { animation: none; opacity: var(--photo-peak, 1); transform: none; }
 }
 
 /* Scroll reveal */
@@ -113,7 +128,6 @@ body::before {
 .stagger.is-visible .aw { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  body { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .stagger .aw { opacity: 1; transform: none; transition: none; }
 }
@@ -195,7 +209,7 @@ h1 {
   position: relative;
   margin: 56px 0;
   border-radius: 6px;
-  background: linear-gradient(180deg, #FFFFFF 0%, var(--bg-soft) 100%);
+  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
   border: 1px solid var(--hairline);
   box-shadow: var(--shadow-xl);
 }
@@ -209,7 +223,7 @@ h1 {
   inset: -34px -26px;
   z-index: -1;
   border-radius: 16px;
-  background: radial-gradient(ellipse at 50% 40%, rgba(160,138,82,0.16), transparent 70%);
+  background: radial-gradient(ellipse at 50% 40%, rgba(198,166,103,0.16), transparent 70%);
   filter: blur(6px);
 }
 .video-frame .ratio {
@@ -251,13 +265,13 @@ h1 {
 }
 .video-frame .placeholder::before {
   top: -30%; left: 60%; width: 70%; height: 70%;
-  background: radial-gradient(circle, rgba(160,138,82,0.16), transparent 70%);
+  background: radial-gradient(circle, rgba(198,166,103,0.18), transparent 70%);
   filter: blur(30px);
   animation: frame-drift-a 22s ease-in-out infinite;
 }
 .video-frame .placeholder::after {
   bottom: -35%; left: -10%; width: 60%; height: 60%;
-  background: radial-gradient(circle, rgba(160,138,82,0.1), transparent 70%);
+  background: radial-gradient(circle, rgba(198,166,103,0.12), transparent 70%);
   filter: blur(30px);
   animation: frame-drift-b 28s ease-in-out infinite;
 }
@@ -332,7 +346,8 @@ h1 {
   padding: 12px 18px;
   margin-bottom: 8px;
   border-radius: 8px;
-  background: linear-gradient(165deg, rgba(255,255,255,0.7) 0%, rgba(250,249,246,0.5) 100%);
+  background: linear-gradient(165deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+  border: 1px solid var(--hairline);
   box-shadow: var(--shadow-sm);
   font-size: 15px;
   color: var(--ink-soft);
@@ -352,8 +367,8 @@ h1 {
   margin-top: 1px;
   box-sizing: content-box;
   border-radius: 50%;
-  background: linear-gradient(160deg, #FFFFFF 0%, var(--bg-soft) 100%);
-  box-shadow: var(--shadow-sm), inset 0 1px 1px rgba(255,255,255,0.7);
+  background: linear-gradient(160deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
+  box-shadow: var(--shadow-sm), inset 0 1px 1px rgba(255,255,255,0.08);
   fill: none;
   stroke: var(--gold);
   stroke-width: 2;
@@ -368,12 +383,10 @@ h1 {
   padding: 48px 32px 42px;
   border-radius: 8px;
   border-top: 2px solid var(--gold);
-  background: linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(253,252,249,0.98) 100%);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border-left: 1px solid rgba(231,228,220,0.9);
-  border-right: 1px solid rgba(231,228,220,0.9);
-  border-bottom: 1px solid rgba(231,228,220,0.9);
+  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
+  border-left: 1px solid var(--hairline);
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
   box-shadow: var(--shadow-xl);
   text-align: center;
   transform-style: preserve-3d;
@@ -389,11 +402,11 @@ h1 {
   inset: -14% -8%;
   z-index: -1;
   border-radius: 16px;
-  background: radial-gradient(ellipse at 50% 40%, rgba(160,138,82,0.16), transparent 70%);
+  background: radial-gradient(ellipse at 50% 40%, rgba(198,166,103,0.18), transparent 70%);
   filter: blur(6px);
 }
 .optin-frame:hover {
-  box-shadow: 0 4px 8px rgba(22,33,62,0.1), 0 20px 40px rgba(22,33,62,0.16), 0 56px 100px rgba(22,33,62,0.26);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.24), 0 20px 40px rgba(0,0,0,0.3), 0 56px 100px rgba(0,0,0,0.4);
 }
 .optin-form {
   display: flex;
@@ -407,7 +420,7 @@ h1 {
   padding: 16px 18px;
   border: 1px solid var(--hairline);
   border-radius: 2px;
-  background: #FFFFFF;
+  background: rgba(255,255,255,0.05);
   font-family: 'Jost', sans-serif;
   font-weight: 300;
   font-size: 15px;
@@ -420,7 +433,7 @@ h1 {
 .optin-form input:focus {
   outline: none;
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(160,138,82,0.12);
+  box-shadow: 0 0 0 3px rgba(198,166,103,0.16);
 }
 .optin-form button.btn-gold {
   border: 0;
@@ -465,7 +478,7 @@ h1 {
   gap: 18px;
   padding: 26px 28px;
   margin-bottom: 32px;
-  background: linear-gradient(165deg, #FFFFFF 0%, var(--bg-soft) 100%);
+  background: linear-gradient(165deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
   border: 1px solid var(--hairline);
   border-radius: 6px;
   box-shadow: var(--shadow-xl);
@@ -482,12 +495,12 @@ h1 {
   inset: -34px -26px;
   z-index: -1;
   border-radius: 16px;
-  background: radial-gradient(ellipse at 50% 40%, rgba(160,138,82,0.16), transparent 70%);
+  background: radial-gradient(ellipse at 50% 40%, rgba(198,166,103,0.16), transparent 70%);
   filter: blur(6px);
 }
 .proof-item:last-child { margin-bottom: 0; }
 .proof-item:hover {
-  box-shadow: 0 4px 8px rgba(22,33,62,0.1), 0 20px 40px rgba(22,33,62,0.16), 0 56px 100px rgba(22,33,62,0.26);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.24), 0 20px 40px rgba(0,0,0,0.3), 0 56px 100px rgba(0,0,0,0.4);
   transform: translateY(-4px);
 }
 .proof-mark {
