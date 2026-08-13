@@ -465,7 +465,7 @@
   .portrait-clip { transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
   .portrait-frame:hover .portrait-clip, .closing-img:hover .portrait-clip { transform: scale(1.08); }
   /* Coaching method */
-  #coaching-method { position: relative; }
+  #coaching-method { position: relative; padding-top: 0; }
   .coach-hero {
     position: relative; overflow: hidden;
     width: 100vw; margin: 0 calc(50% - 50vw);
@@ -474,11 +474,12 @@
   .coach-hero-content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; width: 100%; padding: 96px 44px 64px; box-sizing: border-box; }
   #coaching-method .coach-bg {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%;
+    transform: scale(1.4); transform-origin: 50% 82%;
     z-index: 0;
   }
   #coaching-method .coach-bg.fallback { display: none; }
   #coaching-method .coach-tone {
-    position: absolute; inset: 0; background: rgba(11,11,13,0.64); pointer-events: none; z-index: 0;
+    position: absolute; inset: 0; background: rgba(11,11,13,0.72); pointer-events: none; z-index: 0;
   }
   .coach-fade {
     position: absolute; left: 0; right: 0; bottom: 0; height: 70px; z-index: 1; pointer-events: none;
