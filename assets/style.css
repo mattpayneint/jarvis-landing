@@ -346,11 +346,11 @@ h1 {
   padding: 12px 18px;
   margin-bottom: 8px;
   border-radius: 8px;
-  background: linear-gradient(165deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+  background: linear-gradient(165deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
   border: 1px solid var(--hairline);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   font-size: 15px;
-  color: var(--ink-soft);
+  color: var(--ink);
   font-weight: 300;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
