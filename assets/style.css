@@ -93,6 +93,20 @@ body::after {
   background: var(--scrim, rgba(11,11,13,0.58));
   pointer-events: none;
 }
+/* Video pages: the faded photo alone reads a little flat/plain on its
+   own (Matt's note), but the video itself shouldn't get any more
+   competition — so the richness goes into the page's own material
+   instead of the image. A soft vignette (draws focus toward center,
+   where the video sits) plus a faint paper-grain texture, both cheap
+   CSS gradients/SVG, no extra image requests. */
+body.video-page::after {
+  background-image:
+    radial-gradient(ellipse 140% 100% at 50% 38%, transparent 55%, rgba(20,17,12,0.07) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 200px 200px;
+  background-color: var(--scrim);
+}
 @keyframes bg-photo-in {
   from { opacity: 0; transform: scale(1.04); }
   to { opacity: var(--photo-peak, 1); transform: scale(1); }
@@ -213,6 +227,27 @@ h1 {
   border: 1px solid var(--hairline);
   box-shadow: var(--shadow-xl);
 }
+/* Thin gold corner brackets, like a gallery placard framing a piece —
+   a considered framing detail that sits just outside the video itself,
+   so it adds polish without adding anything inside the frame the eye
+   has to parse alongside the video. */
+.frame-corners {
+  position: absolute;
+  inset: -11px;
+  pointer-events: none;
+  z-index: 2;
+}
+.frame-corners span {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--gold);
+  opacity: 0.55;
+}
+.frame-corners span:nth-child(1) { top: 0; left: 0; border-right: none; border-bottom: none; }
+.frame-corners span:nth-child(2) { top: 0; right: 0; border-left: none; border-bottom: none; }
+.frame-corners span:nth-child(3) { bottom: 0; right: 0; border-left: none; border-top: none; }
+.frame-corners span:nth-child(4) { bottom: 0; left: 0; border-right: none; border-top: none; }
 /* Same spotlight treatment as the opt-in card / proof cards — fixed
    pixel inset, not percentage (percentage scales with the element's
    own height, which is why an earlier pass looked inconsistent across
