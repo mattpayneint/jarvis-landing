@@ -4,7 +4,7 @@
    per Matt's direction 2026-08-13 — supersedes the 2026-08-07 light-palette
    override for these specific pages. */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Jost:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Jost:wght@300;400;500&display=swap');
 
 :root {
   --bg: #0B0B0D;
@@ -149,7 +149,7 @@ header.site {
 }
 header.site .mark {
   font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 32px;
   letter-spacing: 0.01em;
   color: var(--ink);
@@ -192,7 +192,7 @@ header.site::after {
 }
 h1 {
   font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 48px;
   line-height: 1.18;
   letter-spacing: -0.015em;
@@ -230,11 +230,11 @@ h1 {
 .video-frame::before {
   content: '';
   position: absolute;
-  inset: -60px 0;
+  inset: -70px 0;
   z-index: -1;
   border-radius: 24px;
-  background: radial-gradient(ellipse at 50% 45%, rgba(198,166,103,0.14), transparent 70%);
-  filter: blur(10px);
+  background: radial-gradient(ellipse at 50% 45%, rgba(198,166,103,0.24), transparent 68%);
+  filter: blur(12px);
 }
 .video-frame .ratio {
   position: relative;
@@ -254,14 +254,33 @@ h1 {
 .video-frame .placeholder {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 22px;
   color: rgba(242,237,225,0.68);
-  font-size: 14px;
-  letter-spacing: 0.1em;
+  font-size: 13px;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   overflow: hidden;
 }
+/* Focal play mark — a bare caption in an otherwise-empty dark panel
+   reads as an unfinished build, not a considered pause. Gives the eye
+   an actual thing to land on until the real embed replaces this. */
+.play-mark {
+  position: relative;
+  z-index: 1;
+  width: 84px;
+  height: 84px;
+}
+.play-mark svg { width: 100%; height: 100%; overflow: visible; }
+.play-mark circle {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.4;
+  opacity: 0.75;
+}
+.play-mark path { fill: var(--gold); opacity: 0.9; }
 /* Ambient drift so the pending-video box reads as a considered moment
    rather than a dead placeholder while the real embed isn't live yet —
    same slow radial-glow-drift technique used on the main site's video
@@ -345,7 +364,7 @@ h1 {
 /* Benefit bullets */
 .benefits {
   list-style: none;
-  max-width: 640px;
+  max-width: 712px;
   margin: 0 auto;
   padding: 0;
 }
@@ -353,8 +372,8 @@ h1 {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 12px 18px;
-  margin-bottom: 8px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
   border-radius: 8px;
   background: linear-gradient(165deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
   border: 1px solid var(--hairline);
@@ -389,11 +408,16 @@ h1 {
 /* Opt-in form */
 .optin-frame {
   position: relative;
-  margin: 56px 0;
+  max-width: 500px;
+  margin: 56px auto;
   padding: 48px 32px 42px;
   border-radius: 8px;
   border-top: 2px solid var(--gold);
-  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
+  /* Slightly warmer/richer than the plain bg-soft->bg-deep recipe used
+     for the benefit and proof cards — this is the one conversion
+     moment on the page, it should read as a distinct object, not the
+     same card component reused a third time. */
+  background: linear-gradient(180deg, #211C15 0%, var(--bg-deep) 100%);
   border-left: 1px solid var(--hairline);
   border-right: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
@@ -429,7 +453,7 @@ h1 {
   width: 100%;
   padding: 16px 18px;
   border: 1px solid var(--hairline);
-  border-radius: 2px;
+  border-radius: 3px;
   background: rgba(255,255,255,0.05);
   font-family: 'Jost', sans-serif;
   font-weight: 300;
@@ -466,7 +490,7 @@ h1 {
 }
 .proof h2 {
   font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 24px;
   text-align: center;
   margin-bottom: 8px;
@@ -490,7 +514,7 @@ h1 {
   margin-bottom: 32px;
   background: linear-gradient(165deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
   border: 1px solid var(--hairline);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: var(--shadow-xl);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
@@ -551,7 +575,7 @@ footer.site {
   text-align: center;
   padding: 28px 0 48px;
   font-size: 12px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.28em;
   color: var(--ink-soft);
   text-transform: uppercase;
 }
@@ -560,4 +584,7 @@ footer.site {
   h1 { font-size: 32px; }
   .sub { font-size: 16px; }
   .proof { margin: 48px 0; padding: 36px 0; }
+  /* "Unlock The Training" wraps to 2 lines at the desktop button's
+     tracking/padding — tighten both so it stays on one line. */
+  .btn-gold { padding: 20px 28px; letter-spacing: 0.08em; font-size: 13px; }
 }
