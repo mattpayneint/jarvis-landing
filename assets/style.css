@@ -25,6 +25,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
+  position: relative;
   background:
     radial-gradient(ellipse 900px 460px at 50% -8%, rgba(160,138,82,0.07), transparent 62%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
@@ -43,35 +44,50 @@ body {
   50% { background-position: 54% 2%, 0 0, 0 0; }
 }
 
-/* Faint background photograph — the same "glow + bled-through image"
-   idea as the main site's nav takeover, adapted for a light page: the
-   image is heavily lightened/desaturated rather than darkened, so it
-   reads as atmosphere behind the dark ink text rather than a real
-   photo competing with it. Fixed + pinned behind everything, no HTML
-   changes needed since it's pure CSS on body. */
+/* Background photograph, confined to the hero band only, duotone-blended
+   rather than desaturated/brightened. A full-viewport photo blended via
+   opacity+filter under body text reads muddy no matter how it's tuned —
+   opacity scales every pixel toward the page color uniformly, and
+   brightness/grayscale crush the tonal range that gave it edges/detail
+   in the first place, so there's no opacity value that's both visible
+   AND sharp. Fixed that structurally instead of re-tuning numbers:
+   (1) confined to a bounded top zone with a mask-fade edge, so it never
+   competes with body copy below the hero; (2) color-mapped through the
+   brand gold via a multiply blend against the photo's own near-full
+   native contrast, instead of lightening/desaturating it — the tint
+   does the "atmosphere" work, not a wash. */
 body::before {
   content: '';
-  position: fixed;
-  inset: -3%;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 520px;
   z-index: -1;
-  background-image: url('a45-f9e2c4e4ef.jpg');
-  background-size: cover;
-  background-position: center 35%;
-  filter: grayscale(0.55) brightness(1.3) contrast(0.98) saturate(0.55);
+  background-image:
+    linear-gradient(180deg, rgba(160,138,82,0.34) 0%, rgba(160,138,82,0.1) 55%, transparent 100%),
+    url('a45-f9e2c4e4ef.jpg');
+  background-blend-mode: multiply, normal;
+  background-size: 100% 100%, cover;
+  background-position: 0 0, center 30%;
+  background-repeat: no-repeat, no-repeat;
+  mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 94%);
+  -webkit-mask-image: linear-gradient(180deg, black 0%, black 45%, transparent 94%);
   opacity: 0;
   pointer-events: none;
   animation: bg-photo-in 1.8s ease-out 0.15s forwards, bg-photo-drift 42s ease-in-out 1.8s infinite;
 }
 @keyframes bg-photo-in {
-  from { opacity: 0; transform: scale(1.06); }
-  to { opacity: 0.32; transform: scale(1); }
+  from { opacity: 0; transform: scale(1.04); }
+  to { opacity: 1; transform: scale(1); }
 }
 @keyframes bg-photo-drift {
   0%, 100% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.045) translate(-1%, 1%); }
+  50% { transform: scale(1.03) translate(-1%, 1%); }
+}
+@media (max-width: 600px) {
+  body::before { height: 380px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; opacity: 0.16; transform: none; }
+  body::before { animation: none; opacity: 1; transform: none; }
 }
 
 /* Scroll reveal */
