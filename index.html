@@ -469,11 +469,20 @@
   #coaching-method > .wrap { position: relative; z-index: 2; }
   #coaching-method .coach-bg {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%;
-    filter: grayscale(0.4) contrast(1.03) saturate(0.9) brightness(0.95);
-    opacity: 0.88; mix-blend-mode: multiply; z-index: 0;
+    z-index: 0;
   }
   #coaching-method .coach-bg.fallback { display: none; }
-  #coaching-method .coach-tone { position: absolute; inset: 0; background: rgba(11,11,13,0.32); pointer-events: none; z-index: 0; }
+  #coaching-method .coach-tone {
+    position: absolute; inset: 0; background: rgba(217,207,184,0.55); pointer-events: none; z-index: 0;
+  }
+  #coaching-method > .wrap > .eyebrow, #coaching-method > .wrap > h2 {
+    position: relative; z-index: 2; background: var(--paper-deep); display: inline-block; padding: 6px 4px;
+  }
+  #coaching-method > .wrap > h2 { padding: 10px 6px; }
+  #coaching-method .room-story {
+    position: relative; background: var(--paper-deep); padding: 34px 38px; border-radius: 3px;
+    box-shadow: 0 20px 60px rgba(36,31,23,0.1);
+  }
   .coach-vign { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
   .coach-vign::before, .coach-vign::after { content: ""; position: absolute; border-radius: 50%; will-change: transform; }
   .coach-vign::before {
