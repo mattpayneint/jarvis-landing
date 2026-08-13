@@ -53,9 +53,22 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+/* Word-stagger headline reveal — same technique as the main site's
+   hero/chapter headlines. Each word is its own inline-block span with
+   an inline transition-delay; the parent's .is-visible class (added by
+   the same IntersectionObserver as .reveal) fires all of them at once. */
+.stagger .aw {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.4em);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.stagger.is-visible .aw { opacity: 1; transform: none; }
+
 @media (prefers-reduced-motion: reduce) {
   body { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  .stagger .aw { opacity: 1; transform: none; transition: none; }
 }
 
 .wrap {
@@ -168,6 +181,7 @@ h1 {
   border: 0;
 }
 .video-frame .placeholder {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,6 +189,45 @@ h1 {
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  overflow: hidden;
+}
+/* Ambient drift so the pending-video box reads as a considered moment
+   rather than a dead placeholder while the real embed isn't live yet —
+   same slow radial-glow-drift technique used on the main site's video
+   sections, tuned down for a light background. */
+.video-frame .placeholder::before,
+.video-frame .placeholder::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.video-frame .placeholder::before {
+  top: -30%; left: 60%; width: 70%; height: 70%;
+  background: radial-gradient(circle, rgba(160,138,82,0.16), transparent 70%);
+  filter: blur(30px);
+  animation: frame-drift-a 22s ease-in-out infinite;
+}
+.video-frame .placeholder::after {
+  bottom: -35%; left: -10%; width: 60%; height: 60%;
+  background: radial-gradient(circle, rgba(160,138,82,0.1), transparent 70%);
+  filter: blur(30px);
+  animation: frame-drift-b 28s ease-in-out infinite;
+}
+.video-frame .placeholder span {
+  position: relative;
+  z-index: 1;
+}
+@keyframes frame-drift-a {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-8%, 6%) scale(1.08); }
+}
+@keyframes frame-drift-b {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(6%, -5%) scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .video-frame .placeholder::before, .video-frame .placeholder::after { animation: none; }
 }
 
 /* CTA */
