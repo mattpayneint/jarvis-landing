@@ -384,28 +384,10 @@
   .numbers .l { font-size: 10.5px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(242,237,225,0.6); margin-top: 12px; }
   @media (max-width: 860px) { .numbers { grid-template-columns: 1fr 1fr; } }
 
-  /* Chapter VI — coaching, light/glow treatment */
-  .coach-light { position: relative; overflow: hidden; background: var(--paper-deep); padding: 150px 0; }
-  .coach-light .content { display: flex; justify-content: flex-end; position: relative; z-index: 2; }
-  .coach-light .inner { max-width: 520px; text-align: left; }
-  .coach-h2, .coach-lede { color: var(--ink); }
-  .coach-bg {
-    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%;
-    filter: grayscale(0.55) brightness(1.08) contrast(0.94) saturate(0.55);
-    opacity: 0.6; mix-blend-mode: multiply;
-  }
-  .coach-vign { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-  .coach-vign::before, .coach-vign::after { content: ""; position: absolute; border-radius: 50%; will-change: transform; }
-  .coach-vign::before {
-    top: -20%; left: 55%; width: 52vw; height: 52vw;
-    background: radial-gradient(circle, rgba(180,145,91,0.24), transparent 70%);
-    filter: blur(55px); animation: mmSweepA 32s ease-in-out infinite;
-  }
-  .coach-vign::after {
-    bottom: -22%; left: -8%; width: 42vw; height: 42vw;
-    background: radial-gradient(circle, rgba(180,145,91,0.18), transparent 70%);
-    filter: blur(60px); animation: mmSweepB 40s ease-in-out infinite;
-  }
+  /* Chapter VI — coaching over dusk residence */
+  .coach .scrim { background: linear-gradient(90deg, rgba(11,11,13,0.16) 0%, rgba(11,11,13,0.5) 55%, rgba(11,11,13,0.88) 100%), linear-gradient(0deg, rgba(11,11,13,0.8) 0%, rgba(11,11,13,0) 34%); }
+  .coach .content { display: flex; justify-content: flex-end; }
+  .coach .inner { max-width: 520px; text-align: left; }
 
   /* ————— Light interludes ————— */
   .light { background: var(--paper); color: var(--ink); padding: 130px 0; }
@@ -1003,7 +985,6 @@
     .mm-links a { opacity: 1; transform: none; }
     .mm-bottom .btn, .mobile-menu .nav-social { opacity: 1; transform: none; }
     .mm-vign::before, .mm-vign::after { animation: none; }
-    .coach-vign::before, .coach-vign::after { animation: none; }
     .j-ring, .j-orb { animation: none; }
     .j-sweep, .j-ticks, .j-pip { animation: none; }
     .jr1, .jr2, .j-orb { animation: none; }
@@ -1607,17 +1588,17 @@
   <div class="line"><p class="reveal">The work is quiet. <em>The results aren't.</em></p></div>
 </div>
 
-<!-- CHAPTER VI — COACHING, light/glow treatment -->
-<section class="coach-light" id="coaching">
-  <img class="coach-bg" src="assets/a47-88e7d08443.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-  <div class="coach-vign" aria-hidden="true"></div>
+<!-- CHAPTER VI — COACHING over dusk residence -->
+<section class="cine coach" id="coaching">
+  <div class="bg zoom" data-plx="0.19"><img loading="lazy" decoding="async" src="assets/a15-995edf4641.jpg" alt="Luxury chronograph watch, dark ambient light" /></div>
+  <div class="scrim"></div>
   <div class="content">
     <div class="wrap">
       <div class="inner" style="margin-left: auto;">
         <div class="eyebrow reveal">Business &amp; Life Coaching</div>
-        <h2 class="reveal about-h2 coach-h2" style="font-size: clamp(2rem, 4vw, 3.2rem);"><span class="aw" style="transition-delay: 0ms">Optimal</span> <span class="aw" style="transition-delay: 70ms">performance,</span> <span class="aw" style="transition-delay: 140ms">on</span> <span class="aw" style="transition-delay: 210ms">both</span> <span class="aw" style="transition-delay: 280ms">sides</span> <span class="aw" style="transition-delay: 350ms">of</span> <span class="aw" style="transition-delay: 420ms">the</span> <span class="aw" style="transition-delay: 490ms">desk</span></h2>
-        <p class="lede reveal coach-lede">The practice grows when you do. Psychology, strategy, habits, and energy: the four levers I've coached across three thousand rooms, applied to your business and the life it funds.</p>
-        <div class="reveal" style="margin-top: 36px;"><a class="btn on-light" href="#contact">Explore Coaching</a></div>
+        <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4vw, 3.2rem);"><span class="aw" style="transition-delay: 0ms">Optimal</span> <span class="aw" style="transition-delay: 70ms">performance,</span> <span class="aw" style="transition-delay: 140ms">on</span> <span class="aw" style="transition-delay: 210ms">both</span> <span class="aw" style="transition-delay: 280ms">sides</span> <span class="aw" style="transition-delay: 350ms">of</span> <span class="aw" style="transition-delay: 420ms">the</span> <span class="aw" style="transition-delay: 490ms">desk</span></h2>
+        <p class="lede reveal">The practice grows when you do. Psychology, strategy, habits, and energy: the four levers I've coached across three thousand rooms, applied to your business and the life it funds.</p>
+        <div class="reveal" style="margin-top: 36px;"><a class="btn" href="#contact">Explore Coaching</a></div>
       </div>
     </div>
   </div>
