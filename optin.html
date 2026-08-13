@@ -138,7 +138,8 @@ document.getElementById('optinForm').addEventListener('submit', function (e) {
   fetch('https://mattpayneint.app.n8n.cloud/webhook/vsl-optin', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    keepalive: true
   }).catch(function () {});
 
   window.location.href = v.redirect;
