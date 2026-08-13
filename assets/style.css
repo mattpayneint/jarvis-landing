@@ -25,29 +25,15 @@
   --shadow-gold-lg: 0 4px 10px rgba(198,166,103,0.3), 0 20px 40px rgba(198,166,103,0.34);
 }
 
-/* Video pages (vc/advisor/attorney) go back to the light palette — the
-   full-strength dark skyline works great behind the opt-in page's text
-   and form, but behind an actual video player it reads as "a video
-   inside a busy photo," competing with the thing visitors are there to
-   watch. Same tokens as the pre-2026-08-13 light build, so every
-   component (already all token-driven) flips back automatically. */
-body.video-page {
-  --bg: #FFFFFF;
-  --bg-soft: #FAF9F6;
-  --bg-deep: #FFFFFF;
-  --ink: #16213E;
-  --ink-soft: #454D62;
-  --gold: #A08A52;
-  --hairline: #E7E4DC;
-  --photo-peak: 0.5;
-  --scrim: rgba(255,255,255,0.6);
-  --shadow-sm: 0 1px 2px rgba(22,33,62,0.05);
-  --shadow-md: 0 2px 4px rgba(22,33,62,0.05), 0 10px 20px rgba(22,33,62,0.07);
-  --shadow-lg: 0 2px 4px rgba(22,33,62,0.04), 0 10px 20px rgba(22,33,62,0.06), 0 28px 56px rgba(22,33,62,0.12);
-  --shadow-xl: 0 2px 6px rgba(22,33,62,0.08), 0 16px 32px rgba(22,33,62,0.14), 0 48px 90px rgba(22,33,62,0.22);
-  --shadow-gold-md: 0 2px 6px rgba(160,138,82,0.22), 0 8px 16px rgba(160,138,82,0.18);
-  --shadow-gold-lg: 0 4px 10px rgba(160,138,82,0.26), 0 20px 40px rgba(160,138,82,0.3);
-}
+/* Video pages (vc/advisor/attorney): same dark/gold theme as the opt-in
+   page — no separate light palette. Real premium VSL-template research
+   (a Framer template built specifically "for consultants, coaches &
+   agencies") confirms a flat dark canvas is a legitimate, common choice
+   for exactly this page type, and it keeps all 4 pages one consistent
+   brand rather than the video pages being the odd light-themed one out.
+   The only video-page-specific override is suppressing the ambient
+   background photo below — that's what was actually competing with the
+   video, not the dark canvas itself. */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -93,19 +79,18 @@ body::after {
   background: var(--scrim, rgba(11,11,13,0.58));
   pointer-events: none;
 }
-/* Video pages: the faded photo alone reads a little flat/plain on its
-   own (Matt's note), but the video itself shouldn't get any more
-   competition — so the richness goes into the page's own material
-   instead of the image. A soft vignette (draws focus toward center,
-   where the video sits) plus a faint paper-grain texture, both cheap
-   CSS gradients/SVG, no extra image requests. */
+/* Video pages: no ambient background photo at all. Research (real VSL-page
+   teardowns) + a live critique both converged on the same finding — a
+   full-bleed photo behind body content competes with the video for the
+   eye's first fixation and measurably hurts conversion on exactly this
+   page type, and every tuning pass (opacity, scrim, vignette) still left
+   it "too weak to read as atmosphere, too present to leave a clean
+   canvas" (the actual bug: it was diluting into body's own opaque white,
+   not into anything). Flat canvas instead — the video and headline are
+   the only things competing for attention now. */
+body.video-page::before,
 body.video-page::after {
-  background-image:
-    radial-gradient(ellipse 140% 100% at 50% 38%, transparent 55%, rgba(20,17,12,0.07) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  background-repeat: no-repeat, repeat;
-  background-size: cover, 200px 200px;
-  background-color: var(--scrim);
+  display: none;
 }
 @keyframes bg-photo-in {
   from { opacity: 0; transform: scale(1.04); }
@@ -218,54 +203,39 @@ h1 {
   font-weight: 300;
 }
 
-/* Video */
+/* Video — this is the page's one job, so it gets real weight and no
+   competing frame device. Breaks out wider than the 760px text column
+   (research: best-in-class VSL pages run the video near-fullscreen,
+   never boxed in a skeuomorphic device frame) and sits in a solid dark
+   panel regardless of page theme, so it reads as the unmistakable
+   anchor against the flat white canvas around it — not another pale
+   card blending into the page. */
 .video-frame {
   position: relative;
-  margin: 56px 0;
-  border-radius: 6px;
-  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg-deep) 100%);
-  border: 1px solid var(--hairline);
-  box-shadow: var(--shadow-xl);
+  width: 100vw;
+  margin: 48px calc(50% - 50vw) 56px;
+  border-radius: 8px;
+  background: linear-gradient(165deg, #262019 0%, #100D09 100%);
+  border: 1px solid rgba(198,166,103,0.22);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.4);
 }
-/* Thin gold corner brackets, like a gallery placard framing a piece —
-   a considered framing detail that sits just outside the video itself,
-   so it adds polish without adding anything inside the frame the eye
-   has to parse alongside the video. */
-.frame-corners {
-  position: absolute;
-  inset: -11px;
-  pointer-events: none;
-  z-index: 2;
-}
-.frame-corners span {
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  border: 1.5px solid var(--gold);
-  opacity: 0.55;
-}
-.frame-corners span:nth-child(1) { top: 0; left: 0; border-right: none; border-bottom: none; }
-.frame-corners span:nth-child(2) { top: 0; right: 0; border-left: none; border-bottom: none; }
-.frame-corners span:nth-child(3) { bottom: 0; right: 0; border-left: none; border-top: none; }
-.frame-corners span:nth-child(4) { bottom: 0; left: 0; border-right: none; border-top: none; }
-/* Same spotlight treatment as the opt-in card / proof cards — fixed
-   pixel inset, not percentage (percentage scales with the element's
-   own height, which is why an earlier pass looked inconsistent across
-   differently-sized elements). */
+/* Soft gold spotlight so the frame lifts off an equally-dark page
+   background instead of blending into it — same technique as the
+   opt-in card, bled out past the frame's own edges. */
 .video-frame::before {
   content: '';
   position: absolute;
-  inset: -34px -26px;
+  inset: -60px 0;
   z-index: -1;
-  border-radius: 16px;
-  background: radial-gradient(ellipse at 50% 40%, rgba(198,166,103,0.16), transparent 70%);
-  filter: blur(6px);
+  border-radius: 24px;
+  background: radial-gradient(ellipse at 50% 45%, rgba(198,166,103,0.14), transparent 70%);
+  filter: blur(10px);
 }
 .video-frame .ratio {
   position: relative;
   width: 100%;
   padding-top: 56.25%;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
 }
 .video-frame .ratio iframe,
@@ -281,7 +251,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ink-soft);
+  color: rgba(242,237,225,0.68);
   font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -337,11 +307,11 @@ h1 {
   color: #FFFFFF;
   font-family: 'Jost', sans-serif;
   font-weight: 500;
-  font-size: 14px;
-  letter-spacing: 0.15em;
+  font-size: 15px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 18px 44px;
+  padding: 22px 56px;
   border-radius: 3px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.35),
@@ -370,7 +340,7 @@ h1 {
 /* Benefit bullets */
 .benefits {
   list-style: none;
-  max-width: 480px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 0;
 }
