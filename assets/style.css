@@ -37,8 +37,13 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   position: relative;
+  overflow-x: hidden;
   background: var(--bg);
   color: var(--ink);
   font-family: 'Jost', 'Futura', 'Helvetica Neue', Arial, sans-serif;
