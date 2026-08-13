@@ -473,13 +473,12 @@
   }
   .coach-hero-content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; width: 100%; padding: 96px 44px 64px; box-sizing: border-box; }
   #coaching-method .coach-bg {
-    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%;
-    transform: scale(1.4); transform-origin: 50% 82%;
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%;
     z-index: 0;
   }
   #coaching-method .coach-bg.fallback { display: none; }
   #coaching-method .coach-tone {
-    position: absolute; inset: 0; background: rgba(11,11,13,0.72); pointer-events: none; z-index: 0;
+    position: absolute; inset: 0; background: rgba(11,11,13,0.3); pointer-events: none; z-index: 0;
   }
   .coach-fade {
     position: absolute; left: 0; right: 0; bottom: 0; height: 70px; z-index: 1; pointer-events: none;
@@ -487,7 +486,7 @@
   }
   .coach-scrim {
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(100deg, rgba(11,11,13,0.4) 0%, rgba(11,11,13,0.12) 42%, transparent 62%);
+    background: linear-gradient(100deg, rgba(11,11,13,0.32) 0%, rgba(11,11,13,0.1) 38%, transparent 58%);
   }
   #coaching-method .coach-hero-content .eyebrow, #coaching-method .coach-hero-content h2,
   #coaching-method .room-pull, #coaching-method .room-story p {
@@ -507,35 +506,9 @@
     background: radial-gradient(circle, rgba(180,145,91,0.16), transparent 70%);
     filter: blur(60px); animation: mmSweepB 40s ease-in-out infinite;
   }
-  .room-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 70px; align-items: center; margin-top: 10px; }
+  #coaching-method .room-story { max-width: 620px; margin-top: 10px; }
   .room-pull { font-family: var(--serif); font-size: clamp(1.5rem, 2.9vw, 2.1rem); line-height: 1.35; color: var(--ink); margin-bottom: 24px; }
   .room-pull em { color: var(--brass); font-style: italic; }
-  .stage-frame { position: relative; }
-  .stage-clip { position: relative; z-index: 1; }
-  .stage-mark {
-    aspect-ratio: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px;
-    background: none;
-  }
-  .stage-emblem { width: min(72%, 260px); height: auto; overflow: visible; }
-  .gyro-glow { opacity: 0.55; }
-  .gyro-axis { stroke: url(#stageGold); stroke-width: 1; opacity: 0.45; }
-  .gyro-pivot { fill: url(#stageGold); opacity: 0.85; }
-  .gyro-ring { transform-origin: 100px 100px; }
-  .gyro-ring ellipse { fill: none; stroke: url(#stageGold); }
-  .gyro-ring.r1 { animation: gyroR1 6s linear infinite; }
-  .gyro-ring.r1 ellipse { stroke-width: 1.7; opacity: 0.9; }
-  .gyro-ring.r2 { animation: gyroR2 9s linear infinite; }
-  .gyro-ring.r2 ellipse { stroke-width: 1.1; opacity: 0.5; }
-  .gyro-ring.r3 { animation: gyroR3 12.5s linear infinite reverse; }
-  .gyro-ring.r3 ellipse { stroke-width: 0.8; opacity: 0.32; }
-  .gyro-rotor { fill: url(#stageGold); opacity: 0.4; transform-origin: 100px 100px; animation: gyroRotor 2.6s linear infinite; }
-  @keyframes gyroR1 { from { transform: rotate(10deg); } to { transform: rotate(370deg); } }
-  @keyframes gyroR2 { from { transform: rotate(92deg); } to { transform: rotate(452deg); } }
-  @keyframes gyroR3 { from { transform: rotate(-48deg); } to { transform: rotate(312deg); } }
-  @keyframes gyroRotor { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  .stage-mark-label { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(242,237,225,0.75); text-align: center; }
-  .room-grid { perspective: 1100px; }
-  @media (max-width: 860px) { .room-grid { grid-template-columns: 1fr; gap: 44px; } }
   @media (max-width: 700px) { .coach-hero { margin-bottom: 40px; } .coach-hero-content { padding: 68px 24px 56px; } }
   .m-head { display: flex; justify-content: space-between; align-items: center; margin-top: 64px; }
   .m-head-label { font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--brass); }
@@ -1033,10 +1006,6 @@
     .mm-bottom .btn, .mobile-menu .nav-social { opacity: 1; transform: none; }
     .mm-vign::before, .mm-vign::after { animation: none; }
     .coach-vign::before, .coach-vign::after { animation: none; }
-    .gyro-ring, .gyro-rotor { animation: none !important; }
-    .gyro-ring.r1 { transform: rotate(10deg); }
-    .gyro-ring.r2 { transform: rotate(92deg); }
-    .gyro-ring.r3 { transform: rotate(-48deg); }
     #coaching-method video.coach-bg { display: none; }
     #coaching-method .coach-bg.fallback { display: block; }
     .j-ring, .j-orb { animation: none; }
@@ -1662,10 +1631,10 @@
 <section class="light deep" id="coaching-method">
   <div class="wrap">
     <div class="coach-hero" id="coachHero">
-      <video class="coach-bg" id="coachMethodVid" autoplay muted loop playsinline poster="assets/a16-3e092fa7a3.jpg">
-        <source src="assets/a48-332c265c24.mp4" type="video/mp4" />
+      <video class="coach-bg" id="coachMethodVid" autoplay muted loop playsinline poster="assets/a53-2597c7b731.jpg">
+        <source src="assets/a52-a70f011715.mp4" type="video/mp4" />
       </video>
-      <img class="coach-bg fallback" src="assets/a16-3e092fa7a3.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <img class="coach-bg fallback" src="assets/a53-2597c7b731.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
       <div class="coach-tone" aria-hidden="true"></div>
       <div class="coach-scrim" aria-hidden="true"></div>
       <div class="coach-vign" aria-hidden="true"></div>
@@ -1673,35 +1642,10 @@
       <div class="coach-hero-content" id="coachHeroContent">
         <div class="eyebrow reveal">The Method</div>
         <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 22px;"><span class="aw" style="transition-delay: 0ms">Optimal</span> <span class="aw" style="transition-delay: 70ms">performance,</span> <span class="aw" style="transition-delay: 140ms">engineered</span></h2>
-        <div class="room-grid">
-          <div class="room-story">
-            <p class="room-pull reveal">The work is private, personal, and one on one. <em>Because breakthroughs are.</em></p>
-            <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 50ch;">This is personalized professional coaching for your business and your life. Together, every week, we work the levers that actually move performance: psychology, strategy, habits, and energy. Not theory from a stage. Applied to your goals, your obstacles, your season.</p>
-            <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 50ch;">Some of the deepest work happens beneath the business: the internal conflicts and strongholds that quietly cap what a person can do. That is where two decades of performance psychology earn their keep. The source of real greatness is already in you. The work is tapping it, continuously.</p>
-          </div>
-          <div class="stage-frame reveal">
-            <div class="stage-clip stage-mark">
-              <svg class="stage-emblem" viewBox="0 0 200 200" aria-hidden="true">
-                <defs>
-                  <linearGradient id="stageGold" x1="0" y1="0" x2="0.3" y2="1">
-                    <stop offset="0" stop-color="#D8C296"/><stop offset="0.45" stop-color="#9A7B3F"/><stop offset="1" stop-color="#5C4826"/>
-                  </linearGradient>
-                  <radialGradient id="stageGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="rgba(194,164,104,0.4)"/><stop offset="100%" stop-color="rgba(194,164,104,0)"/>
-                  </radialGradient>
-                </defs>
-                <circle class="gyro-glow" cx="100" cy="100" r="88" fill="url(#stageGlow)" />
-                <line class="gyro-axis" x1="100" y1="10" x2="100" y2="190" />
-                <circle class="gyro-pivot" cx="100" cy="15" r="2.6" />
-                <circle class="gyro-pivot" cx="100" cy="185" r="2.6" />
-                <g class="gyro-ring r3"><ellipse cx="100" cy="100" rx="80" ry="28" /></g>
-                <g class="gyro-ring r2"><ellipse cx="100" cy="100" rx="80" ry="28" /></g>
-                <ellipse class="gyro-rotor" cx="100" cy="100" rx="28" ry="10" />
-                <g class="gyro-ring r1"><ellipse cx="100" cy="100" rx="80" ry="28" /></g>
-              </svg>
-              <span class="stage-mark-label">Precision, in motion</span>
-            </div>
-          </div>
+        <div class="room-story">
+          <p class="room-pull reveal">The work is private, personal, and one on one. <em>Because breakthroughs are.</em></p>
+          <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 50ch;">This is personalized professional coaching for your business and your life. Together, every week, we work the levers that actually move performance: psychology, strategy, habits, and energy. Not theory from a stage. Applied to your goals, your obstacles, your season.</p>
+          <p class="reveal" style="color: rgba(242,237,225,0.78); max-width: 50ch;">Some of the deepest work happens beneath the business: the internal conflicts and strongholds that quietly cap what a person can do. That is where two decades of performance psychology earn their keep. The source of real greatness is already in you. The work is tapping it, continuously.</p>
         </div>
       </div>
     </div>
