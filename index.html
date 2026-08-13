@@ -473,6 +473,7 @@
     opacity: 0.88; mix-blend-mode: multiply; z-index: 0;
   }
   #coaching-method .coach-bg.fallback { display: none; }
+  #coaching-method .coach-tone { position: absolute; inset: 0; background: rgba(11,11,13,0.32); pointer-events: none; z-index: 0; }
   .coach-vign { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
   .coach-vign::before, .coach-vign::after { content: ""; position: absolute; border-radius: 50%; will-change: transform; }
   .coach-vign::before {
@@ -1633,6 +1634,7 @@
     <source src="assets/a48-332c265c24.mp4" type="video/mp4" />
   </video>
   <img class="coach-bg fallback" src="assets/a16-3e092fa7a3.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+  <div class="coach-tone" aria-hidden="true"></div>
   <div class="coach-vign" aria-hidden="true"></div>
   <div class="wrap">
     <div class="eyebrow reveal">The Method</div>
