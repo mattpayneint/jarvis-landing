@@ -71,17 +71,16 @@ body::before {
   pointer-events: none;
   animation: bg-photo-in 1.6s ease-out 0.1s forwards, bg-photo-drift 46s ease-in-out 1.6s infinite;
 }
-/* Flat scrim over the photo. Default (opt-in page): a moderate dark
-   single-tone darken so the gold/cream letterhead stands out without
-   flattening the skyline into an unreadable silhouette. Video pages
-   override both this and --photo-peak below to fade the whole thing
-   down to a ghost of itself — see the .video-page block above. */
+/* Flat scrim over the photo — a moderate dark single-tone darken so the
+   gold/cream letterhead stands out without flattening the skyline into
+   an unreadable silhouette. Opt-in page only; video pages hide the
+   whole photo+scrim layer entirely below. */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: var(--scrim, rgba(11,11,13,0.58));
+  background: rgba(11,11,13,0.58);
   pointer-events: none;
 }
 /* Video pages: no ambient background photo at all. Research (real VSL-page
@@ -99,14 +98,14 @@ body.video-page::after {
 }
 @keyframes bg-photo-in {
   from { opacity: 0; transform: scale(1.04); }
-  to { opacity: var(--photo-peak, 1); transform: scale(1); }
+  to { opacity: 1; transform: scale(1); }
 }
 @keyframes bg-photo-drift {
   0%, 100% { transform: scale(1) translate(0, 0); }
   50% { transform: scale(1.035) translate(-1%, 1%); }
 }
 @media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; opacity: var(--photo-peak, 1); transform: none; }
+  body::before { animation: none; opacity: 1; transform: none; }
 }
 
 /* Scroll reveal */
