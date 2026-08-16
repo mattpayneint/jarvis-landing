@@ -210,7 +210,18 @@
   @media (max-width: 900px) { .nav-social { display: none; } }
   .nav-links .cta { border: 1px solid rgba(242,237,225,0.55); padding: 12px 24px; transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease); }
   .nav-links .cta:hover { background: var(--cream); color: var(--noir); border-color: var(--cream); }
-  @media (max-width: 1300px) { .nav-links > a:not(.cta) { display: none; } }
+  .nav-drop { position: relative; display: flex; }
+  .nav-drop > a { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; color: var(--cream); position: relative; padding-bottom: 5px; padding-right: 16px; display: inline-block; }
+  .nav-drop > a::after { content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; background: var(--brass-soft); transform: scaleX(0); transform-origin: right; transition: transform 0.45s var(--ease); }
+  .nav-drop:hover > a::after, .nav-drop:focus-within > a::after { transform: scaleX(1); transform-origin: left; }
+  .nd-chev { position: absolute; right: 0; top: 1px; width: 10px; height: 10px; fill: none; stroke: var(--brass-soft); stroke-width: 2.2; transition: transform 0.35s var(--ease); }
+  .nav-drop:hover .nd-chev, .nav-drop:focus-within .nd-chev { transform: rotate(180deg); }
+  .nav-drop-panel { position: absolute; top: 100%; left: 50%; transform: translate(-50%, 8px); padding-top: 18px; opacity: 0; visibility: hidden; transition: opacity 0.35s var(--ease), transform 0.35s var(--ease), visibility 0s linear 0.35s; z-index: 60; }
+  .nav-drop:hover .nav-drop-panel, .nav-drop:focus-within .nav-drop-panel { opacity: 1; visibility: visible; transform: translate(-50%, 0); transition-delay: 0s; }
+  .nav-drop-panel > a { display: block; white-space: nowrap; background: rgba(11,11,13,0.96); border: 1px solid rgba(194,164,104,0.28); border-top: none; padding: 15px 26px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--cream); transition: color 0.3s var(--ease), background 0.3s var(--ease), padding-left 0.3s var(--ease); }
+  .nav-drop-panel > a:first-child { border-top: 1px solid rgba(194,164,104,0.28); }
+  .nav-drop-panel > a:hover { color: #E9CD90; background: rgba(24,22,17,0.98); padding-left: 32px; }
+  @media (max-width: 1300px) { .nav-links > a:not(.cta), .nav-drop { display: none; } }
 
   /* ————— Full-screen menu takeover (all breakpoints) ————— */
   .nav-toggle {
@@ -746,6 +757,10 @@
   .portrait-frame img { width: 100%; display: block; mix-blend-mode: multiply; filter: saturate(0.92); animation: portraitzoom 18s ease-in-out infinite alternate; }
   @keyframes portraitzoom { from { transform: scale(1); } to { transform: scale(1.09); } }
   .programs { display: flex; flex-direction: column; gap: 26px; }
+  @property --crsA { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+  .program.course::before { content: ""; position: absolute; inset: 0; padding: 2px; z-index: 3; background: conic-gradient(from var(--crsA), rgba(194,164,104,0) 0deg 278deg, rgba(194,164,104,0.6) 312deg, #E9CD90 332deg, rgba(194,164,104,0.6) 352deg, rgba(194,164,104,0) 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; animation: crsspin 6.5s linear infinite; pointer-events: none; }
+  @keyframes crsspin { to { --crsA: 360deg; } }
+  .program.course { border-color: rgba(194,164,104,0.5); }
   .program {
     background: #FFFDF8; border: 1px solid var(--hairline); position: relative; overflow: hidden;
     box-shadow: 0 1px 2px rgba(88,70,38,0.07), 0 6px 20px rgba(88,70,38,0.07);
@@ -1058,7 +1073,13 @@
     <a href="#capital">Capital</a>
     <a href="#about">About</a>
     <a href="#process">Approach</a>
-    <a href="#programs">Programs</a>
+    <div class="nav-drop">
+      <a href="#programs">Client Engagements<svg class="nd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+      <div class="nav-drop-panel" role="menu" aria-label="Client Engagements">
+        <a href="#programs" role="menuitem">Consulting &amp; The Approach</a>
+        <a href="https://portal.matthewpayneconsulting.com" role="menuitem">Online Hybrid Training</a>
+      </div>
+    </div>
     <a href="#coaching">Coaching</a>
     <a href="#jarvis">Agentic Technology</a>
     <a href="#audio">Audio</a>
@@ -1084,10 +1105,11 @@
       <a href="#capital"><span class="mi">01</span>Capital</a>
       <a href="#about"><span class="mi">02</span>About</a>
       <a href="#process"><span class="mi">03</span>Approach</a>
-      <a href="#programs"><span class="mi">04</span>Programs</a>
+      <a href="#programs"><span class="mi">04</span>Client Engagements</a>
       <a href="#coaching"><span class="mi">05</span>Coaching</a>
-      <a href="#jarvis"><span class="mi">06</span>Agentic Technology</a>
-      <a href="#audio"><span class="mi">07</span>Audio</a>
+      <a href="https://portal.matthewpayneconsulting.com"><span class="mi">06</span>The Online Course</a>
+      <a href="#jarvis"><span class="mi">07</span>Agentic Technology</a>
+      <a href="#audio"><span class="mi">08</span>Audio</a>
     </div>
     <div class="mm-bottom">
       <a class="btn" href="#contact">Schedule A Call</a>
@@ -1596,7 +1618,7 @@
         </svg>
               <div class="portrait-frame reveal"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a38-matt-programs.jpg" alt="Matthew Payne" /></div></div></div>
       <div>
-        <div class="eyebrow reveal">Programs</div>
+        <div class="eyebrow reveal">Client Engagements</div>
         <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 40px;"><span class="aw" style="transition-delay: 0ms">Two</span> <span class="aw" style="transition-delay: 70ms">ways</span> <span class="aw" style="transition-delay: 140ms">we</span> <span class="aw" style="transition-delay: 210ms">work</span> <span class="aw" style="transition-delay: 280ms">together</span></h2>
         <div class="programs">
           <div class="program reveal">
@@ -1608,13 +1630,13 @@
               <a class="quiet-link" href="#contact">Inquire</a>
             </div>
           </div>
-          <div class="program reveal">
+          <div class="program course reveal">
             <div class="p-img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a13-2958722dab.jpg" alt=""></div></div>
             <div class="p-body">
-              <div class="k">The System</div>
-              <h3>The High-Net-Worth Client Attraction &amp; Conversion System</h3>
-              <p>The complete architecture: automation, attraction, and consultative conversion, installed and running.</p>
-              <a class="quiet-link" href="#contact">Inquire</a>
+              <div class="k">Course &middot; Weekly</div>
+              <h3>The System</h3>
+              <p>The complete system: seventeen video modules, the worksheets, the swipe files, and weekly calls with me while you build it. Learn it once, own it forever.</p>
+              <a class="quiet-link" href="https://portal.matthewpayneconsulting.com">Enter The Classroom</a>
             </div>
           </div>
         </div>
