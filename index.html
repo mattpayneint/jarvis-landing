@@ -981,7 +981,8 @@
   /* All widths: sections never spill sideways (fly-in ghosts + ring decorations clip at edges) */
   section, .cineband, .closing, footer { overflow-x: clip; }
   /* Fixed nav sits at z-index:60 over everything; without this, jumping to a nav anchor tucks the section's headline behind the bar. */
-  section[id], .closing[id] { scroll-margin-top: 110px; }
+  /* Matches the SOLID (scrolled) nav height of 84px; anchor jumps always end scrolled. */
+  section[id], .closing[id] { scroll-margin-top: 86px; }
   /* .jarvis needs the sticky Jarvis core to escape section-level clipping on desktop (where sticky is active); the video/scrim wrapper (.j-bg-clip) handles its own overflow instead. Mobile keeps the universal clip below since sticky is disabled there. */
   @media (min-width: 901px) { .jarvis { overflow-x: visible; } }
 
@@ -1662,7 +1663,7 @@
         <div class="eyebrow reveal">Business &amp; Life Coaching</div>
         <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4vw, 3.2rem);"><span class="aw" style="transition-delay: 0ms">Optimal</span> <span class="aw" style="transition-delay: 70ms">performance,</span> <span class="aw" style="transition-delay: 140ms">on</span> <span class="aw" style="transition-delay: 210ms">both</span> <span class="aw" style="transition-delay: 280ms">sides</span> <span class="aw" style="transition-delay: 350ms">of</span> <span class="aw" style="transition-delay: 420ms">the</span> <span class="aw" style="transition-delay: 490ms">desk</span></h2>
         <p class="lede reveal">The practice grows when you do. Psychology, strategy, habits, and energy: the four levers I've coached across three thousand rooms, applied to your business and the life it funds.</p>
-        <div class="reveal" style="margin-top: 36px;"><a class="btn" href="#contact">Explore Coaching</a></div>
+        <div class="reveal" style="margin-top: 36px;"><a class="btn" href="#coaching">Explore Coaching</a></div>
       </div>
     </div>
   </div>
