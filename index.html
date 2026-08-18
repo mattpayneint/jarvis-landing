@@ -160,6 +160,9 @@
 </head>
 <body>
 <style>
+  /* First rule on purpose: attributed images default to natural ratio (beats the raw width/height attrs), while every later CSS height rule still wins the cascade. */
+  img[width] { height: auto; }
+
   /* Direction A v3 — THE GALLERY, Four Seasons anatomy: full-bleed cinema, black + gold + cream. */
   :root {
     --noir: #0B0B0D;
@@ -176,7 +179,7 @@
     --hairline-dark: #2A2A2E;
     --serif: "Didot", "Playfair Display", "Bodoni 72", "Times New Roman", Georgia, serif;
     --sans: "Avenir Next", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
   html { scroll-behavior: smooth; }
   body { background: var(--noir); color: var(--cream); font-family: var(--sans); font-size: 17px; line-height: 1.65; margin: 0; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
@@ -963,6 +966,7 @@
   .car-head-slim { margin-bottom: 40px; }
   .car-head-slim .eyebrow { color: var(--brass-soft); font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; }
   .car-nav { display: flex; gap: 12px; }
+  .verticals .car-nav { display: none; }
   .car-btn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(242,237,225,0.35); background: transparent; color: var(--cream); font-size: 16px; cursor: pointer; transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease); }
   .car-btn:hover { border-color: var(--brass-soft); background: rgba(194,164,104,0.12); transform: translateY(-2px); }
   .car-track { display: flex; gap: 30px; cursor: grab; user-select: none; will-change: transform; transition: transform 0.7s var(--ease); }
@@ -1126,9 +1130,6 @@
     <a href="#audio">Audio</a>
     <div class="nav-social" aria-label="Social media">
       <a href="https://www.linkedin.com/in/matthewpayneconsulting/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><path d="M7.5 10.5 V17 M7.5 7.2 v.01 M11.5 17 v-4 c0-2.6 4.5-2.8 4.5 0 V17"/></svg></a>
-      <a class="soon" role="img" aria-label="Instagram (coming soon)" title="Instagram — coming soon"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8 v.01"/></svg></a>
-      <a class="soon" role="img" aria-label="YouTube (coming soon)" title="YouTube — coming soon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10.2 9.3 L15 12 L10.2 14.7 Z"/></svg></a>
-      <a class="soon" role="img" aria-label="Facebook (coming soon)" title="Facebook — coming soon"><svg viewBox="0 0 24 24"><path d="M15.5 5 h-2.2 a2.6 2.6 0 0 0 -2.6 2.6 V19 M8.4 11.8 h6"/></svg></a>
     </div>
     <a href="#contact" class="cta">Schedule A Call</a>
   </div>
@@ -1156,9 +1157,6 @@
       <a class="btn" href="#contact">Schedule A Call</a>
       <div class="nav-social" aria-label="Social media">
         <a href="https://www.linkedin.com/in/matthewpayneconsulting/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5"/><path d="M7.5 10.5 V17 M7.5 7.2 v.01 M11.5 17 v-4 c0-2.6 4.5-2.8 4.5 0 V17"/></svg></a>
-        <a class="soon" role="img" aria-label="Instagram (coming soon)" title="Instagram — coming soon"><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.2 6.8 v.01"/></svg></a>
-        <a class="soon" role="img" aria-label="YouTube (coming soon)" title="YouTube — coming soon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10.2 9.3 L15 12 L10.2 14.7 Z"/></svg></a>
-        <a class="soon" role="img" aria-label="Facebook (coming soon)" title="Facebook — coming soon"><svg viewBox="0 0 24 24"><path d="M15.5 5 h-2.2 a2.6 2.6 0 0 0 -2.6 2.6 V19 M8.4 11.8 h6"/></svg></a>
       </div>
     </div>
   </div>
