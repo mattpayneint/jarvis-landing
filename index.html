@@ -1096,6 +1096,15 @@
     .s-step.live .s-medal::after { animation: none; }
     html { scroll-behavior: auto; }
   }
+
+  /* Craft polish: brand selection + scrollbar (audit items 3-4) */
+  ::selection { background: rgba(194,164,104,0.85); color: #0B0B0D; }
+  ::-moz-selection { background: rgba(194,164,104,0.85); color: #0B0B0D; }
+  html { scrollbar-width: thin; scrollbar-color: rgba(154,123,63,0.6) #0B0B0D; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #0B0B0D; }
+  ::-webkit-scrollbar-thumb { background: #9A7B3F; border-radius: 5px; border: 2px solid #0B0B0D; }
+  ::-webkit-scrollbar-thumb:hover { background: #C2A468; }
 </style>
 
 <nav id="nav">
@@ -1126,7 +1135,7 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <img class="mm-bg" src="assets/a46-6c539cdf5a.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+  <img width="1920" height="1280" class="mm-bg" src="assets/a46-6c539cdf5a.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
   <div class="mm-vign" aria-hidden="true"></div>
   <div class="mm-inner">
     <div class="mm-top">
@@ -1160,7 +1169,7 @@
   <video id="heroVid" autoplay muted loop playsinline poster="assets/a01-860fa06ade.jpg">
     <source src="assets/a02-9b1e02cfec.mp4" type="video/mp4" />
   </video>
-  <img decoding="async" class="fallback" src="assets/a01-860fa06ade.jpg" alt="City at dusk" />
+  <img width="1800" height="1107" decoding="async" class="fallback" src="assets/a01-860fa06ade.jpg" alt="City at dusk" />
   <div class="hero-scrim"></div>
   <div class="hero-content">
     <div class="kicker">Matthew Payne Consulting</div>
@@ -1193,7 +1202,7 @@
     <video id="capitalVid" autoplay muted loop playsinline poster="assets/a45-f9e2c4e4ef.jpg">
       <source src="assets/a44-60435f6768.mp4" type="video/mp4" />
     </video>
-    <img class="fallback" loading="lazy" decoding="async" src="assets/a45-f9e2c4e4ef.jpg" alt="Manhattan skyline over the East River" />
+    <img width="1280" height="720" class="fallback" loading="lazy" decoding="async" src="assets/a45-f9e2c4e4ef.jpg" alt="Manhattan skyline over the East River" />
   </div>
   <div class="cap-tone" aria-hidden="true"></div>
   <div class="scrim"></div>
@@ -1232,7 +1241,7 @@
             <circle class="strat-ring" cx="200" cy="220" r="172"/>
             <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
           </svg>
-          <div class="portrait-frame"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a36-matt-vest.jpg" alt="Matthew Payne" /></div></div>
+          <div class="portrait-frame"><div class="portrait-clip"><img width="900" height="1500" loading="lazy" decoding="async" src="assets/a36-matt-vest.jpg" alt="Matthew Payne" /></div></div>
         </div>
       </div>
     </div>
@@ -1251,7 +1260,7 @@
     </div>
     <div class="car-track" id="carTrack">
       <div class="v-card">
-        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="" data-src-from="towers" alt="Glass towers" /></div></div>
+        <div class="img"><div class="v-zoom"><img width="1800" height="1200" loading="lazy" decoding="async" src="" data-src-from="towers" alt="Glass towers" /></div></div>
         <div class="body">
           <div class="k">Vertical · 01</div>
           <h3>Financial Advisors</h3>
@@ -1261,7 +1270,7 @@
         </div>
       </div>
       <div class="v-card">
-        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="assets/a47-c8af4b7005.jpg" alt="Empire State Building at sunset over Manhattan" /></div></div>
+        <div class="img"><div class="v-zoom"><img width="1600" height="1068" loading="lazy" decoding="async" src="assets/a47-c8af4b7005.jpg" alt="Empire State Building at sunset over Manhattan" /></div></div>
         <div class="body">
           <div class="k">Vertical · 02</div>
           <h3>VC &amp; Fund Managers</h3>
@@ -1271,7 +1280,7 @@
         </div>
       </div>
       <div class="v-card">
-        <div class="img"><div class="v-zoom"><img loading="lazy" decoding="async" src="assets/a14-0123f510e8.jpg" alt="Classical law library with marble busts" /></div></div>
+        <div class="img"><div class="v-zoom"><img width="1400" height="933" loading="lazy" decoding="async" src="assets/a14-0123f510e8.jpg" alt="Classical law library with marble busts" /></div></div>
         <div class="body">
           <div class="k">Vertical · 03</div>
           <h3>Estate &amp; Business Attorneys</h3>
@@ -1511,10 +1520,10 @@
         </div>
       </div>
       <div class="scrolly-steps" id="steps">
-        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img loading="lazy" decoding="async" src="assets/a05-313bc59e2a.jpg" alt=""></div></div><div class="s-body"><span class="num">I.</span><h3>Automate</h3><p>The infrastructure that works while you don't. Outreach, follow-up, and qualification running on rails, so the practice grows on schedule instead of on willpower.</p></div></div>
-        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img loading="lazy" decoding="async" src="assets/a06-7b865efec0.jpg" alt=""></div></div><div class="s-body"><span class="num">II.</span><h3>Attract</h3><p>Positioning that puts you in front of high net worth clients and investors as a peer, never a vendor. The right rooms, the right posture, the right first impression, so your scarcity and exclusivity stay exactly where they belong.</p></div></div>
-        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img loading="lazy" decoding="async" src="assets/a07-d992313dfc.jpg" alt=""></div></div><div class="s-body"><span class="num">III.</span><h3>Convert</h3><p>Consultative, soft-selling influence. The craft of turning conversations into committed relationships without a single pushy moment.</p></div></div>
-        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img loading="lazy" decoding="async" src="assets/a08-6cc0259999.jpg" alt=""></div></div><div class="s-body"><span class="num">IV.</span><h3>Scale &amp; Grow</h3><p>Compounding what works. More of the right clients, at higher levels, with less of your time in the machine.</p></div></div>
+        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img width="520" height="347" loading="lazy" decoding="async" src="assets/a05-313bc59e2a.jpg" alt=""></div></div><div class="s-body"><span class="num">I.</span><h3>Automate</h3><p>The infrastructure that works while you don't. Outreach, follow-up, and qualification running on rails, so the practice grows on schedule instead of on willpower.</p></div></div>
+        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img width="520" height="347" loading="lazy" decoding="async" src="assets/a06-7b865efec0.jpg" alt=""></div></div><div class="s-body"><span class="num">II.</span><h3>Attract</h3><p>Positioning that puts you in front of high net worth clients and investors as a peer, never a vendor. The right rooms, the right posture, the right first impression, so your scarcity and exclusivity stay exactly where they belong.</p></div></div>
+        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img width="520" height="390" loading="lazy" decoding="async" src="assets/a07-d992313dfc.jpg" alt=""></div></div><div class="s-body"><span class="num">III.</span><h3>Convert</h3><p>Consultative, soft-selling influence. The craft of turning conversations into committed relationships without a single pushy moment.</p></div></div>
+        <div class="s-step"><div class="s-medal" aria-hidden="true"><svg class="m-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57"/><circle class="r2" cx="60" cy="60" r="48"/></svg><div class="m-img"><img width="520" height="924" loading="lazy" decoding="async" src="assets/a08-6cc0259999.jpg" alt=""></div></div><div class="s-body"><span class="num">IV.</span><h3>Scale &amp; Grow</h3><p>Compounding what works. More of the right clients, at higher levels, with less of your time in the machine.</p></div></div>
       </div>
     </div>
   </div>
@@ -1522,7 +1531,7 @@
 
 <!-- CHAPTER IV — TOWERS statement + numbers -->
 <section class="cine towers">
-  <div class="bg zoom" data-plx="0.17"><img loading="lazy" decoding="async" src="assets/a09-da814c06d7.jpg" alt="Glass towers lit from within" /></div>
+  <div class="bg zoom" data-plx="0.17"><img width="1800" height="1200" loading="lazy" decoding="async" src="assets/a09-da814c06d7.jpg" alt="Glass towers lit from within" /></div>
   <div class="scrim"></div>
   <div class="content">
     <div class="wrap">
@@ -1633,7 +1642,7 @@
           <circle class="strat-ring" cx="200" cy="220" r="172"/>
           <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
         </svg>
-      <div class="portrait-frame reveal"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a37-matt-about.jpg" alt="Matthew Payne" /></div></div>
+      <div class="portrait-frame reveal"><div class="portrait-clip"><img width="900" height="1243" loading="lazy" decoding="async" src="assets/a37-matt-about.jpg" alt="Matthew Payne" /></div></div>
       </div>
     </div>
   </div>
@@ -1648,13 +1657,13 @@
           <circle class="strat-ring" cx="200" cy="220" r="172"/>
           <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
         </svg>
-              <div class="portrait-frame reveal"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a48-3ed6f0a44e.jpg" alt="Matthew Payne" /></div></div></div>
+              <div class="portrait-frame reveal"><div class="portrait-clip"><img width="900" height="1297" loading="lazy" decoding="async" src="assets/a48-3ed6f0a44e.jpg" alt="Matthew Payne" /></div></div></div>
       <div>
         <div class="eyebrow reveal">Client Engagements</div>
         <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 40px;"><span class="aw" style="transition-delay: 0ms">Two</span> <span class="aw" style="transition-delay: 70ms">ways</span> <span class="aw" style="transition-delay: 140ms">we</span> <span class="aw" style="transition-delay: 210ms">work</span> <span class="aw" style="transition-delay: 280ms">together</span></h2>
         <div class="programs">
           <div class="program reveal">
-            <div class="p-img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a12-7ee157d34c.jpg" alt=""></div></div>
+            <div class="p-img"><div class="p-zoom"><img width="900" height="600" loading="lazy" decoding="async" src="assets/a12-7ee157d34c.jpg" alt=""></div></div>
             <div class="p-body">
               <div class="k">Private · Weekly</div>
               <h3>1-on-1 Strategic Consulting</h3>
@@ -1663,7 +1672,7 @@
             </div>
           </div>
           <div class="program course reveal">
-            <div class="p-img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a13-2958722dab.jpg" alt=""></div></div>
+            <div class="p-img"><div class="p-zoom"><img width="900" height="600" loading="lazy" decoding="async" src="assets/a13-2958722dab.jpg" alt=""></div></div>
             <div class="p-body">
               <div class="k">Course &middot; Weekly</div>
               <h3>The System</h3>
@@ -1686,7 +1695,7 @@
 
 <!-- CHAPTER VI — COACHING over dusk residence -->
 <section class="cine coach" id="coaching">
-  <div class="bg zoom" data-plx="0.19"><img loading="lazy" decoding="async" src="assets/a15-995edf4641.jpg" alt="Luxury chronograph watch, dark ambient light" /></div>
+  <div class="bg zoom" data-plx="0.19"><img width="1800" height="1150" loading="lazy" decoding="async" src="assets/a15-995edf4641.jpg" alt="Luxury chronograph watch, dark ambient light" /></div>
   <div class="scrim"></div>
   <div class="content">
     <div class="wrap">
@@ -1707,7 +1716,7 @@
       <video class="coach-bg" id="coachMethodVid" autoplay muted loop playsinline poster="assets/a53-2597c7b731.jpg">
         <source src="assets/a52-a70f011715.mp4" type="video/mp4" />
       </video>
-      <img class="coach-bg fallback" src="assets/a53-2597c7b731.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+      <img width="787" height="1400" class="coach-bg fallback" src="assets/a53-2597c7b731.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
       <div class="coach-tone" aria-hidden="true"></div>
       <div class="coach-scrim" aria-hidden="true"></div>
       <div class="coach-vign" aria-hidden="true"></div>
@@ -1731,11 +1740,11 @@
     </div>
     <div class="m-scroll">
       <div class="m-track" id="mTrack">
-        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a17-99afb07f0b.jpg" alt=""></div></div><div class="body"><span class="mn">I.</span><h3>Crystallize your goals and values</h3><p>Clarity coupled with consistent focus is power. When you know what you want most and why, laid out in a measurable, visual plan, follow-through becomes automatic.</p></div></div>
-        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a18-65a8ff7484.jpg" alt=""></div></div><div class="body"><span class="mn">II.</span><h3>Create the strategic plan</h3><p>The precise order, logic, and sequence of objectives that must land on time to accomplish your personal and professional goals.</p></div></div>
-        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a49-66469222bb.jpg" alt="Ocean at dawn from swimmer's eye level"></div></div><div class="body"><span class="mn">III.</span><h3>Install the daily habits and routines</h3><p>What you repeatedly focus on, believe, and do determines your destination. We install and reinforce the routines that compound.</p></div></div>
-        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a20-c6a71fc52d.jpg" alt=""></div></div><div class="body"><span class="mn">IV.</span><h3>Resolve the internal conflicts keeping you stuck</h3><p>Procrastination is rarely laziness. It is conflict. We align your conscious goals with your unconscious commitments so you move forward congruently.</p></div></div>
-        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a21-c9eee95cb4.jpg" alt=""></div></div><div class="body"><span class="mn">V.</span><h3>Implement the strategies that change results</h3><p>Your approach is the most crucial variable. Best practice strategy, applied hand in hand, every single week.</p></div></div>
+        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img width="700" height="525" loading="lazy" decoding="async" src="assets/a17-99afb07f0b.jpg" alt=""></div></div><div class="body"><span class="mn">I.</span><h3>Crystallize your goals and values</h3><p>Clarity coupled with consistent focus is power. When you know what you want most and why, laid out in a measurable, visual plan, follow-through becomes automatic.</p></div></div>
+        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img width="700" height="394" loading="lazy" decoding="async" src="assets/a18-65a8ff7484.jpg" alt=""></div></div><div class="body"><span class="mn">II.</span><h3>Create the strategic plan</h3><p>The precise order, logic, and sequence of objectives that must land on time to accomplish your personal and professional goals.</p></div></div>
+        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img width="1400" height="2098" loading="lazy" decoding="async" src="assets/a49-66469222bb.jpg" alt="Ocean at dawn from swimmer's eye level"></div></div><div class="body"><span class="mn">III.</span><h3>Install the daily habits and routines</h3><p>What you repeatedly focus on, believe, and do determines your destination. We install and reinforce the routines that compound.</p></div></div>
+        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img width="700" height="467" loading="lazy" decoding="async" src="assets/a20-c6a71fc52d.jpg" alt=""></div></div><div class="body"><span class="mn">IV.</span><h3>Resolve the internal conflicts keeping you stuck</h3><p>Procrastination is rarely laziness. It is conflict. We align your conscious goals with your unconscious commitments so you move forward congruently.</p></div></div>
+        <div class="m-card reveal"><div class="img"><div class="p-zoom"><img width="700" height="1050" loading="lazy" decoding="async" src="assets/a21-c9eee95cb4.jpg" alt=""></div></div><div class="body"><span class="mn">V.</span><h3>Implement the strategies that change results</h3><p>Your approach is the most crucial variable. Best practice strategy, applied hand in hand, every single week.</p></div></div>
       </div>
     </div>
     <div class="car-dots on-light" id="mDots"></div>
@@ -1756,7 +1765,7 @@
     </div>
     <div class="lever-panel" id="leverPanel" aria-live="polite">
       <div class="lp-inner">
-        <div class="lp-mediaWrap"><span class="lp-orb a" aria-hidden="true"></span><span class="lp-orb b" aria-hidden="true"></span><div class="lp-media"><div class="lp-img" data-img="0"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a22-63442ddd76.jpg" alt=""></div></div><div class="lp-img" data-img="1"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a23-2fd051644e.jpg" alt=""></div></div><div class="lp-img" data-img="2"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a24-5d66a824ff.jpg" alt=""></div></div><div class="lp-img" data-img="3"><div class="p-zoom"><img loading="lazy" decoding="async" src="assets/a25-cbef6fabe0.jpg" alt=""></div></div></div></div>
+        <div class="lp-mediaWrap"><span class="lp-orb a" aria-hidden="true"></span><span class="lp-orb b" aria-hidden="true"></span><div class="lp-media"><div class="lp-img" data-img="0"><div class="p-zoom"><img width="600" height="403" loading="lazy" decoding="async" src="assets/a22-63442ddd76.jpg" alt=""></div></div><div class="lp-img" data-img="1"><div class="p-zoom"><img width="600" height="400" loading="lazy" decoding="async" src="assets/a23-2fd051644e.jpg" alt=""></div></div><div class="lp-img" data-img="2"><div class="p-zoom"><img width="600" height="900" loading="lazy" decoding="async" src="assets/a24-5d66a824ff.jpg" alt=""></div></div><div class="lp-img" data-img="3"><div class="p-zoom"><img width="600" height="750" loading="lazy" decoding="async" src="assets/a25-cbef6fabe0.jpg" alt=""></div></div></div></div>
         <div class="lp-copy">
           <h4 id="lpTitle"></h4>
           <p id="lpBody"></p>
@@ -1782,14 +1791,14 @@
     <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4.2vw, 3.2rem); color: var(--cream);"><span class="aw" style="transition-delay: 0ms">In</span> <span class="aw" style="transition-delay: 70ms">their</span> <span class="aw" style="transition-delay: 140ms">words</span></h2>
     <div class="q-scroll">
       <div class="q-track" id="qTrack">
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Financial Wellness Director</span><span class="q-idx">No. 01</span></div><div class="q">By implementing Matt’s approaches and strategies, I’ve landed several 100-million-dollar accounts!</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a26-9679b32aec.jpg" alt="Todd Barden"></div><div class="q-id"><div class="who">Todd Barden</div><div class="firm">Morgan Stanley</div></div></div></div>
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Founder &amp; CEO</span><span class="q-idx">No. 02</span></div><div class="q">Within the 1st 6 weeks of working with Matt, I’ve brought in over 2 million in new assets.</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a27-83e08d8ca8.jpg" alt="Brian Parker"></div><div class="q-id"><div class="who">Brian Parker</div><div class="firm">Brian Parker Investments</div></div></div></div>
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Founder &amp; CEO</span><span class="q-idx">No. 03</span></div><div class="q">Using Matt’s System, strategies, and approaches, I’m now consistently bringing in multiple millions in new deals in an extremely efficient, effective manner.</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a28-647a5c710c.jpg" alt="Matt Beck"></div><div class="q-id"><div class="who">Matt Beck</div><div class="firm">Beck Investment Group</div></div></div></div>
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Senior Advisor</span><span class="q-idx">No. 04</span></div><div class="q">Working with Matt has allowed me to have a machine-like system that every month brings millions in new AUM and executive clients. Thank you Matt!</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a29-dfebc3a4f6.jpg" alt="Jean Good"></div><div class="q-id"><div class="who">Jean Good</div><div class="firm">Northwestern Mutual</div></div></div></div>
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">CEO</span><span class="q-idx">No. 05</span></div><div class="q">Matt’s knowledge and strategies are game-changing! I’m now consistently bringing in high net worth clients.</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a30-f0a656de5b.jpg" alt="Scott Rulon"></div><div class="q-id"><div class="who">Scott Rulon</div><div class="firm">Rulon Financial</div></div></div></div>
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">First Vice President</span><span class="q-idx">No. 06</span></div><div class="q">Working with Matt and implementing his client acquisition strategies has given my team and me an incredible advantage. Thanks to Matt and his system, we are now consistently bringing on board CEOs and execs, resulting in millions monthly in new AUM.</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a31-84415adffa.jpg" alt="Franklin Etter"></div><div class="q-id"><div class="who">Franklin Etter</div><div class="firm">Wells Fargo</div></div></div></div>
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Senior Vice President</span><span class="q-idx">No. 07</span></div><div class="q">I scheduled 10 calls in one week with our ideal C-suite clients by implementing Matt’s strategies.</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a32-9d356955f8.jpg" alt="Joe Notarfrancesco"></div><div class="q-id"><div class="who">Joe Notarfrancesco</div><div class="firm">Morgan Stanley</div></div></div></div>
-        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">President</span><span class="q-idx">No. 08</span></div><div class="q">I’ve been using Matt’s system and am now meeting and speaking with cardiologists and business owners. We’re generating several million each month in new assets.</div><div class="q-byline"><div class="q-face"><img loading="lazy" decoding="async" src="assets/a33-9b35c271e0.jpg" alt="Michael Cratty"></div><div class="q-id"><div class="who">Michael Cratty</div><div class="firm">Cratty &amp; Swanson</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Financial Wellness Director</span><span class="q-idx">No. 01</span></div><div class="q">By implementing Matt’s approaches and strategies, I’ve landed several 100-million-dollar accounts!</div><div class="q-byline"><div class="q-face"><img width="300" height="300" loading="lazy" decoding="async" src="assets/a26-9679b32aec.jpg" alt="Todd Barden"></div><div class="q-id"><div class="who">Todd Barden</div><div class="firm">Morgan Stanley</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Founder &amp; CEO</span><span class="q-idx">No. 02</span></div><div class="q">Within the 1st 6 weeks of working with Matt, I’ve brought in over 2 million in new assets.</div><div class="q-byline"><div class="q-face"><img width="300" height="300" loading="lazy" decoding="async" src="assets/a27-83e08d8ca8.jpg" alt="Brian Parker"></div><div class="q-id"><div class="who">Brian Parker</div><div class="firm">Brian Parker Investments</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Founder &amp; CEO</span><span class="q-idx">No. 03</span></div><div class="q">Using Matt’s System, strategies, and approaches, I’m now consistently bringing in multiple millions in new deals in an extremely efficient, effective manner.</div><div class="q-byline"><div class="q-face"><img width="300" height="300" loading="lazy" decoding="async" src="assets/a28-647a5c710c.jpg" alt="Matt Beck"></div><div class="q-id"><div class="who">Matt Beck</div><div class="firm">Beck Investment Group</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Senior Advisor</span><span class="q-idx">No. 04</span></div><div class="q">Working with Matt has allowed me to have a machine-like system that every month brings millions in new AUM and executive clients. Thank you Matt!</div><div class="q-byline"><div class="q-face"><img width="214" height="300" loading="lazy" decoding="async" src="assets/a29-dfebc3a4f6.jpg" alt="Jean Good"></div><div class="q-id"><div class="who">Jean Good</div><div class="firm">Northwestern Mutual</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">CEO</span><span class="q-idx">No. 05</span></div><div class="q">Matt’s knowledge and strategies are game-changing! I’m now consistently bringing in high net worth clients.</div><div class="q-byline"><div class="q-face"><img width="300" height="300" loading="lazy" decoding="async" src="assets/a30-f0a656de5b.jpg" alt="Scott Rulon"></div><div class="q-id"><div class="who">Scott Rulon</div><div class="firm">Rulon Financial</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">First Vice President</span><span class="q-idx">No. 06</span></div><div class="q">Working with Matt and implementing his client acquisition strategies has given my team and me an incredible advantage. Thanks to Matt and his system, we are now consistently bringing on board CEOs and execs, resulting in millions monthly in new AUM.</div><div class="q-byline"><div class="q-face"><img width="300" height="300" loading="lazy" decoding="async" src="assets/a31-84415adffa.jpg" alt="Franklin Etter"></div><div class="q-id"><div class="who">Franklin Etter</div><div class="firm">Wells Fargo</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">Senior Vice President</span><span class="q-idx">No. 07</span></div><div class="q">I scheduled 10 calls in one week with our ideal C-suite clients by implementing Matt’s strategies.</div><div class="q-byline"><div class="q-face"><img width="201" height="300" loading="lazy" decoding="async" src="assets/a32-9d356955f8.jpg" alt="Joe Notarfrancesco"></div><div class="q-id"><div class="who">Joe Notarfrancesco</div><div class="firm">Morgan Stanley</div></div></div></div>
+        <div class="quote reveal"><div class="q-kicker"><span class="q-tag">President</span><span class="q-idx">No. 08</span></div><div class="q">I’ve been using Matt’s system and am now meeting and speaking with cardiologists and business owners. We’re generating several million each month in new assets.</div><div class="q-byline"><div class="q-face"><img width="300" height="300" loading="lazy" decoding="async" src="assets/a33-9b35c271e0.jpg" alt="Michael Cratty"></div><div class="q-id"><div class="who">Michael Cratty</div><div class="firm">Cratty &amp; Swanson</div></div></div></div>
       </div>
     </div>
     <div class="car-dots" id="qDots"></div>
@@ -1798,7 +1807,7 @@
 
 <!-- CHAPTER VIII — AUDIO PROGRAM (cinematic noir) -->
 <section class="audio" id="audio">
-  <div class="bg"><img class="bg-couple" loading="lazy" decoding="async" src="assets/a43-9eaa18a327.jpg" alt="Sunlight breaking through clouds over calm golden water" /><img class="bg-mic" loading="lazy" decoding="async" src="assets/a35-87d5360bb0.jpg" alt="" aria-hidden="true" /></div>
+  <div class="bg"><img width="1800" height="1200" class="bg-couple" loading="lazy" decoding="async" src="assets/a43-9eaa18a327.jpg" alt="Sunlight breaking through clouds over calm golden water" /><img width="1067" height="1600" class="bg-mic" loading="lazy" decoding="async" src="assets/a35-87d5360bb0.jpg" alt="" aria-hidden="true" /></div>
   <div class="om-river"><div class="orc r1" aria-hidden="true"><ul><li>Introduction</li><li>My Personal Story of Struggle &amp; Transformation</li><li>Old Model Vs. New Model of Change &amp; Success</li><li>How Real Change Happens</li><li>The Joy of Personal Growth</li><li>Making Your Changes Last</li><li>Expectations Shape Our Results</li><li>Course Overview</li><li>Why Some Are More Successful Than Others</li><li>Conscious &amp; Unconscious Conflicts</li><li>The Power of Your Supermind</li><li>Aligning Your Intentions &amp; Feelings</li><li>Learning To Use More of Your Mind</li><li>Understanding Our Two Minds</li><li>Failure Vs. Learning</li><li>The Importance of Vision</li><li>Building A Logical Case For Cause</li><li>All Great Successes Were Once Failures</li><li>Questions To Build Your Success</li><li>Communicating &amp; Controlling Your Supermind</li><li>Autogenic Conditioning</li><li>Wrap Up &amp; Active Action Exercise</li><li>Introduction</li><li>Review &amp; Recap</li><li>Your Map Of Reality</li><li>How Our Perceptions Shape Our Life</li><li>The Model of Experience</li><li>Changing Our Map</li><li>Understanding Values</li><li>Design Your Values</li><li>Inner Conflicts</li><li>Resolving Conflicts With New Beliefs</li><li>The Power Of Your Beliefs</li><li>Creating New Beliefs Exercise</li><li>Wrap Up</li><li>Introduction</li><li>The Power of Emotions</li><li>Emotions Drive Behavior</li><li>Mastering Your Internal &amp; External Forces</li><li>The Power of Posture</li><li>What Are Your Patterns of Posture</li><li>Perception &amp; Your Attention</li><li>How Our Attention Shapes Our Experiences</li><li>Ask &amp; You Shall Receive</li><li>Mastering Your Perspective</li><li>Persuasiveness! Program Yourself For Success</li><li>Wrap Up</li><li>Introduction</li><li>Introduction</li><li>My Personal Story of Struggle &amp; Transformation</li><li>Old Model Vs. New Model of Change &amp; Success</li><li>How Real Change Happens</li><li>The Joy of Personal Growth</li><li>Making Your Changes Last</li><li>Expectations Shape Our Results</li><li>Course Overview</li><li>Why Some Are More Successful Than Others</li><li>Conscious &amp; Unconscious Conflicts</li><li>The Power of Your Supermind</li><li>Aligning Your Intentions &amp; Feelings</li><li>Learning To Use More of Your Mind</li><li>Understanding Our Two Minds</li><li>Failure Vs. Learning</li><li>The Importance of Vision</li><li>Building A Logical Case For Cause</li><li>All Great Successes Were Once Failures</li><li>Questions To Build Your Success</li><li>Communicating &amp; Controlling Your Supermind</li><li>Autogenic Conditioning</li><li>Wrap Up &amp; Active Action Exercise</li><li>Introduction</li><li>Review &amp; Recap</li><li>Your Map Of Reality</li><li>How Our Perceptions Shape Our Life</li><li>The Model of Experience</li><li>Changing Our Map</li><li>Understanding Values</li><li>Design Your Values</li><li>Inner Conflicts</li><li>Resolving Conflicts With New Beliefs</li><li>The Power Of Your Beliefs</li><li>Creating New Beliefs Exercise</li><li>Wrap Up</li><li>Introduction</li><li>The Power of Emotions</li><li>Emotions Drive Behavior</li><li>Mastering Your Internal &amp; External Forces</li><li>The Power of Posture</li><li>What Are Your Patterns of Posture</li><li>Perception &amp; Your Attention</li><li>How Our Attention Shapes Our Experiences</li><li>Ask &amp; You Shall Receive</li><li>Mastering Your Perspective</li><li>Persuasiveness! Program Yourself For Success</li><li>Wrap Up</li><li>Introduction</li></ul></div>
 <div class="orc r2" aria-hidden="true"><ul><li>The Price of Procrastinating</li><li>What Drives Human Behavior</li><li>Motivation Vs. Inspiration</li><li>Core Desires</li><li>Identify Feelings &amp; Behaviors You Don&#x27;t Like</li><li>The Desire For Control</li><li>How Do You Get Control</li><li>Desire For The New</li><li>Addictions! Positive &amp; Negative</li><li>How Do You Get Stimulation</li><li>Overcome Procrastination With Core Desires</li><li>Overcoming Fear</li><li>The Desire For Importance</li><li>The Desire For Love &amp; Belonging</li><li>The Desire For Self-Actualization</li><li>Wrap Up</li><li>Introduction</li><li>The Two Variables Leaders Control</li><li>Why People Don&#x27;t Set Goals</li><li>Achievement Formula of Masters</li><li>Your Vision! Get Clear &amp; Specific</li><li>Create Your Life Categories</li><li>Mindstorm &amp; Activate Drive</li><li>Write Out Your Future</li><li>Get In An Optimal State Of Mind</li><li>Act Now! With Sensory Acuity</li><li>Time Management</li><li>The Time Matrix</li><li>Where Are You Spending Your Time</li><li>Setting Priorities</li><li>Strategic Planning</li><li>Wrap Up</li><li>Introduction</li><li>The Habit Of Lifelong Learning</li><li>Our Habits Shape Our Future</li><li>Changing Habits</li><li>Change Anything Formula</li><li>Association Vs. Disassociation</li><li>Disruption, Distraction, &amp; Scrambling</li><li>When Are Your Crucial Moments</li><li>Harness The Power Of Self-Discipline</li><li>Submodalities</li><li>Wishing Vs. Expecting Exercise</li><li>Anchoring</li><li>Create Your Own Anchors Exercise</li><li>Momentum Pattern</li><li>Wrap Up - A New Beginning</li><li>The Price of Procrastinating</li><li>What Drives Human Behavior</li><li>Motivation Vs. Inspiration</li><li>Core Desires</li><li>Identify Feelings &amp; Behaviors You Don&#x27;t Like</li><li>The Desire For Control</li><li>How Do You Get Control</li><li>Desire For The New</li><li>Addictions! Positive &amp; Negative</li><li>How Do You Get Stimulation</li><li>Overcome Procrastination With Core Desires</li><li>Overcoming Fear</li><li>The Desire For Importance</li><li>The Desire For Love &amp; Belonging</li><li>The Desire For Self-Actualization</li><li>Wrap Up</li><li>Introduction</li><li>The Two Variables Leaders Control</li><li>Why People Don&#x27;t Set Goals</li><li>Achievement Formula of Masters</li><li>Your Vision! Get Clear &amp; Specific</li><li>Create Your Life Categories</li><li>Mindstorm &amp; Activate Drive</li><li>Write Out Your Future</li><li>Get In An Optimal State Of Mind</li><li>Act Now! With Sensory Acuity</li><li>Time Management</li><li>The Time Matrix</li><li>Where Are You Spending Your Time</li><li>Setting Priorities</li><li>Strategic Planning</li><li>Wrap Up</li><li>Introduction</li><li>The Habit Of Lifelong Learning</li><li>Our Habits Shape Our Future</li><li>Changing Habits</li><li>Change Anything Formula</li><li>Association Vs. Disassociation</li><li>Disruption, Distraction, &amp; Scrambling</li><li>When Are Your Crucial Moments</li><li>Harness The Power Of Self-Discipline</li><li>Submodalities</li><li>Wishing Vs. Expecting Exercise</li><li>Anchoring</li><li>Create Your Own Anchors Exercise</li><li>Momentum Pattern</li><li>Wrap Up - A New Beginning</li></ul></div></div>
   <div class="wrap">
@@ -1841,7 +1850,7 @@
         <a class="cal-opt reveal" href="https://calendly.com/matthewpayneconsulting/attorney-strategy-call" target="_blank" rel="noopener"><span class="ck">Estate &amp; Business Attorneys</span><span class="cs">Book an attorney strategy call</span></a>
       </div>
     </div>
-    <div class="closing-img"><div class="ci-plx" data-plx="0.1"><div class="portrait-clip"><img loading="lazy" decoding="async" src="assets/a34-8ff63ef1e7.jpg" alt="Matthew Payne" /></div></div></div>
+    <div class="closing-img"><div class="ci-plx" data-plx="0.1"><div class="portrait-clip"><img width="1920" height="1100" loading="lazy" decoding="async" src="assets/a34-8ff63ef1e7.jpg" alt="Matthew Payne" /></div></div></div>
   </div>
 </div>
 
