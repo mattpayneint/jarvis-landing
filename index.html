@@ -1197,10 +1197,10 @@
 <!-- CHAPTER II — CAPITAL over Chicago dusk, parallax + slow zoom -->
 <section class="cine capital" id="capital">
   <div class="bg zoom" data-plx="0.19">
-    <video id="capitalVid" autoplay muted loop playsinline poster="assets/a45-f9e2c4e4ef.jpg">
-      <source src="assets/a44-60435f6768.mp4" type="video/mp4" />
+    <video id="capitalVid" autoplay muted loop playsinline poster="assets/a55-545f932af9.jpg">
+      <source src="assets/a54-545f932af9.mp4" type="video/mp4" />
     </video>
-    <img width="1280" height="720" class="fallback" loading="lazy" decoding="async" src="assets/a45-f9e2c4e4ef.jpg" alt="Manhattan skyline over the East River" />
+    <img width="1280" height="720" class="fallback" loading="lazy" decoding="async" src="assets/a55-545f932af9.jpg" alt="The Charging Bull statue at Bowling Green, golden hour" />
   </div>
   <div class="cap-tone" aria-hidden="true"></div>
   <div class="scrim"></div>
@@ -2051,9 +2051,7 @@
     /* Jarvis section keeps the cyan network video regardless of what the hero uses - locked independently per Matt's call. */
     var jv = document.getElementById('jarvisVid');
     if (jv) { jv.src = 'assets/a02-9b1e02cfec.mp4'; if (reduce) jv.pause(); }
-    /* Real drone footage plays a touch too brisk for a background loop - ease it down. */
-    var capVid = document.getElementById('capitalVid');
-    if (capVid) { capVid.playbackRate = 0.6; }
+    /* Capital background clip is already paced for a slow, elegant loop - no rate override needed. */
 
     /* FS Oahu-style card carousel: arrows, drag, dots, gentle auto-advance */
     var track = document.getElementById('carTrack');
