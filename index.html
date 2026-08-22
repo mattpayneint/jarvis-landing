@@ -678,26 +678,12 @@
   .j-core::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -9%; height: 7%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); filter: blur(7px); transform: translateX(var(--shx, 0px)); }
   .j-glint { position: absolute; inset: 6%; border-radius: 50%; background: radial-gradient(circle at var(--gx, 32%) var(--gy, 26%), rgba(233,205,144,0.28), rgba(194,164,104,0.1) 30%, transparent 48%); transform: translateZ(44px); pointer-events: none; }
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
-  .j-ring { position: absolute; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.55); }
-  .jr1 { inset: 0; animation: gyroX 16s linear infinite; }
-  @keyframes gyroX { from { transform: rotateX(62deg) rotateZ(0deg); } to { transform: rotateX(62deg) rotateZ(360deg); } }
-  .jr2 { inset: 13%; border-color: rgba(194,164,104,0.4); animation: gyroY 21s linear infinite; }
-  @keyframes gyroY { from { transform: rotateY(62deg) rotateZ(360deg); } to { transform: rotateY(62deg) rotateZ(0deg); } }
-  .jr3 { inset: 27%; border-style: solid; border-color: rgba(194,164,104,0.18); animation: ringspin 60s linear infinite; }
-  .j-orb { position: absolute; inset: 6.5%; transform: translateZ(26px); animation: orbspin 18s linear infinite; }
-  @keyframes orbspin { from { transform: translateZ(26px) rotate(0deg); } to { transform: translateZ(26px) rotate(360deg); } }
-  .j-orb.o2 { inset: 20%; animation-duration: 26s; animation-direction: reverse; }
-  .j-core:hover .jr1 { animation-duration: 7s; }
-  .j-core:hover .jr2 { animation-duration: 9s; }
-  .j-core:hover .j-sweep { animation-duration: 4s; }
-  .j-orb::before { content: ""; position: absolute; top: -3px; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 12px rgba(194,164,104,0.8); }
-  .j-dot { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: var(--brass-soft); transform: translateZ(52px); animation: jpulse 3.2s var(--ease) infinite; }
-  @keyframes jpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(194,164,104,0.5), 0 0 24px rgba(194,164,104,0.9); } 50% { box-shadow: 0 0 0 26px rgba(194,164,104,0), 0 0 34px rgba(194,164,104,1); } }
   .j-ticks { position: absolute; inset: -5%; border-radius: 50%; transform: translateZ(-34px); background: repeating-conic-gradient(rgba(194,164,104,0.55) 0deg 0.5deg, transparent 0.9deg 6deg); -webkit-mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); mask: radial-gradient(circle, transparent 46%, #000 47%, #000 49.5%, transparent 50.5%); animation: ringspin 120s linear infinite; }
-  .j-sweep { position: absolute; inset: 3%; border-radius: 50%; transform: translateZ(-34px); background: conic-gradient(from 0deg, rgba(194,164,104,0.3), rgba(194,164,104,0.05) 55deg, transparent 75deg); -webkit-mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); mask: radial-gradient(circle, transparent 29%, #000 30%, #000 49%, transparent 50%); animation: ringspin 9s linear infinite; }
-  .j-pip { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--brass-soft); animation: pipblink 4s var(--ease) infinite; }
-  .j-pip.p1 { top: 18%; left: 74%; } .j-pip.p2 { top: 66%; left: 12%; animation-delay: 1.3s; } .j-pip.p3 { top: 82%; left: 62%; animation-delay: 2.6s; }
-  @keyframes pipblink { 0%, 100% { opacity: 0.2; box-shadow: none; } 50% { opacity: 1; box-shadow: 0 0 10px rgba(194,164,104,0.9); } }
+  .j-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transform: translateZ(10px); }
+  .j-type { margin-top: 14px; min-height: 14px; text-align: center; font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brass-soft); opacity: 0.58; white-space: nowrap; pointer-events: none; }
+  .j-type .j-caret { display: inline-block; width: 1px; height: 10px; margin-left: 3px; vertical-align: -1px; background: var(--brass-soft); animation: jcaret 1s steps(2, start) infinite; }
+  @keyframes jcaret { to { opacity: 0; } }
+  .j-core:hover .j-ticks { animation-duration: 40s; }
   .j-label { text-align: center; margin-top: 28px; font-size: 11px; font-weight: 600; letter-spacing: 0.5em; color: var(--brass-soft); opacity: 0.85; }
   .j-clone { margin-top: 70px; border-left: 2px solid var(--brass); padding-left: 44px; }
   .j-clone .jc { font-family: var(--serif); font-size: clamp(1.3rem, 2.5vw, 1.8rem); line-height: 1.45; color: var(--cream); margin: 0 0 26px; }
@@ -1043,6 +1029,7 @@
     .hero-actions { flex-wrap: wrap; gap: 18px; }
     .hero-content { padding-left: 24px; padding-right: 24px; }
     .j-core { width: min(280px, 70vw); }
+    .j-type { white-space: normal; letter-spacing: 0.14em; padding: 0 10px; line-height: 1.5; }
     .m-track .m-card { flex-basis: min(280px, 76vw); }
     .stage-frame::before { inset: 14px -12px -14px 14px; }
     .stage-corners { inset: -10px; }
@@ -1081,7 +1068,7 @@
     #coaching-method video.coach-bg { display: none; }
     #coaching-method .coach-bg.fallback { display: block; }
     .j-ring, .j-orb { animation: none; }
-    .j-sweep, .j-ticks, .j-pip { animation: none; }
+    .j-ticks, .j-caret { animation: none; }
     .jr1, .jr2, .j-orb { animation: none; }
     .j-seq .j-step.reveal, .j-scope .js-item.reveal, .j-impact-early.reveal { opacity: 1; transform: none; transition: none; }
     .stage-frame::before, .stage-clip .p-zoom, .lever::before { animation: none; }
@@ -1580,13 +1567,11 @@
         <div class="j-stick-inner reveal">
           <div class="j-core" aria-hidden="true">
             <span class="j-ticks"></span>
-            <span class="j-sweep"></span>
-            <span class="j-ring jr1"></span><span class="j-ring jr2"></span><span class="j-ring jr3"></span>
-            <span class="j-orb o1"></span><span class="j-orb o2"></span>
-            <span class="j-pip p1"></span><span class="j-pip p2"></span><span class="j-pip p3"></span>
-            <span class="j-glint" aria-hidden="true"></span><span class="j-dot"></span>
+            <canvas class="j-canvas"></canvas>
+            <span class="j-glint" aria-hidden="true"></span>
           </div>
           <div class="j-label">J A R V I S</div>
+          <div class="j-type" aria-hidden="true"><span class="j-type-text"></span><span class="j-caret"></span></div>
         </div>
       </div>
     </div>
@@ -2399,35 +2384,179 @@
 <script>
   (function () {
     var core = document.querySelector('.j-core');
-    if (!core) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (window.matchMedia('(max-width: 900px)').matches) return;
-    var zone = core.closest('.j-sticky-wrap') || core.parentElement;
-    var tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, engaged = false;
-    function step() {
-      cx += (tx - cx) * 0.08;
-      cy += (ty - cy) * 0.08;
-      core.style.transform = 'scale(1) rotateX(' + cy.toFixed(2) + 'deg) rotateY(' + cx.toFixed(2) + 'deg)';
-      core.style.setProperty('--shx', (-cx * 2.4).toFixed(1) + 'px');
-      if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) raf = requestAnimationFrame(step); else raf = 0;
+    var canvas = core && core.querySelector('.j-canvas');
+    if (!core || !canvas) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var mobile = window.matchMedia('(max-width: 900px)').matches;
+    var G = '226,196,130', GS = '194,164,104', GH = '255,236,190';
+    var ctx = canvas.getContext('2d');
+    var s = 0, cx = 0, cy = 0, R = 0, F = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var N = mobile ? 900 : 1500;
+    var px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
+    var tx = new Float32Array(N), ty = new Float32Array(N), tz = new Float32Array(N);
+    var k = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
+    var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
+    var NODES = 54, nodes = [], edges = [], pulses = [], phases = [];
+    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, netW = 0, lockW = 0, gyroW = 0, started = false, pingT = 0, pings = [];
+    var rings = [
+      { r: 1.13, tx: 1.1, ty: 0.3, wx: 0.00032, wy: 0.00021, dash: true, bead: 0.9, w: 1, a: 0.7 },
+      { r: 1.24, tx: -0.6, ty: 1.2, wx: -0.00024, wy: 0.00038, dash: true, bead: -0.6, w: 1, a: 0.55 },
+      { r: 1.04, tx: 0.4, ty: -0.9, wx: 0.00046, wy: -0.00029, dash: false, bead: 1.3, w: 0.8, a: 0.4 }
+    ];
+    var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
+    var lines = [
+      'Researching. 340 names, 62 firms, verified.',
+      'Reaching out in your voice. Peer to peer.',
+      'Following up. Nothing forgotten. Nothing dropped.',
+      'Call booked Thursday. Calendar filling.'
+    ];
+    var typeIdx = -1, typePos = 0, typeTimer = 0;
+    function rot(p, ax, ay) {
+      var c = Math.cos(ay), sn = Math.sin(ay);
+      var x1 = p[0] * c + p[2] * sn, z1 = -p[0] * sn + p[2] * c;
+      c = Math.cos(ax); sn = Math.sin(ax);
+      return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c];
     }
-    zone.addEventListener('mousemove', function (e) {
-      if (!engaged) { engaged = true; core.style.transition = 'opacity 1s'; }
-      var r = core.getBoundingClientRect();
-      var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
-      var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
-      dx = Math.max(-0.75, Math.min(0.75, dx));
-      dy = Math.max(-0.75, Math.min(0.75, dy));
-      tx = dx * 16;
-      ty = -dy * 14;
-      core.style.setProperty('--gx', (50 + dx * 46).toFixed(1) + '%');
-      core.style.setProperty('--gy', (42 + dy * 40).toFixed(1) + '%');
-      if (!raf) raf = requestAnimationFrame(step);
-    });
-    zone.addEventListener('mouseleave', function () {
-      tx = 0; ty = 0;
-      if (!raf) raf = requestAnimationFrame(step);
-    });
+    function proj(q) { var sc = F / (F + q[2]); return [cx + q[0] * sc, cy + q[1] * sc, (q[2] + R * 1.3) / (2.6 * R)]; }
+    function build() {
+      s = core.clientWidth; if (!s) return false;
+      canvas.width = s * dpr; canvas.height = s * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = s / 2; cy = s / 2; R = s * 0.31; F = s * 1.6;
+      nodes = []; edges = []; pulses = [];
+      var sphere = [], net = [], gyro = [], ret = [], g = Math.PI * (3 - Math.sqrt(5)), i;
+      for (i = 0; i < N; i++) { var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * R, y * R, Math.sin(t) * r * R]); }
+      for (i = 0; i < NODES; i++) nodes.push(sphere[Math.floor(i * N / NODES)]);
+      for (i = 0; i < N; i++) { var n = nodes[i % NODES], j = 1 + (Math.random() - 0.5) * 0.1; net.push([n[0] * j + (Math.random() - 0.5) * 7, n[1] * j + (Math.random() - 0.5) * 7, n[2] * j + (Math.random() - 0.5) * 7]); }
+      for (var a = 0; a < NODES; a++) for (var b = a + 1; b < NODES; b++) { var d = Math.hypot(nodes[a][0] - nodes[b][0], nodes[a][1] - nodes[b][1], nodes[a][2] - nodes[b][2]); if (d < R * 0.95) edges.push([a, b]); }
+      for (i = 0; i < N; i++) {
+        var th = Math.random() * Math.PI * 2, rr = R * (0.97 + (Math.random() - 0.5) * 0.07), w = i % 3, pt;
+        if (w === 0) pt = [Math.cos(th) * rr, Math.sin(th) * rr, (Math.random() - 0.5) * 4];
+        else if (w === 1) pt = [(Math.random() - 0.5) * 4, Math.cos(th) * rr, Math.sin(th) * rr];
+        else pt = [Math.cos(th) * rr, (Math.random() - 0.5) * 4, Math.sin(th) * rr];
+        gyro.push(rot(pt, 0.26, 0.26));
+      }
+      for (i = 0; i < N; i++) {
+        var f = i / N, ang = Math.random() * Math.PI * 2, zz = (Math.random() - 0.5) * 3, q;
+        if (f < 0.36) { var r1 = R * (0.96 + (Math.random() - 0.5) * 0.03); q = [Math.cos(ang) * r1, Math.sin(ang) * r1, zz]; }
+        else if (f < 0.62) { var r2 = R * (0.6 + (Math.random() - 0.5) * 0.03); q = [Math.cos(ang) * r2, Math.sin(ang) * r2, zz]; }
+        else if (f < 0.86) { var tk = Math.floor(Math.random() * 8), ta = tk * Math.PI / 4, len = tk % 2 ? [0.72, 0.82] : [0.66, 0.9], rr2 = R * (len[0] + Math.random() * (len[1] - len[0])), jit = (Math.random() - 0.5) * 2.5; q = [Math.cos(ta) * rr2 - Math.sin(ta) * jit, Math.sin(ta) * rr2 + Math.cos(ta) * jit, zz]; }
+        else { var rc = R * 0.12 * Math.sqrt(Math.random()); q = [Math.cos(ang) * rc, Math.sin(ang) * rc, zz]; }
+        ret.push(q);
+      }
+      for (i = 0; i < 14; i++) pulses.push({ e: Math.floor(Math.random() * edges.length), t: Math.random(), v: 0.006 + Math.random() * 0.008 });
+      phases = [{ pts: sphere, dur: 6000 }, { pts: net, dur: 6500 }, { pts: gyro, dur: 6200 }, { pts: ret, dur: 5400 }];
+      return true;
+    }
+    function setTargets() { var p = phases[phase].pts; for (var i = 0; i < N; i++) { tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2]; } }
+    function setLine(idx) { if (!typeEl || idx === typeIdx) return; typeIdx = idx; typePos = 0; typeTimer = 0; typeEl.textContent = ''; }
+    function typeStep(dt) {
+      if (!typeEl || typeIdx < 0) return;
+      var line = lines[typeIdx]; if (typePos >= line.length) return;
+      typeTimer += dt;
+      while (typeTimer > 38 && typePos < line.length) { typeTimer -= 38; typePos++; }
+      typeEl.textContent = line.slice(0, typePos);
+    }
+    function ringPt(rg, t, ax, ay) {
+      var r = rg.r * R, p = [Math.cos(t) * r, Math.sin(t) * r, 0];
+      var c = Math.cos(rg.tx), sn = Math.sin(rg.tx), y1 = p[1] * c - p[2] * sn, z1 = p[1] * sn + p[2] * c;
+      c = Math.cos(rg.ty); sn = Math.sin(rg.ty);
+      var x2 = p[0] * c + z1 * sn, z2 = -p[0] * sn + z1 * c;
+      return proj(rot([x2, y1, z2], ax, ay));
+    }
+    function drawRings(now, dt, ax, ay, hot) {
+      var SEG = 120, i, rg, pts;
+      for (var r = 0; r < rings.length; r++) {
+        rg = rings[r]; rg.tx += rg.wx * dt * hot; rg.ty += rg.wy * dt * hot; rg.spin = (rg.spin || 0) + dt * 0.0006 * hot;
+        pts = []; for (i = 0; i <= SEG; i++) pts.push(ringPt(rg, i / SEG * Math.PI * 2, ax, ay));
+        ctx.lineWidth = rg.w;
+        for (i = 0; i < SEG; i++) {
+          if (rg.dash && ((i + rg.spin * 40) % 8) > 5) continue;
+          var A = pts[i], B = pts[i + 1], dep = (A[2] + B[2]) / 2;
+          ctx.strokeStyle = 'rgba(' + GS + ',' + (rg.a * (0.18 + 0.82 * (1 - dep)) * (0.75 + 0.5 * gyroW)).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+        }
+        var bp = ringPt(rg, rg.spin * rg.bead * 2.2, ax, ay);
+        ctx.fillStyle = 'rgba(' + GH + ',' + (0.5 + 0.5 * (1 - bp[2])).toFixed(3) + ')'; ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(bp[0], bp[1], 2.4, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+      }
+    }
+    function drawHud(now, dt, hot) {
+      var i, a0;
+      ctx.lineCap = 'butt';
+      for (i = 0; i < 3; i++) { a0 = now / (9000 / hot) * Math.PI * 2 + i * Math.PI * 2 / 3; ctx.strokeStyle = 'rgba(' + GS + ',0.5)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(cx, cy, R * 1.37, a0, a0 + 1.05); ctx.stroke(); }
+      for (i = 0; i < 4; i++) { a0 = -now / (13000 / hot) * Math.PI * 2 + i * Math.PI / 2; ctx.strokeStyle = 'rgba(' + GS + ',0.3)'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cx, cy, R * 1.44, a0, a0 + 0.3); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(' + GS + ',0.12)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R * 1.415, 0, 7); ctx.stroke();
+      if (ctx.createConicGradient) { var sw = ctx.createConicGradient(now / (4200 / hot) * Math.PI * 2, cx, cy); sw.addColorStop(0, 'rgba(' + GS + ',0)'); sw.addColorStop(0.82, 'rgba(' + GS + ',0)'); sw.addColorStop(1, 'rgba(' + GS + ',0.24)'); ctx.fillStyle = sw; ctx.beginPath(); ctx.arc(cx, cy, R * 1.34, 0, 7); ctx.arc(cx, cy, R * 1.0, 0, 7, true); ctx.fill(); }
+      var br = R * (1.33 - 0.3 * lockW), bl = R * 0.09;
+      ctx.strokeStyle = 'rgba(' + GH + ',' + (0.45 + 0.5 * lockW).toFixed(3) + ')'; ctx.lineWidth = 1.2;
+      for (i = 0; i < 4; i++) { var ang = i * Math.PI / 2 + Math.PI / 4 * 0, x0 = cx + Math.cos(ang) * br, y0 = cy + Math.sin(ang) * br, x1 = cx + Math.cos(ang) * (br - bl), y1 = cy + Math.sin(ang) * (br - bl); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); }
+      pingT -= dt * hot; if (pingT < 0) { pingT = 2400 + Math.random() * 1200; pings.push({ t: 0 }); }
+      for (i = pings.length - 1; i >= 0; i--) { var pg = pings[i]; pg.t += dt / 1500; if (pg.t >= 1) { pings.splice(i, 1); continue; } ctx.strokeStyle = 'rgba(' + G + ',' + (0.45 * (1 - pg.t)).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R * (0.25 + 1.1 * pg.t), 0, 7); ctx.stroke(); }
+    }
+    function frame(now) {
+      if (!last) last = now;
+      var dt = Math.min(50, now - last); last = now;
+      m.x += (m.tx - m.x) * 0.06; m.y += (m.ty - m.y) * 0.06;
+      phaseT += dt;
+      if (phaseT > phases[phase].dur) { phase = (phase + 1) % phases.length; phaseT = 0; setTargets(); setLine(phase); }
+      typeStep(dt);
+      var hot = m.in ? 2 : 1, i;
+      netW += ((phase === 1 ? 1 : 0) - netW) * 0.04; gyroW += ((phase === 2 ? 1 : 0) - gyroW) * 0.04; lockW += ((phase === 3 ? 1 : 0) - lockW) * 0.05;
+      var spd = 0.00007 * hot * (1 + 3.2 * gyroW);
+      if (phase !== 3) ry += spd * dt; else { var target = Math.round(ry / (Math.PI * 2)) * Math.PI * 2; ry += (target - ry) * 0.05; }
+      var rxT = (phase === 3 ? 0 : 0.12) + gyroW * 0.45 * Math.sin(now / 1400);
+      rx += (rxT - rx) * 0.04;
+      var ax = rx + m.y * 0.35, ay = ry + m.x * 0.45;
+      ctx.clearRect(0, 0, s, s);
+      var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.6);
+      cg.addColorStop(0, 'rgba(' + G + ',' + (0.2 + 0.08 * Math.sin(now / 900)) + ')'); cg.addColorStop(1, 'rgba(' + G + ',0)');
+      ctx.fillStyle = cg; ctx.fillRect(0, 0, s, s);
+      ctx.globalCompositeOperation = 'lighter';
+      drawHud(now, dt, hot);
+      drawRings(now, dt, ax, ay, hot);
+      if (netW > 0.02) {
+        var pn = nodes.map(function (p) { return proj(rot(p, ax, ay)); });
+        ctx.lineWidth = 1;
+        for (i = 0; i < edges.length; i++) { var A = pn[edges[i][0]], B = pn[edges[i][1]]; var dz = 1 - (A[2] + B[2]) / 2; ctx.strokeStyle = 'rgba(' + GS + ',' + (netW * (0.05 + 0.28 * dz)).toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); }
+        for (i = 0; i < pulses.length; i++) { var pu = pulses[i]; pu.t += pu.v * hot; if (pu.t > 1) { pu.t = 0; var fl = pn[edges[pu.e][1]]; ctx.strokeStyle = 'rgba(' + GH + ',' + (netW * 0.8) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(fl[0], fl[1], 7, 0, 7); ctx.stroke(); pu.e = Math.floor(Math.random() * edges.length); } var A2 = pn[edges[pu.e][0]], B2 = pn[edges[pu.e][1]]; var x = A2[0] + (B2[0] - A2[0]) * pu.t, y = A2[1] + (B2[1] - A2[1]) * pu.t; ctx.fillStyle = 'rgba(' + GH + ',' + (netW * 0.95) + ')'; ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, 7); ctx.fill(); ctx.shadowBlur = 0; }
+      }
+      for (i = 0; i < N; i++) {
+        px[i] += (tx[i] - px[i]) * k[i]; py[i] += (ty[i] - py[i]) * k[i]; pz[i] += (tz[i] - pz[i]) * k[i];
+        var rp = 1 + (1 - lockW) * 0.035 * Math.sin(py[i] / R * 4 + px[i] / R * 2 + now / 520);
+        var q = rot([px[i] * rp, py[i] * rp, pz[i] * rp], ax, ay); var sc = F / (F + q[2]); var xp = cx + q[0] * sc, yp = cy + q[1] * sc;
+        if (m.in) { var dx = xp - m.px, dy = yp - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
+        ox[i] *= 0.88; oy[i] *= 0.88; xp += ox[i]; yp += oy[i];
+        var depth = (q[2] + R) / (2 * R); var al = 0.18 + 0.72 * (1 - depth) + 0.1 * gyroW; var r = sz[i] * (0.7 + 0.8 * (1 - depth)) * (1 + lockW * 0.2);
+        ctx.fillStyle = 'rgba(' + (depth < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; ctx.fillRect(xp - r / 2, yp - r / 2, r, r);
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      if (!reduce) requestAnimationFrame(frame);
+    }
+    function start() {
+      if (started) return; if (!build()) return; started = true;
+      for (var i = 0; i < N; i++) { k[i] = 0.025 + Math.random() * 0.045; sz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; }
+      setTargets(); setLine(0);
+      if (reduce) { for (var j = 0; j < N; j++) { px[j] = tx[j]; py[j] = ty[j]; pz[j] = tz[j]; } }
+      requestAnimationFrame(frame);
+    }
+    var zone = core.closest('.j-sticky-wrap') || core.parentElement;
+    if (!mobile) {
+      zone.addEventListener('mousemove', function (e) {
+        var r = core.getBoundingClientRect();
+        m.px = e.clientX - r.left; m.py = e.clientY - r.top;
+        var dx = (e.clientX - (r.left + r.width / 2)) / r.width, dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+        dx = Math.max(-0.75, Math.min(0.75, dx)); dy = Math.max(-0.75, Math.min(0.75, dy));
+        m.tx = dx * 1.4; m.ty = dy * 1.4; m.in = true;
+        core.style.setProperty('--gx', (50 + dx * 46).toFixed(1) + '%');
+        core.style.setProperty('--gy', (42 + dy * 40).toFixed(1) + '%');
+      });
+      zone.addEventListener('mouseleave', function () { m.tx = 0; m.ty = 0; m.in = false; m.px = -9999; m.py = -9999; });
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { start(); io.disconnect(); } }, { rootMargin: '200px' });
+      io.observe(core);
+    } else start();
+    window.addEventListener('resize', function () { if (started && Math.abs(core.clientWidth - s) > 20) { started = false; last = 0; start(); } });
   })();
 </script>
 
