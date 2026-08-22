@@ -2543,7 +2543,8 @@
       { container: '.hero-stats .numbers', items: ':scope > div', delay: 900 },
       { container: '.towers .numbers', items: ':scope > div', delay: 0 },
       { container: '.om-stats', items: '.om-stat', delay: 0 },
-      { container: '.cal-grid', items: '.cal-opt', delay: 0, self: true, text: '.ck', outline: true, ink: true, burst: true, stagger: 340 }
+      { container: '.cal-grid', items: '.cal-opt', delay: 0, self: true, text: '.ck', outline: true, ink: true, burst: true, stagger: 340 },
+      { container: '.cineband .line', items: ':scope > p', delay: 0, self: true, text: ':self', words: true }
     ];
     function pageOff(el) { var x = 0, y = 0; while (el) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return [x, y]; }
     function finalText(el) {
@@ -2553,12 +2554,13 @@
     GROUPS.forEach(function (spec) {
       var container = document.querySelector(spec.container); if (!container) return;
       var tsel = spec.text || '.n[data-count]';
-      var items = Array.prototype.slice.call(container.querySelectorAll(spec.items)).filter(function (it) { return it.querySelector(tsel); });
+      var items = Array.prototype.slice.call(container.querySelectorAll(spec.items)).filter(function (it) { return tsel === ':self' || it.querySelector(tsel); });
+      function textEl(it) { return tsel === ':self' ? it : it.querySelector(tsel); }
       if (!items.length) return;
       container.classList.add('asm');
       var COL = spec.ink ? '154,123,63' : G, COMP = spec.ink ? 'source-over' : 'lighter', AMUL = spec.ink ? 0.85 : 0.9, STAG = spec.stagger || 220;
       var PADX = 30, PADY = 50, W = 0, H = 0, cv = null, ctx = null, groups = [], running = false, last = 0;
-      items.forEach(function (it) { (spec.self ? it : it.querySelector(tsel)).classList.add('asm-target'); });
+      items.forEach(function (it) { (spec.self ? it : textEl(it)).classList.add('asm-target'); });
       function ensure() {
         if (cv) return;
         cv = document.createElement('canvas'); cv.className = 'asm-stars'; container.appendChild(cv); ctx = cv.getContext('2d');
@@ -2567,7 +2569,22 @@
       }
       function box(el) { var o0 = pageOff(container), o1 = pageOff(el); return { x: o1[0] - o0[0] + PADX, y: o1[1] - o0[1] + PADY, w: el.offsetWidth, h: el.offsetHeight }; }
       function targetsFor(item) {
-        var tEl = item.querySelector(tsel), cs = getComputedStyle(tEl), bx = box(tEl);
+        var tEl = textEl(item), cs = getComputedStyle(tEl), bx = box(tEl);
+        if (spec.words) {
+          /* multi-line text: one fillText per word at that word's own laid-out position (Range rects), transform-corrected */
+          var o2 = document.createElement('canvas'); o2.width = W; o2.height = H; var g2 = o2.getContext('2d'); g2.fillStyle = '#fff'; g2.textBaseline = 'alphabetic'; g2.textAlign = 'left';
+          var pr = tEl.getBoundingClientRect(), cr = container.getBoundingClientRect();
+          var ddx = (pr.left - cr.left + PADX) - bx.x, ddy = (pr.top - cr.top + PADY) - bx.y;
+          var walker = document.createTreeWalker(tEl, NodeFilter.SHOW_TEXT, null), node;
+          while ((node = walker.nextNode())) {
+            var pcs = getComputedStyle(node.parentElement); g2.font = pcs.fontStyle + ' ' + pcs.fontWeight + ' ' + pcs.fontSize + ' ' + pcs.fontFamily;
+            var re = /\S+/g, mm, txt = node.nodeValue;
+            while ((mm = re.exec(txt))) { var rg = document.createRange(); rg.setStart(node, mm.index); rg.setEnd(node, mm.index + mm[0].length); var rr = rg.getBoundingClientRect(), mt = g2.measureText(mm[0]), asc = mt.fontBoundingBoxAscent || rr.height * 0.8; g2.fillText(mm[0], rr.left - cr.left + PADX - ddx, rr.top - cr.top + PADY - ddy + asc); }
+          }
+          var fs2 = parseFloat(cs.fontSize), d2 = g2.getImageData(0, 0, W, H).data, cand2 = [], st2 = fs2 > 40 ? 2 : 1;
+          for (var y2 = 0; y2 < H; y2 += st2) for (var x2 = 0; x2 < W; x2 += st2) if (d2[(y2 * W + x2) * 4 + 3] > 110) cand2.push([x2, y2]);
+          return { cand: cand2, fs: fs2 };
+        }
         var pt = parseFloat(cs.paddingTop) || 0, pb = parseFloat(cs.paddingBottom) || 0, pl = parseFloat(cs.paddingLeft) || 0, pr = parseFloat(cs.paddingRight) || 0;
         var ta = cs.textAlign; if (ta === 'start') ta = 'left'; if (ta === 'end') ta = 'right'; if (ta !== 'center' && ta !== 'right') ta = 'left';
         var tx = ta === 'center' ? bx.x + pl + (bx.w - pl - pr) / 2 : ta === 'right' ? bx.x + bx.w - pr : bx.x + pl;
@@ -2583,8 +2600,8 @@
       }
       function startItem(item, idx) {
         ensure();
-        var hid = spec.self ? item : item.querySelector(tsel), t = targetsFor(item); if (!t.cand.length) { hid.classList.add('shown'); return; }
-        var NP = Math.round((spec.outline ? 820 : Math.max(240, Math.min(520, Math.round(t.fs * 9)))) * PM), ps = [], szb = spec.ink ? 1.15 : 0.7 + t.fs / 70;
+        var hid = spec.self ? item : textEl(item), t = targetsFor(item); if (!t.cand.length) { hid.classList.add('shown'); return; }
+        var NP = Math.round((spec.words ? 1000 : spec.outline ? 820 : Math.max(240, Math.min(520, Math.round(t.fs * 9)))) * PM), ps = [], szb = spec.ink ? 1.15 : 0.7 + t.fs / 70;
         for (var i = 0; i < NP; i++) { var c = t.cand[Math.floor(Math.random() * t.cand.length)]; ps.push({ x: Math.random() * W, y: Math.random() * H, tx: c[0] + (Math.random() - 0.5), ty: c[1] + (Math.random() - 0.5), k: 0.035 + Math.random() * 0.05, sz: szb * (0.8 + Math.random() * 0.7), a: 0 }); }
         groups.push({ ps: ps, t: 0, n: hid, shown: false, dead: false, delay: spec.delay + idx * STAG });
         if (!running) { running = true; last = 0; requestAnimationFrame(frame); }
