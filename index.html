@@ -2397,18 +2397,12 @@
     var k = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
     var NODES = 54, nodes = [], edges = [], pulses = [], phases = [];
-    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, netW = 0, lockW = 0, gyroW = 0, started = false, pingT = 0, pings = [];
-    var rings = [
-      { r: 1.13, tx: 1.1, ty: 0.3, wx: 0.00032, wy: 0.00021, dash: true, bead: 0.9, w: 1, a: 0.7 },
-      { r: 1.24, tx: -0.6, ty: 1.2, wx: -0.00024, wy: 0.00038, dash: true, bead: -0.6, w: 1, a: 0.55 },
-      { r: 1.04, tx: 0.4, ty: -0.9, wx: 0.00046, wy: -0.00029, dash: false, bead: 1.3, w: 0.8, a: 0.4 }
-    ];
+    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, netW = 0, gyroW = 0, started = false;
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
     var lines = [
       'Researching. 340 names, 62 firms, verified.',
       'Reaching out in your voice. Peer to peer.',
-      'Following up. Nothing forgotten. Nothing dropped.',
-      'Call booked Thursday. Calendar filling.'
+      'Follow-up sent 4:12 AM. Call booked Thursday.'
     ];
     var typeIdx = -1, typePos = 0, typeTimer = 0;
     function rot(p, ax, ay) {
@@ -2421,9 +2415,9 @@
     function build() {
       s = core.clientWidth; if (!s) return false;
       canvas.width = s * dpr; canvas.height = s * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cx = s / 2; cy = s / 2; R = s * 0.31; F = s * 1.6;
+      cx = s / 2; cy = s / 2; R = s * 0.34; F = s * 1.6;
       nodes = []; edges = []; pulses = [];
-      var sphere = [], net = [], gyro = [], ret = [], g = Math.PI * (3 - Math.sqrt(5)), i;
+      var sphere = [], net = [], gyro = [], g = Math.PI * (3 - Math.sqrt(5)), i;
       for (i = 0; i < N; i++) { var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * R, y * R, Math.sin(t) * r * R]); }
       for (i = 0; i < NODES; i++) nodes.push(sphere[Math.floor(i * N / NODES)]);
       for (i = 0; i < N; i++) { var n = nodes[i % NODES], j = 1 + (Math.random() - 0.5) * 0.1; net.push([n[0] * j + (Math.random() - 0.5) * 7, n[1] * j + (Math.random() - 0.5) * 7, n[2] * j + (Math.random() - 0.5) * 7]); }
@@ -2435,16 +2429,8 @@
         else pt = [Math.cos(th) * rr, (Math.random() - 0.5) * 4, Math.sin(th) * rr];
         gyro.push(rot(pt, 0.26, 0.26));
       }
-      for (i = 0; i < N; i++) {
-        var f = i / N, ang = Math.random() * Math.PI * 2, zz = (Math.random() - 0.5) * 3, q;
-        if (f < 0.36) { var r1 = R * (0.96 + (Math.random() - 0.5) * 0.03); q = [Math.cos(ang) * r1, Math.sin(ang) * r1, zz]; }
-        else if (f < 0.62) { var r2 = R * (0.6 + (Math.random() - 0.5) * 0.03); q = [Math.cos(ang) * r2, Math.sin(ang) * r2, zz]; }
-        else if (f < 0.86) { var tk = Math.floor(Math.random() * 8), ta = tk * Math.PI / 4, len = tk % 2 ? [0.72, 0.82] : [0.66, 0.9], rr2 = R * (len[0] + Math.random() * (len[1] - len[0])), jit = (Math.random() - 0.5) * 2.5; q = [Math.cos(ta) * rr2 - Math.sin(ta) * jit, Math.sin(ta) * rr2 + Math.cos(ta) * jit, zz]; }
-        else { var rc = R * 0.12 * Math.sqrt(Math.random()); q = [Math.cos(ang) * rc, Math.sin(ang) * rc, zz]; }
-        ret.push(q);
-      }
       for (i = 0; i < 14; i++) pulses.push({ e: Math.floor(Math.random() * edges.length), t: Math.random(), v: 0.006 + Math.random() * 0.008 });
-      phases = [{ pts: sphere, dur: 6000 }, { pts: net, dur: 6500 }, { pts: gyro, dur: 6200 }, { pts: ret, dur: 5400 }];
+      phases = [{ pts: sphere, dur: 6500 }, { pts: net, dur: 6500 }, { pts: gyro, dur: 6200 }];
       return true;
     }
     function setTargets() { var p = phases[phase].pts; for (var i = 0; i < N; i++) { tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2]; } }
@@ -2456,43 +2442,6 @@
       while (typeTimer > 38 && typePos < line.length) { typeTimer -= 38; typePos++; }
       typeEl.textContent = line.slice(0, typePos);
     }
-    function ringPt(rg, t, ax, ay) {
-      var r = rg.r * R, p = [Math.cos(t) * r, Math.sin(t) * r, 0];
-      var c = Math.cos(rg.tx), sn = Math.sin(rg.tx), y1 = p[1] * c - p[2] * sn, z1 = p[1] * sn + p[2] * c;
-      c = Math.cos(rg.ty); sn = Math.sin(rg.ty);
-      var x2 = p[0] * c + z1 * sn, z2 = -p[0] * sn + z1 * c;
-      return proj(rot([x2, y1, z2], ax, ay));
-    }
-    function drawRings(now, dt, ax, ay, hot) {
-      var SEG = 120, i, rg, pts;
-      for (var r = 0; r < rings.length; r++) {
-        rg = rings[r]; rg.tx += rg.wx * dt * hot; rg.ty += rg.wy * dt * hot; rg.spin = (rg.spin || 0) + dt * 0.0006 * hot;
-        pts = []; for (i = 0; i <= SEG; i++) pts.push(ringPt(rg, i / SEG * Math.PI * 2, ax, ay));
-        ctx.lineWidth = rg.w;
-        for (i = 0; i < SEG; i++) {
-          if (rg.dash && ((i + rg.spin * 40) % 8) > 5) continue;
-          var A = pts[i], B = pts[i + 1], dep = (A[2] + B[2]) / 2;
-          ctx.strokeStyle = 'rgba(' + GS + ',' + (rg.a * (0.18 + 0.82 * (1 - dep)) * (0.75 + 0.5 * gyroW)).toFixed(3) + ')';
-          ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
-        }
-        var bp = ringPt(rg, rg.spin * rg.bead * 2.2, ax, ay);
-        ctx.fillStyle = 'rgba(' + GH + ',' + (0.5 + 0.5 * (1 - bp[2])).toFixed(3) + ')'; ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 12;
-        ctx.beginPath(); ctx.arc(bp[0], bp[1], 2.4, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
-      }
-    }
-    function drawHud(now, dt, hot) {
-      var i, a0;
-      ctx.lineCap = 'butt';
-      for (i = 0; i < 3; i++) { a0 = now / (9000 / hot) * Math.PI * 2 + i * Math.PI * 2 / 3; ctx.strokeStyle = 'rgba(' + GS + ',0.5)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(cx, cy, R * 1.37, a0, a0 + 1.05); ctx.stroke(); }
-      for (i = 0; i < 4; i++) { a0 = -now / (13000 / hot) * Math.PI * 2 + i * Math.PI / 2; ctx.strokeStyle = 'rgba(' + GS + ',0.3)'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cx, cy, R * 1.44, a0, a0 + 0.3); ctx.stroke(); }
-      ctx.strokeStyle = 'rgba(' + GS + ',0.12)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R * 1.415, 0, 7); ctx.stroke();
-      if (ctx.createConicGradient) { var sw = ctx.createConicGradient(now / (4200 / hot) * Math.PI * 2, cx, cy); sw.addColorStop(0, 'rgba(' + GS + ',0)'); sw.addColorStop(0.82, 'rgba(' + GS + ',0)'); sw.addColorStop(1, 'rgba(' + GS + ',0.24)'); ctx.fillStyle = sw; ctx.beginPath(); ctx.arc(cx, cy, R * 1.34, 0, 7); ctx.arc(cx, cy, R * 1.0, 0, 7, true); ctx.fill(); }
-      var br = R * (1.33 - 0.3 * lockW), bl = R * 0.09;
-      ctx.strokeStyle = 'rgba(' + GH + ',' + (0.45 + 0.5 * lockW).toFixed(3) + ')'; ctx.lineWidth = 1.2;
-      for (i = 0; i < 4; i++) { var ang = i * Math.PI / 2 + Math.PI / 4 * 0, x0 = cx + Math.cos(ang) * br, y0 = cy + Math.sin(ang) * br, x1 = cx + Math.cos(ang) * (br - bl), y1 = cy + Math.sin(ang) * (br - bl); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); }
-      pingT -= dt * hot; if (pingT < 0) { pingT = 2400 + Math.random() * 1200; pings.push({ t: 0 }); }
-      for (i = pings.length - 1; i >= 0; i--) { var pg = pings[i]; pg.t += dt / 1500; if (pg.t >= 1) { pings.splice(i, 1); continue; } ctx.strokeStyle = 'rgba(' + G + ',' + (0.45 * (1 - pg.t)).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R * (0.25 + 1.1 * pg.t), 0, 7); ctx.stroke(); }
-    }
     function frame(now) {
       if (!last) last = now;
       var dt = Math.min(50, now - last); last = now;
@@ -2501,10 +2450,10 @@
       if (phaseT > phases[phase].dur) { phase = (phase + 1) % phases.length; phaseT = 0; setTargets(); setLine(phase); }
       typeStep(dt);
       var hot = m.in ? 2 : 1, i;
-      netW += ((phase === 1 ? 1 : 0) - netW) * 0.04; gyroW += ((phase === 2 ? 1 : 0) - gyroW) * 0.04; lockW += ((phase === 3 ? 1 : 0) - lockW) * 0.05;
+      netW += ((phase === 1 ? 1 : 0) - netW) * 0.04; gyroW += ((phase === 2 ? 1 : 0) - gyroW) * 0.04;
       var spd = 0.00007 * hot * (1 + 3.2 * gyroW);
-      if (phase !== 3) ry += spd * dt; else { var target = Math.round(ry / (Math.PI * 2)) * Math.PI * 2; ry += (target - ry) * 0.05; }
-      var rxT = (phase === 3 ? 0 : 0.12) + gyroW * 0.45 * Math.sin(now / 1400);
+      ry += spd * dt;
+      var rxT = 0.12 + gyroW * 0.45 * Math.sin(now / 1400);
       rx += (rxT - rx) * 0.04;
       var ax = rx + m.y * 0.35, ay = ry + m.x * 0.45;
       ctx.clearRect(0, 0, s, s);
@@ -2512,21 +2461,18 @@
       cg.addColorStop(0, 'rgba(' + G + ',' + (0.2 + 0.08 * Math.sin(now / 900)) + ')'); cg.addColorStop(1, 'rgba(' + G + ',0)');
       ctx.fillStyle = cg; ctx.fillRect(0, 0, s, s);
       ctx.globalCompositeOperation = 'lighter';
-      drawHud(now, dt, hot);
-      drawRings(now, dt, ax, ay, hot);
       if (netW > 0.02) {
         var pn = nodes.map(function (p) { return proj(rot(p, ax, ay)); });
         ctx.lineWidth = 1;
         for (i = 0; i < edges.length; i++) { var A = pn[edges[i][0]], B = pn[edges[i][1]]; var dz = 1 - (A[2] + B[2]) / 2; ctx.strokeStyle = 'rgba(' + GS + ',' + (netW * (0.05 + 0.28 * dz)).toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); }
-        for (i = 0; i < pulses.length; i++) { var pu = pulses[i]; pu.t += pu.v * hot; if (pu.t > 1) { pu.t = 0; var fl = pn[edges[pu.e][1]]; ctx.strokeStyle = 'rgba(' + GH + ',' + (netW * 0.8) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(fl[0], fl[1], 7, 0, 7); ctx.stroke(); pu.e = Math.floor(Math.random() * edges.length); } var A2 = pn[edges[pu.e][0]], B2 = pn[edges[pu.e][1]]; var x = A2[0] + (B2[0] - A2[0]) * pu.t, y = A2[1] + (B2[1] - A2[1]) * pu.t; ctx.fillStyle = 'rgba(' + GH + ',' + (netW * 0.95) + ')'; ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, 7); ctx.fill(); ctx.shadowBlur = 0; }
+        for (i = 0; i < pulses.length; i++) { var pu = pulses[i]; pu.t += pu.v * hot; if (pu.t > 1) { pu.t = 0; pu.e = Math.floor(Math.random() * edges.length); } var A2 = pn[edges[pu.e][0]], B2 = pn[edges[pu.e][1]]; var x = A2[0] + (B2[0] - A2[0]) * pu.t, y = A2[1] + (B2[1] - A2[1]) * pu.t; ctx.fillStyle = 'rgba(' + GH + ',' + (netW * 0.95) + ')'; ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, 7); ctx.fill(); ctx.shadowBlur = 0; }
       }
       for (i = 0; i < N; i++) {
         px[i] += (tx[i] - px[i]) * k[i]; py[i] += (ty[i] - py[i]) * k[i]; pz[i] += (tz[i] - pz[i]) * k[i];
-        var rp = 1 + (1 - lockW) * 0.035 * Math.sin(py[i] / R * 4 + px[i] / R * 2 + now / 520);
-        var q = rot([px[i] * rp, py[i] * rp, pz[i] * rp], ax, ay); var sc = F / (F + q[2]); var xp = cx + q[0] * sc, yp = cy + q[1] * sc;
+        var q = rot([px[i], py[i], pz[i]], ax, ay); var sc = F / (F + q[2]); var xp = cx + q[0] * sc, yp = cy + q[1] * sc;
         if (m.in) { var dx = xp - m.px, dy = yp - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
         ox[i] *= 0.88; oy[i] *= 0.88; xp += ox[i]; yp += oy[i];
-        var depth = (q[2] + R) / (2 * R); var al = 0.18 + 0.72 * (1 - depth) + 0.1 * gyroW; var r = sz[i] * (0.7 + 0.8 * (1 - depth)) * (1 + lockW * 0.2);
+        var depth = (q[2] + R) / (2 * R); var al = 0.18 + 0.72 * (1 - depth) + 0.1 * gyroW; var r = sz[i] * (0.7 + 0.8 * (1 - depth));
         ctx.fillStyle = 'rgba(' + (depth < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; ctx.fillRect(xp - r / 2, yp - r / 2, r, r);
       }
       ctx.globalCompositeOperation = 'source-over';
