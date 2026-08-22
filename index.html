@@ -351,12 +351,22 @@
   .hero .sub { font-size: 1.1rem; color: rgba(242,237,225,0.75); max-width: 46ch; margin-top: 26px; opacity: 0; animation: rise 1s var(--ease) 1.3s forwards; }
   .hero-actions { display: flex; gap: 30px; align-items: center; margin-top: 38px; opacity: 0; animation: rise 1s var(--ease) 1.55s forwards; }
   .hero-actions .quiet-link { color: rgba(242,237,225,0.8); }
-  .hero-jbadge { display: inline-flex; align-items: center; gap: 10px; margin-top: 30px; width: fit-content; font-size: 10.5px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; color: var(--brass-soft); border: 1px solid rgba(194,164,104,0.35); padding: 13px 20px; opacity: 0; animation: rise 1s var(--ease) 1.85s forwards; transition: border-color 0.4s var(--ease), background 0.4s var(--ease); }
-  .hero-jbadge .dot { color: var(--cream); }
-  .hero-jbadge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 8px rgba(194,164,104,0.9); animation: jpulse 3.2s var(--ease) infinite; }
+  /* Hero Jarvis badge: a living mini Jarvis core (sphere → network → gyroscope, same engine as the chapter)
+     with "Agentic Technology" beside it. No box. Flies in, lands with a flash, sparkles around the circle. */
+  .hero-jbadge { position: relative; display: inline-flex; align-items: center; gap: 22px; margin-top: 26px; width: fit-content; font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; color: var(--brass-soft); opacity: 0; transform: translate(-54px, 30px) scale(0.88); will-change: transform, opacity; animation: jbfly 1.5s var(--ease) 1.85s both; transition: color 0.4s var(--ease); }
+  .hero-jbadge .jb-text { display: flex; flex-direction: column; gap: 7px; }
+  .hero-jbadge .jb-label { position: relative; padding-bottom: 4px; }
+  .hero-jbadge .jb-sub { font-family: var(--serif, Georgia, serif); font-style: italic; font-weight: 400; letter-spacing: 0.02em; text-transform: none; font-size: 14px; color: rgba(242,237,225,0.62); }
+  .jb-core { position: relative; width: 88px; height: 88px; flex: 0 0 88px; border-radius: 50%; animation: jbflash 2.2s var(--ease) 1.85s both, jbbreathe 4.2s ease-in-out 4.05s infinite; }
+  /* instrument tick ring: the one frame element the Jarvis core is allowed */
+  .jb-core::after { content: ""; position: absolute; inset: -7px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(194,164,104,0.55) 0deg 0.9deg, transparent 0.9deg 6deg); -webkit-mask: radial-gradient(circle, transparent calc(50% - 4px), #000 calc(50% - 3px), #000 50%, transparent calc(50% + 1px)); mask: radial-gradient(circle, transparent calc(50% - 4px), #000 calc(50% - 3px), #000 50%, transparent calc(50% + 1px)); animation: jbtick 48s linear infinite; opacity: 0.8; pointer-events: none; }
+  @keyframes jbtick { to { transform: rotate(360deg); } }
+  @keyframes jbbreathe { 0%, 100% { box-shadow: 0 0 18px rgba(233,205,144,0.16); } 50% { box-shadow: 0 0 30px rgba(233,205,144,0.34), 0 0 6px rgba(233,205,144,0.2); } }
+  .jb-core::before { content: ""; position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle, rgba(226,196,130,0.22), rgba(226,196,130,0) 68%); pointer-events: none; }
+  .jb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: 50%; }
+  @keyframes jbfly { 0% { opacity: 0; transform: translate(-54px, 30px) scale(0.88); filter: blur(10px); } 55% { opacity: 1; filter: blur(0); } 78% { transform: translate(2px, -2px) scale(1.03); } 100% { opacity: 1; transform: none; filter: none; } }
+  @keyframes jbflash { 0%, 50% { box-shadow: 0 0 0 rgba(233,205,144,0); } 72% { box-shadow: 0 0 34px rgba(233,205,144,0.45), 0 0 10px rgba(233,205,144,0.3); } 100% { box-shadow: 0 0 18px rgba(233,205,144,0.16); } }
   .hero-jbadge:hover { border-color: var(--brass-soft); background: rgba(194,164,104,0.1); }
-  .hero-jbadge.has-orb::before { display: none; }
-  .jb-orb { width: 16px; height: 16px; display: block; flex: 0 0 16px; filter: drop-shadow(0 0 6px rgba(194,164,104,0.7)); }
   .asm { position: relative; }
   .asm-stars { position: absolute; pointer-events: none; z-index: 2; }
   .asm .asm-target { transition: opacity 0.9s var(--ease); }
@@ -372,7 +382,7 @@
   .scroll-cue { position: absolute; bottom: 40px; left: 46px; z-index: 4; font-size: 10px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(242,237,225,0.6); display: flex; align-items: center; gap: 14px; }
   .scroll-cue::after { content: ""; width: 1px; height: 52px; background: linear-gradient(var(--brass-soft), transparent); animation: cuepulse 2.6s var(--ease) infinite; transform-origin: top; }
   @keyframes cuepulse { 0%, 100% { transform: scaleY(0.55); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
-  @media (max-width: 860px) { .hero-content { justify-content: flex-start; padding-top: 128px; padding-bottom: 40px; } .hero .kicker { margin-bottom: 26px; } .hero .sub { margin-top: 18px; } .hero-actions { margin-top: 24px; } .hero-jbadge { margin-top: 18px; } .hero-note { display: none; } .scroll-cue { bottom: 44px; } }
+  @media (max-width: 860px) { .hero-content { justify-content: flex-start; padding-top: 128px; padding-bottom: 40px; } .hero .kicker { margin-bottom: 26px; } .hero .sub { margin-top: 18px; } .hero-actions { margin-top: 24px; } .hero-jbadge { margin-top: 20px; gap: 16px; } .jb-core { width: 64px; height: 64px; flex-basis: 64px; } .hero-jbadge .jb-sub { font-size: 13px; } .hero-note { display: none; } .scroll-cue { bottom: 44px; } }
   /* Short desktop windows: the hero's core copy (kicker/h1/sub/actions/badge) always keeps full,
      consistent type sizing - it never shrinks. The stats row shrinks instead on short windows,
      but always stays visible. */
@@ -386,13 +396,17 @@
   }
   @media (min-width: 861px) and (max-height: 860px) {
     .hero-content { padding-top: 90px; padding-bottom: 30px; }
-    .hero-jbadge { display: none; }
+    .hero-actions { margin-top: 16px; }
+    .hero-jbadge { margin-top: 8px; gap: 18px; } .jb-core { width: 70px; height: 70px; flex-basis: 70px; } .hero-jbadge .jb-text { gap: 5px; }
+    .hero-stats { margin-top: 10px; }
   }
   @media (min-width: 861px) and (max-height: 740px) {
-    .hero-content { padding-top: 76px; padding-bottom: 18px; }
-    .hero .kicker { margin-bottom: 10px; }
-    .hero .sub { margin-top: 10px; }
-    .hero-actions { margin-top: 14px; }
+    .hero-content { padding-top: 112px; padding-bottom: 14px; } /* nav is 108px at page top: never center the block up under it */
+    .hero .kicker { margin-bottom: 8px; }
+    .hero .sub { margin-top: 8px; }
+    .hero-actions { margin-top: 10px; }
+    .hero-jbadge { margin-top: 6px; font-size: 10px; } .jb-core { width: 48px; height: 48px; flex-basis: 48px; } .hero-jbadge .jb-sub { font-size: 12px; }
+    .hero-stats { margin-top: 6px; }
   }
 
   /* ————— Full-bleed image chapters ————— */
@@ -1053,7 +1067,7 @@
     .vid-toggle { display: none; }
     .hero .fallback { display: block; }
     .hero .kicker, .hero h1 .w, .hero .sub, .hero-actions, .hero-jbadge { opacity: 1; transform: none; animation: none; }
-    .hero-jbadge::before { animation: none; }
+    .jb-core, .jb-core::after { animation: none; }
     .capital .bg video { display: none; }
     .capital .bg .fallback { display: block; }
     .cine .bg.zoom img { animation: none; }
@@ -1173,7 +1187,7 @@
       <a class="btn" href="#contact">Schedule A Call</a>
       <a class="quiet-link" href="#capital">Raising capital?</a>
     </div>
-    <a class="hero-jbadge" href="#jarvis">Agentic Technology</a>
+    <a class="hero-jbadge" href="#jarvis" aria-label="Agentic Technology: meet Jarvis"><span class="jb-core" aria-hidden="true"><canvas class="jb-canvas"></canvas></span><span class="jb-text"><span class="jb-label">Agentic Technology</span><span class="jb-sub">See it in motion &rarr;</span></span></a>
     <div class="hero-stats reveal">
       <div class="numbers">
         <div><div class="n" data-count="20"><span class="v">0</span><span class="plus">+</span></div><div class="l">Years Consulting</div></div>
@@ -2517,23 +2531,79 @@
     if (reduce) return;
     var G = '226,196,130', dpr = Math.min(window.devicePixelRatio || 1, 2);
     var MOB = window.matchMedia('(max-width: 900px)').matches, PM = MOB ? 0.6 : 1;
-    /* Hero badge: live mini sphere replaces the pulsing dot */
-    var badge = document.querySelector('.hero-jbadge');
-    if (badge) {
-      var D = 16, oc = document.createElement('canvas'); oc.className = 'jb-orb'; oc.width = D * dpr; oc.height = D * dpr;
-      badge.insertBefore(oc, badge.firstChild); badge.classList.add('has-orb');
-      var octx = oc.getContext('2d'); octx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var ON = 150, OP = [], gg = Math.PI * (3 - Math.sqrt(5)), oa = 0, orun = true;
-      for (var i = 0; i < ON; i++) { var yy = 1 - (i / (ON - 1)) * 2, rr = Math.sqrt(1 - yy * yy), tt = gg * i; OP.push([Math.cos(tt) * rr, yy, Math.sin(tt) * rr]); }
-      function orb() {
-        if (!orun) return;
-        oa += 0.011; octx.clearRect(0, 0, D, D);
-        var c = Math.cos(oa), sn = Math.sin(oa), R = D * 0.44, cx = D / 2, cy = D / 2;
-        for (var j = 0; j < ON; j++) { var p = OP[j], x = p[0] * c + p[2] * sn, z = -p[0] * sn + p[2] * c, y = p[1] * 0.95 + z * 0.3, dep = (z + 1) / 2, sz = 0.55 + dep * 0.75; octx.fillStyle = 'rgba(' + G + ',' + (0.2 + 0.8 * dep).toFixed(2) + ')'; octx.fillRect(cx + x * R - sz / 2, cy + y * R - sz / 2, sz, sz); }
-        requestAnimationFrame(orb);
+    /* Hero badge: a mini Jarvis core (same sphere → network → gyroscope engine as the chapter, scaled down).
+       Flies in via CSS; hover only nudges the orb's tilt and pace. No chrome, no sparkles (Matt: "let it do what it does"). */
+    var badge = document.querySelector('.hero-jbadge'), jbCore = badge && badge.querySelector('.jb-core'), jbCv = badge && badge.querySelector('.jb-canvas');
+    if (badge && jbCore && jbCv) {
+      var GS = '194,164,104', GH = '255,236,190';
+      var bctx = jbCv.getContext('2d');
+      var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BNODES = 22;
+      var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), btx = new Float32Array(BN), bty = new Float32Array(BN), btz = new Float32Array(BN), bk = new Float32Array(BN), bsz = new Float32Array(BN);
+      var bnodes = [], bedges = [], bpulses = [], bphases = [], bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, bnetW = 0, bgyroW = 0, blast = 0, brun = true, bbuilt = false;
+      var bm = { x: 0, y: 0, tx: 0, ty: 0, in: false };
+      function brot(p, ax, ay) { var c = Math.cos(ay), sn = Math.sin(ay); var x1 = p[0] * c + p[2] * sn, z1 = -p[0] * sn + p[2] * c; c = Math.cos(ax); sn = Math.sin(ax); return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c]; }
+      function bproj(q) { var sc = bF / (bF + q[2]); return [bcx + q[0] * sc, bcy + q[1] * sc, (q[2] + bR * 1.3) / (2.6 * bR)]; }
+      function bbuild() {
+        bs = jbCore.clientWidth; if (!bs) return false;
+        jbCv.width = bs * dpr; jbCv.height = bs * dpr; bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        bcx = bs / 2; bcy = bs / 2; bR = bs * 0.36; bF = bs * 1.6;
+        bnodes = []; bedges = []; bpulses = [];
+        var sphere = [], net = [], gyro = [], g = Math.PI * (3 - Math.sqrt(5)), i;
+        for (i = 0; i < BN; i++) { var y = 1 - (i / (BN - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * bR, y * bR, Math.sin(t) * r * bR]); }
+        for (i = 0; i < BNODES; i++) bnodes.push(sphere[Math.floor(i * BN / BNODES)]);
+        for (i = 0; i < BN; i++) { var n = bnodes[i % BNODES], j = 1 + (Math.random() - 0.5) * 0.1; net.push([n[0] * j + (Math.random() - 0.5) * 2.2, n[1] * j + (Math.random() - 0.5) * 2.2, n[2] * j + (Math.random() - 0.5) * 2.2]); }
+        for (var a = 0; a < BNODES; a++) for (var b = a + 1; b < BNODES; b++) { var d = Math.hypot(bnodes[a][0] - bnodes[b][0], bnodes[a][1] - bnodes[b][1], bnodes[a][2] - bnodes[b][2]); if (d < bR * 1.05) bedges.push([a, b]); }
+        for (i = 0; i < BN; i++) {
+          var th = Math.random() * Math.PI * 2, rr = bR * (0.97 + (Math.random() - 0.5) * 0.07), w = i % 3, pt;
+          if (w === 0) pt = [Math.cos(th) * rr, Math.sin(th) * rr, (Math.random() - 0.5) * 1.4];
+          else if (w === 1) pt = [(Math.random() - 0.5) * 1.4, Math.cos(th) * rr, Math.sin(th) * rr];
+          else pt = [Math.cos(th) * rr, (Math.random() - 0.5) * 1.4, Math.sin(th) * rr];
+          gyro.push(brot(pt, 0.26, 0.26));
+        }
+        for (i = 0; i < 6; i++) bpulses.push({ e: Math.floor(Math.random() * bedges.length), t: Math.random(), v: 0.008 + Math.random() * 0.01 });
+        bphases = [{ pts: sphere, dur: 6500 }, { pts: net, dur: 6500 }, { pts: gyro, dur: 6200 }];
+        return true;
       }
-      if ('IntersectionObserver' in window) { new IntersectionObserver(function (en) { var v = en[0].isIntersecting; if (v && !orun) { orun = true; orb(); } else if (!v) orun = false; }).observe(badge); }
-      orb();
+      function bTargets() { var p = bphases[bphase].pts; for (var i = 0; i < BN; i++) { btx[i] = p[i][0]; bty[i] = p[i][1]; btz[i] = p[i][2]; } }
+      function bframe(now) {
+        if (!brun) return;
+        if (!blast) blast = now;
+        var dt = Math.min(50, now - blast); blast = now; var i;
+        bm.x += (bm.tx - bm.x) * 0.06; bm.y += (bm.ty - bm.y) * 0.06;
+        bphaseT += dt;
+        if (bphaseT > bphases[bphase].dur) { bphase = (bphase + 1) % bphases.length; bphaseT = 0; bTargets(); }
+        var hotM = bm.in ? 1.6 : 1;
+        bnetW += ((bphase === 1 ? 1 : 0) - bnetW) * 0.04; bgyroW += ((bphase === 2 ? 1 : 0) - bgyroW) * 0.04;
+        bry += 0.00009 * hotM * (1 + 3.2 * bgyroW) * dt;
+        var rxT = 0.12 + bgyroW * 0.45 * Math.sin(now / 1400); brx += (rxT - brx) * 0.04;
+        var ax = brx + bm.y * 0.35, ay = bry + bm.x * 0.45;
+        bctx.clearRect(0, 0, bs, bs);
+        bctx.globalCompositeOperation = 'lighter';
+        if (bnetW > 0.02) {
+          var pn = bnodes.map(function (p) { return bproj(brot(p, ax, ay)); });
+          bctx.lineWidth = 0.7;
+          for (i = 0; i < bedges.length; i++) { var A = pn[bedges[i][0]], B = pn[bedges[i][1]]; var dz = 1 - (A[2] + B[2]) / 2; bctx.strokeStyle = 'rgba(' + GS + ',' + (bnetW * (0.08 + 0.38 * dz)).toFixed(3) + ')'; bctx.beginPath(); bctx.moveTo(A[0], A[1]); bctx.lineTo(B[0], B[1]); bctx.stroke(); }
+          for (i = 0; i < bpulses.length; i++) { var pu = bpulses[i]; pu.t += pu.v * hotM; if (pu.t > 1) { pu.t = 0; pu.e = Math.floor(Math.random() * bedges.length); } var A2 = pn[bedges[pu.e][0]], B2 = pn[bedges[pu.e][1]]; bctx.fillStyle = 'rgba(' + GH + ',' + (bnetW * 0.95) + ')'; bctx.shadowColor = 'rgba(' + G + ',1)'; bctx.shadowBlur = 6; bctx.beginPath(); bctx.arc(A2[0] + (B2[0] - A2[0]) * pu.t, A2[1] + (B2[1] - A2[1]) * pu.t, 1.3, 0, 7); bctx.fill(); bctx.shadowBlur = 0; }
+        }
+        for (i = 0; i < BN; i++) {
+          bpx[i] += (btx[i] - bpx[i]) * bk[i]; bpy[i] += (bty[i] - bpy[i]) * bk[i]; bpz[i] += (btz[i] - bpz[i]) * bk[i];
+          var q = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc = bF / (bF + q[2]), xp = bcx + q[0] * sc, yp = bcy + q[1] * sc;
+          var depth = (q[2] + bR) / (2 * bR), al = 0.18 + 0.72 * (1 - depth) + 0.1 * bgyroW, r = bsz[i] * (0.7 + 0.8 * (1 - depth));
+          bctx.fillStyle = 'rgba(' + (depth < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp - r / 2, yp - r / 2, r, r);
+        }
+        bctx.globalCompositeOperation = 'source-over';
+        requestAnimationFrame(bframe);
+      }
+      function bstart() {
+        if (!bbuild()) return false;
+        for (var i = 0; i < BN; i++) { bk[i] = 0.025 + Math.random() * 0.045; bsz[i] = 0.75 + Math.random() * 0.95; bpx[i] = (Math.random() - 0.5) * bs; bpy[i] = (Math.random() - 0.5) * bs; bpz[i] = (Math.random() - 0.5) * bs; }
+        bTargets(); bbuilt = true; return true;
+      }
+      if (bstart()) requestAnimationFrame(bframe);
+      badge.addEventListener('mouseleave', function () { bm.tx = 0; bm.ty = 0; bm.in = false; });
+      if (!MOB) badge.addEventListener('mousemove', function (e) { var r = jbCore.getBoundingClientRect(); var dx = (e.clientX - (r.left + r.width / 2)) / r.width, dy = (e.clientY - (r.top + r.height / 2)) / r.height; dx = Math.max(-1.2, Math.min(1.2, dx)); dy = Math.max(-1.2, Math.min(1.2, dy)); bm.tx = dx * 1.1; bm.ty = dy * 1.1; bm.in = true; });
+      window.addEventListener('resize', function () { if (bbuilt && Math.abs(jbCore.clientWidth - bs) > 4) { bstart(); } });
+      if ('IntersectionObserver' in window) { new IntersectionObserver(function (en) { var v = en[0].isIntersecting; if (v && !brun) { brun = true; blast = 0; requestAnimationFrame(bframe); } else if (!v) brun = false; }).observe(badge); }
     }
     /* Signature motion: objects assemble from a scattered gold constellation, then crossfade into the real thing.
        Numbers everywhere + the scheduler cards. One mechanic, used consistently. */
