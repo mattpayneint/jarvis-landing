@@ -355,6 +355,13 @@
   .hero-jbadge .dot { color: var(--cream); }
   .hero-jbadge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 8px rgba(194,164,104,0.9); animation: jpulse 3.2s var(--ease) infinite; }
   .hero-jbadge:hover { border-color: var(--brass-soft); background: rgba(194,164,104,0.1); }
+  .hero-jbadge.has-orb::before { display: none; }
+  .jb-orb { width: 16px; height: 16px; display: block; flex: 0 0 16px; filter: drop-shadow(0 0 6px rgba(194,164,104,0.7)); }
+  .asm { position: relative; }
+  .asm > * { position: relative; z-index: 1; }
+  .asm-stars { position: absolute; pointer-events: none; z-index: 0; }
+  .asm .n[data-count] { opacity: 0; transition: opacity 0.9s var(--ease); }
+  .asm .n[data-count].shown { opacity: 1; }
   .hero-meta { position: absolute; bottom: 40px; right: 46px; z-index: 4; display: flex; align-items: center; gap: 18px; }
   .vid-toggle {
     width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(242,237,225,0.4); background: rgba(11,11,13,0.3);
@@ -1203,7 +1210,7 @@
           <p class="lede reveal">Standing, peer to peer, with real allocators and real high net worth investors who want the meeting. Never solicited, so nothing about it undermines the scarcity and exclusivity you need to protect.</p>
           <div class="reveal" style="margin-top: 40px;"><a class="btn" href="https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call" target="_blank" rel="noopener">Start The Conversation</a></div>
         </div>
-        <div>
+        <div class="cap-col">
           <div class="stat-line reveal"><span class="n" data-count="100">$<span class="v">0</span>M</span><span class="l">Raised · Pete's Story</span></div>
           <div class="stat-line reveal"><span class="n" data-count="60">$<span class="v">0</span>M</span><span class="l">Raised · Chris's Story</span></div>
           <div class="stat-line reveal"><span class="n" data-count="35">$<span class="v">0</span>M</span><span class="l">Raised · Todd's Story</span></div>
@@ -2503,6 +2510,108 @@
       io.observe(core);
     } else start();
     window.addEventListener('resize', function () { if (started && Math.abs(core.clientWidth - s) > 20) { started = false; last = 0; start(); } });
+  })();
+</script>
+<script>
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    var G = '226,196,130', dpr = Math.min(window.devicePixelRatio || 1, 2);
+    /* Hero badge: live mini sphere replaces the pulsing dot */
+    var badge = document.querySelector('.hero-jbadge');
+    if (badge) {
+      var D = 16, oc = document.createElement('canvas'); oc.className = 'jb-orb'; oc.width = D * dpr; oc.height = D * dpr;
+      badge.insertBefore(oc, badge.firstChild); badge.classList.add('has-orb');
+      var octx = oc.getContext('2d'); octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var ON = 150, OP = [], gg = Math.PI * (3 - Math.sqrt(5)), oa = 0, orun = true;
+      for (var i = 0; i < ON; i++) { var yy = 1 - (i / (ON - 1)) * 2, rr = Math.sqrt(1 - yy * yy), tt = gg * i; OP.push([Math.cos(tt) * rr, yy, Math.sin(tt) * rr]); }
+      function orb() {
+        if (!orun) return;
+        oa += 0.011; octx.clearRect(0, 0, D, D);
+        var c = Math.cos(oa), sn = Math.sin(oa), R = D * 0.44, cx = D / 2, cy = D / 2;
+        for (var j = 0; j < ON; j++) { var p = OP[j], x = p[0] * c + p[2] * sn, z = -p[0] * sn + p[2] * c, y = p[1] * 0.95 + z * 0.3, dep = (z + 1) / 2, sz = 0.55 + dep * 0.75; octx.fillStyle = 'rgba(' + G + ',' + (0.2 + 0.8 * dep).toFixed(2) + ')'; octx.fillRect(cx + x * R - sz / 2, cy + y * R - sz / 2, sz, sz); }
+        requestAnimationFrame(orb);
+      }
+      if ('IntersectionObserver' in window) { new IntersectionObserver(function (en) { var v = en[0].isIntersecting; if (v && !orun) { orun = true; orb(); } else if (!v) orun = false; }).observe(badge); }
+      orb();
+    }
+    /* Figures assemble from a scattered gold constellation, then crossfade into the real number.
+       Applied to every number band on the page: one mechanic, used consistently. */
+    if (!('IntersectionObserver' in window)) return;
+    var GROUPS = [
+      { container: '.capital .cap-col', items: '.stat-line', delay: 0 },
+      { container: '.hero-stats .numbers', items: ':scope > div', delay: 900 },
+      { container: '.towers .numbers', items: ':scope > div', delay: 0 },
+      { container: '.om-stats', items: '.om-stat', delay: 0 }
+    ];
+    function pageOff(el) { var x = 0, y = 0; while (el) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return [x, y]; }
+    function finalText(n) { var c = n.cloneNode(true), v = c.querySelector('.v'); if (v) v.textContent = parseInt(n.getAttribute('data-count'), 10).toLocaleString(); return c.textContent.replace(/\s+/g, ''); }
+    GROUPS.forEach(function (spec) {
+      var container = document.querySelector(spec.container); if (!container) return;
+      var items = Array.prototype.slice.call(container.querySelectorAll(spec.items)).filter(function (it) { return it.querySelector('.n[data-count]'); });
+      if (!items.length) return;
+      container.classList.add('asm');
+      var PADX = 30, PADY = 50, W = 0, H = 0, cv = null, ctx = null, groups = [], running = false, last = 0;
+      function ensure() {
+        if (cv) return;
+        cv = document.createElement('canvas'); cv.className = 'asm-stars'; container.appendChild(cv); ctx = cv.getContext('2d');
+        W = container.clientWidth + PADX * 2; H = container.clientHeight + PADY * 2;
+        cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px'; cv.style.left = -PADX + 'px'; cv.style.top = -PADY + 'px'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function targetsFor(n) {
+        var cs = getComputedStyle(n), o0 = pageOff(container), o1 = pageOff(n);
+        var x = o1[0] - o0[0] + PADX, y = o1[1] - o0[1] + PADY, w = n.offsetWidth, h = n.offsetHeight;
+        var pt = parseFloat(cs.paddingTop) || 0, pb = parseFloat(cs.paddingBottom) || 0, pl = parseFloat(cs.paddingLeft) || 0, pr = parseFloat(cs.paddingRight) || 0;
+        var ta = cs.textAlign; if (ta === 'start') ta = 'left'; if (ta === 'end') ta = 'right'; if (ta !== 'center' && ta !== 'right') ta = 'left';
+        var tx = ta === 'center' ? x + pl + (w - pl - pr) / 2 : ta === 'right' ? x + w - pr : x + pl;
+        var o = document.createElement('canvas'); o.width = W; o.height = H; var g = o.getContext('2d');
+        g.fillStyle = '#fff'; g.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; g.textBaseline = 'middle'; g.textAlign = ta;
+        g.fillText(finalText(n), tx, y + pt + (h - pt - pb) / 2);
+        var d = g.getImageData(0, 0, W, H).data, cand = [], step = parseFloat(cs.fontSize) > 40 ? 2 : 1;
+        for (var yy = 0; yy < H; yy += step) for (var xx = 0; xx < W; xx += step) if (d[(yy * W + xx) * 4 + 3] > 110) cand.push([xx, yy]);
+        return { cand: cand, fs: parseFloat(cs.fontSize) };
+      }
+      function startItem(item, idx) {
+        ensure();
+        var n = item.querySelector('.n[data-count]'), t = targetsFor(n); if (!t.cand.length) { n.classList.add('shown'); return; }
+        var NP = Math.max(240, Math.min(520, Math.round(t.fs * 9))), ps = [], szb = 0.7 + t.fs / 70;
+        for (var i = 0; i < NP; i++) { var c = t.cand[Math.floor(Math.random() * t.cand.length)]; ps.push({ x: Math.random() * W, y: Math.random() * H, tx: c[0] + (Math.random() - 0.5), ty: c[1] + (Math.random() - 0.5), k: 0.035 + Math.random() * 0.05, sz: szb * (0.8 + Math.random() * 0.7), a: 0 }); }
+        groups.push({ ps: ps, t: 0, n: n, shown: false, dead: false, delay: spec.delay + idx * 220 });
+        if (!running) { running = true; last = 0; requestAnimationFrame(frame); }
+      }
+      function frame(now) {
+        if (!last) last = now; var dt = Math.min(50, now - last); last = now;
+        ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'lighter';
+        var alive = false;
+        for (var gi = 0; gi < groups.length; gi++) {
+          var gr = groups[gi]; if (gr.dead) continue; alive = true;
+          gr.t += dt; var T = gr.t - gr.delay; if (T < 0) continue;
+          var fade = T < 2300 ? 1 : Math.max(0, 1 - (T - 2300) / 900);
+          if (T > 2000 && !gr.shown) { gr.shown = true; gr.n.classList.add('shown'); }
+          if (fade <= 0) { gr.dead = true; continue; }
+          var lw = 0;
+          for (var i = 0; i < gr.ps.length; i++) {
+            var p = gr.ps[i]; p.x += (p.tx - p.x) * p.k; p.y += (p.ty - p.y) * p.k; p.a += (1 - p.a) * 0.05;
+            if (T > 2300) { p.x += (p.x - W / 2) * 0.004; p.y += (p.y - H / 2) * 0.004; }
+            var al = p.a * fade; ctx.fillStyle = 'rgba(' + G + ',' + (al * 0.9).toFixed(3) + ')'; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz);
+            if (i % 23 === 0 && T < 1500 && lw < 24) { var q = gr.ps[(i * 7) % gr.ps.length]; ctx.strokeStyle = 'rgba(' + G + ',' + (0.12 * (1 - T / 1500) * p.a).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); lw++; }
+          }
+        }
+        ctx.globalCompositeOperation = 'source-over';
+        if (alive) requestAnimationFrame(frame); else { running = false; if (cv) { cv.remove(); cv = null; } }
+      }
+      function observe() {
+        items.forEach(function (item, idx) {
+          var io = new IntersectionObserver(function (en) {
+            if (!en[0].isIntersecting) return;
+            var r = item.getBoundingClientRect(); if (r.bottom < 0 || r.top > window.innerHeight) return;
+            io.disconnect(); startItem(item, idx);
+          }, { threshold: 0.5 });
+          io.observe(item);
+        });
+      }
+      if (document.readyState === 'complete') setTimeout(observe, 400); else window.addEventListener('load', function () { setTimeout(observe, 400); });
+    });
   })();
 </script>
 
