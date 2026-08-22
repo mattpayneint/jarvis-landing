@@ -358,10 +358,9 @@
   .hero-jbadge.has-orb::before { display: none; }
   .jb-orb { width: 16px; height: 16px; display: block; flex: 0 0 16px; filter: drop-shadow(0 0 6px rgba(194,164,104,0.7)); }
   .asm { position: relative; }
-  .asm > * { position: relative; z-index: 1; }
-  .asm-stars { position: absolute; pointer-events: none; z-index: 0; }
-  .asm .n[data-count] { opacity: 0; transition: opacity 0.9s var(--ease); }
-  .asm .n[data-count].shown { opacity: 1; }
+  .asm-stars { position: absolute; pointer-events: none; z-index: 2; }
+  .asm .asm-target { transition: opacity 0.9s var(--ease); }
+  .asm .asm-target:not(.shown) { opacity: 0 !important; }
   .hero-meta { position: absolute; bottom: 40px; right: 46px; z-index: 4; display: flex; align-items: center; gap: 18px; }
   .vid-toggle {
     width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(242,237,225,0.4); background: rgba(11,11,13,0.3);
@@ -2517,6 +2516,7 @@
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return;
     var G = '226,196,130', dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var MOB = window.matchMedia('(max-width: 900px)').matches, PM = MOB ? 0.6 : 1;
     /* Hero badge: live mini sphere replaces the pulsing dot */
     var badge = document.querySelector('.hero-jbadge');
     if (badge) {
@@ -2535,71 +2535,95 @@
       if ('IntersectionObserver' in window) { new IntersectionObserver(function (en) { var v = en[0].isIntersecting; if (v && !orun) { orun = true; orb(); } else if (!v) orun = false; }).observe(badge); }
       orb();
     }
-    /* Figures assemble from a scattered gold constellation, then crossfade into the real number.
-       Applied to every number band on the page: one mechanic, used consistently. */
+    /* Signature motion: objects assemble from a scattered gold constellation, then crossfade into the real thing.
+       Numbers everywhere + the scheduler cards. One mechanic, used consistently. */
     if (!('IntersectionObserver' in window)) return;
     var GROUPS = [
       { container: '.capital .cap-col', items: '.stat-line', delay: 0 },
       { container: '.hero-stats .numbers', items: ':scope > div', delay: 900 },
       { container: '.towers .numbers', items: ':scope > div', delay: 0 },
-      { container: '.om-stats', items: '.om-stat', delay: 0 }
+      { container: '.om-stats', items: '.om-stat', delay: 0 },
+      { container: '.cal-grid', items: '.cal-opt', delay: 0, self: true, text: '.ck', outline: true, ink: true, burst: true, stagger: 340 }
     ];
     function pageOff(el) { var x = 0, y = 0; while (el) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return [x, y]; }
-    function finalText(n) { var c = n.cloneNode(true), v = c.querySelector('.v'); if (v) v.textContent = parseInt(n.getAttribute('data-count'), 10).toLocaleString(); return c.textContent.replace(/\s+/g, ''); }
+    function finalText(el) {
+      if (el.hasAttribute('data-count')) { var c = el.cloneNode(true), v = c.querySelector('.v'); if (v) v.textContent = parseInt(el.getAttribute('data-count'), 10).toLocaleString(); return c.textContent.replace(/\s+/g, ''); }
+      return el.textContent.replace(/\s+/g, ' ').trim();
+    }
     GROUPS.forEach(function (spec) {
       var container = document.querySelector(spec.container); if (!container) return;
-      var items = Array.prototype.slice.call(container.querySelectorAll(spec.items)).filter(function (it) { return it.querySelector('.n[data-count]'); });
+      var tsel = spec.text || '.n[data-count]';
+      var items = Array.prototype.slice.call(container.querySelectorAll(spec.items)).filter(function (it) { return it.querySelector(tsel); });
       if (!items.length) return;
       container.classList.add('asm');
+      var COL = spec.ink ? '154,123,63' : G, COMP = spec.ink ? 'source-over' : 'lighter', AMUL = spec.ink ? 0.85 : 0.9, STAG = spec.stagger || 220;
       var PADX = 30, PADY = 50, W = 0, H = 0, cv = null, ctx = null, groups = [], running = false, last = 0;
+      items.forEach(function (it) { (spec.self ? it : it.querySelector(tsel)).classList.add('asm-target'); });
       function ensure() {
         if (cv) return;
         cv = document.createElement('canvas'); cv.className = 'asm-stars'; container.appendChild(cv); ctx = cv.getContext('2d');
         W = container.clientWidth + PADX * 2; H = container.clientHeight + PADY * 2;
         cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px'; cv.style.left = -PADX + 'px'; cv.style.top = -PADY + 'px'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
-      function targetsFor(n) {
-        var cs = getComputedStyle(n), o0 = pageOff(container), o1 = pageOff(n);
-        var x = o1[0] - o0[0] + PADX, y = o1[1] - o0[1] + PADY, w = n.offsetWidth, h = n.offsetHeight;
+      function box(el) { var o0 = pageOff(container), o1 = pageOff(el); return { x: o1[0] - o0[0] + PADX, y: o1[1] - o0[1] + PADY, w: el.offsetWidth, h: el.offsetHeight }; }
+      function targetsFor(item) {
+        var tEl = item.querySelector(tsel), cs = getComputedStyle(tEl), bx = box(tEl);
         var pt = parseFloat(cs.paddingTop) || 0, pb = parseFloat(cs.paddingBottom) || 0, pl = parseFloat(cs.paddingLeft) || 0, pr = parseFloat(cs.paddingRight) || 0;
         var ta = cs.textAlign; if (ta === 'start') ta = 'left'; if (ta === 'end') ta = 'right'; if (ta !== 'center' && ta !== 'right') ta = 'left';
-        var tx = ta === 'center' ? x + pl + (w - pl - pr) / 2 : ta === 'right' ? x + w - pr : x + pl;
+        var tx = ta === 'center' ? bx.x + pl + (bx.w - pl - pr) / 2 : ta === 'right' ? bx.x + bx.w - pr : bx.x + pl;
+        var text = finalText(tEl); if (cs.textTransform === 'uppercase') text = text.toUpperCase();
         var o = document.createElement('canvas'); o.width = W; o.height = H; var g = o.getContext('2d');
         g.fillStyle = '#fff'; g.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; g.textBaseline = 'middle'; g.textAlign = ta;
-        g.fillText(finalText(n), tx, y + pt + (h - pt - pb) / 2);
-        var d = g.getImageData(0, 0, W, H).data, cand = [], step = parseFloat(cs.fontSize) > 40 ? 2 : 1;
+        if ('letterSpacing' in g) g.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing;
+        g.fillText(text, tx, bx.y + pt + (bx.h - pt - pb) / 2);
+        if (spec.outline) { var ib = box(item); g.strokeStyle = '#fff'; g.lineWidth = 1.6; g.strokeRect(ib.x + 0.8, ib.y + 0.8, ib.w - 1.6, ib.h - 1.6); }
+        var fs = parseFloat(cs.fontSize), d = g.getImageData(0, 0, W, H).data, cand = [], step = fs > 40 ? 2 : 1;
         for (var yy = 0; yy < H; yy += step) for (var xx = 0; xx < W; xx += step) if (d[(yy * W + xx) * 4 + 3] > 110) cand.push([xx, yy]);
-        return { cand: cand, fs: parseFloat(cs.fontSize) };
+        return { cand: cand, fs: fs };
       }
       function startItem(item, idx) {
         ensure();
-        var n = item.querySelector('.n[data-count]'), t = targetsFor(n); if (!t.cand.length) { n.classList.add('shown'); return; }
-        var NP = Math.max(240, Math.min(520, Math.round(t.fs * 9))), ps = [], szb = 0.7 + t.fs / 70;
+        var hid = spec.self ? item : item.querySelector(tsel), t = targetsFor(item); if (!t.cand.length) { hid.classList.add('shown'); return; }
+        var NP = Math.round((spec.outline ? 820 : Math.max(240, Math.min(520, Math.round(t.fs * 9)))) * PM), ps = [], szb = spec.ink ? 1.15 : 0.7 + t.fs / 70;
         for (var i = 0; i < NP; i++) { var c = t.cand[Math.floor(Math.random() * t.cand.length)]; ps.push({ x: Math.random() * W, y: Math.random() * H, tx: c[0] + (Math.random() - 0.5), ty: c[1] + (Math.random() - 0.5), k: 0.035 + Math.random() * 0.05, sz: szb * (0.8 + Math.random() * 0.7), a: 0 }); }
-        groups.push({ ps: ps, t: 0, n: n, shown: false, dead: false, delay: spec.delay + idx * 220 });
+        groups.push({ ps: ps, t: 0, n: hid, shown: false, dead: false, delay: spec.delay + idx * STAG });
+        if (!running) { running = true; last = 0; requestAnimationFrame(frame); }
+      }
+      function burst(item) {
+        ensure();
+        var b = box(item), ps = [];
+        for (var i = 0; i < 64; i++) { var top = Math.random() < 0.62; ps.push({ x: top ? b.x + Math.random() * b.w : b.x + b.w, y: top ? b.y : b.y + Math.random() * b.h, vx: 0.35 + Math.random() * 1.3, vy: -(0.25 + Math.random() * 0.95), sz: 1 + Math.random() * 1.3 }); }
+        groups.push({ burst: true, ps: ps, t: 0, dead: false });
         if (!running) { running = true; last = 0; requestAnimationFrame(frame); }
       }
       function frame(now) {
         if (!last) last = now; var dt = Math.min(50, now - last); last = now;
-        ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'lighter';
-        var alive = false;
+        ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = COMP;
+        var alive = false, i, p;
         for (var gi = 0; gi < groups.length; gi++) {
           var gr = groups[gi]; if (gr.dead) continue; alive = true;
-          gr.t += dt; var T = gr.t - gr.delay; if (T < 0) continue;
+          gr.t += dt;
+          if (gr.burst) {
+            var bf = 1 - gr.t / 850; if (bf <= 0) { gr.dead = true; continue; }
+            for (i = 0; i < gr.ps.length; i++) { p = gr.ps[i]; p.x += p.vx * dt * 0.06; p.y += p.vy * dt * 0.06; ctx.fillStyle = 'rgba(' + COL + ',' + (bf * 0.8).toFixed(3) + ')'; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz); }
+            continue;
+          }
+          var T = gr.t - gr.delay; if (T < 0) continue;
           var fade = T < 2300 ? 1 : Math.max(0, 1 - (T - 2300) / 900);
           if (T > 2000 && !gr.shown) { gr.shown = true; gr.n.classList.add('shown'); }
           if (fade <= 0) { gr.dead = true; continue; }
           var lw = 0;
-          for (var i = 0; i < gr.ps.length; i++) {
-            var p = gr.ps[i]; p.x += (p.tx - p.x) * p.k; p.y += (p.ty - p.y) * p.k; p.a += (1 - p.a) * 0.05;
+          for (i = 0; i < gr.ps.length; i++) {
+            p = gr.ps[i]; p.x += (p.tx - p.x) * p.k; p.y += (p.ty - p.y) * p.k; p.a += (1 - p.a) * 0.05;
             if (T > 2300) { p.x += (p.x - W / 2) * 0.004; p.y += (p.y - H / 2) * 0.004; }
-            var al = p.a * fade; ctx.fillStyle = 'rgba(' + G + ',' + (al * 0.9).toFixed(3) + ')'; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz);
-            if (i % 23 === 0 && T < 1500 && lw < 24) { var q = gr.ps[(i * 7) % gr.ps.length]; ctx.strokeStyle = 'rgba(' + G + ',' + (0.12 * (1 - T / 1500) * p.a).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); lw++; }
+            var al = p.a * fade; ctx.fillStyle = 'rgba(' + COL + ',' + (al * AMUL).toFixed(3) + ')'; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz);
+            if (i % 23 === 0 && T < 1500 && lw < 24) { var q = gr.ps[(i * 7) % gr.ps.length]; ctx.strokeStyle = 'rgba(' + COL + ',' + (0.12 * (1 - T / 1500) * p.a).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); lw++; }
           }
         }
         ctx.globalCompositeOperation = 'source-over';
-        if (alive) requestAnimationFrame(frame); else { running = false; if (cv) { cv.remove(); cv = null; } }
+        if (alive) requestAnimationFrame(frame); else { running = false; groups = []; if (cv) { cv.remove(); cv = null; } }
       }
+      if (spec.burst) items.forEach(function (item) { item.addEventListener('mouseenter', function () { if (item.classList.contains('shown')) burst(item); }); });
       function observe() {
         items.forEach(function (item, idx) {
           var io = new IntersectionObserver(function (en) {
