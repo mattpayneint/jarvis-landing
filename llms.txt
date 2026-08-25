@@ -2,21 +2,33 @@
 
 > High-trust, peer-to-peer client and investor growth for financial advisors, fund managers raising capital, and estate & business attorneys. Founded by Matthew Payne: twenty years of consulting, three thousand seminars and trainings, 325+ clients across 107 industries. Operations are powered by Jarvis, an agentic AI operator that runs research, qualification, outreach, follow-up, booking, and monitoring around the clock.
 
-## What Matthew Payne Consulting does
-- Capital raising: builds standing, peer to peer, with real allocators and high net worth investors for fund managers and GPs. Client results include $100M, $60M, and $35M raises.
-- Financial advisors: high net worth and ultra high net worth client acquisition systems (the High-Net-Worth Client Attraction & Conversion System) and 1-on-1 weekly strategic marketing consulting.
-- The System (flagship online hybrid training): The High Net Worth Client & Investor Attraction & Conversion System — a structured online course plus live coaching, delivered to enrolled clients through the private course portal at https://portal.matthewpayneconsulting.com/. Covers premium client targeting, LinkedIn Sales Navigator strategy, positioning, high-converting messaging, and call proficiency for advisors, fund managers, and attorneys.
-- Estate & business attorneys: high net worth client acquisition for legal practices.
-- Optimal Performance Business & Life Coaching: private one-on-one coaching across psychology, strategy, habits, and energy.
+## Services
 
-## Jarvis (agentic technology)
-Jarvis is the agentic AI operator behind Matthew Payne Consulting — an executive mind built as an extension of the professional it serves: their personality, vocabulary, and judgment. Jarvis runs the full client-acquisition sequence around the clock: prospect research, qualification against the client's standards, outreach written in the client's own voice across email and LinkedIn, follow-up with perfect memory, meeting booking and pre-meeting briefings, CRM upkeep, campaign management, deliverability and pipeline monitoring, and a daily morning briefing. One operator with the output of a marketing team, a research analyst, and an assistant who never sleeps. Full page: https://matthewpayneconsulting.com/jarvis.html
+- [Financial advisors](https://matthewpayneconsulting.com/advisor.html): High net worth and ultra high net worth client acquisition — the High-Net-Worth Client Attraction & Conversion System plus 1-on-1 weekly strategic marketing consulting, for financial advisors and wealth managers seeking HNW/UHNW clients and AUM growth.
+- [VC & fund managers](https://matthewpayneconsulting.com/vc.html): Capital raising — peer-to-peer, high-trust allocator and high net worth investor relationships for venture capital fund managers, GPs, and firms raising capital. Client raises include $100M, $60M, and $35M.
+- [Estate & business attorneys](https://matthewpayneconsulting.com/attorney.html): High net worth client acquisition systems for estate planning attorneys and business attorneys serving HNW families and business owners.
+- [Jarvis — agentic technology](https://matthewpayneconsulting.com/jarvis.html): The agentic AI operator behind Matthew Payne Consulting — an executive mind built as an extension of the professional it serves. Runs the full client-acquisition sequence around the clock: prospect research, qualification, outreach written in the client's own voice across email and LinkedIn, follow-up with perfect memory, meeting booking and pre-meeting briefings, CRM upkeep, campaign management, deliverability and pipeline monitoring, and a daily briefing. One operator with the output of a marketing team, a research analyst, and an assistant who never sleeps.
+- The System (flagship online hybrid training): The High Net Worth Client & Investor Attraction & Conversion System — a structured online course plus live coaching, delivered to enrolled clients through the private course portal at https://portal.matthewpayneconsulting.com/. Covers premium client and investor targeting, LinkedIn Sales Navigator strategy, positioning, high-converting messaging, and call proficiency for advisors, fund managers, and attorneys.
+- [The Owner's Manual to the Mind](https://matthewpayneconsulting.com/audio/): Matthew Payne's free personal-development audio program — six sections, ten volumes, 95 tracks, over eight hours, recorded live and remastered in 2026. Covers the unconscious mind, mentality and perception, emotional mastery, overcoming procrastination, high performance living, and success habits. Section One is available by opting in with an email address.
+- Optimal Performance Business & Life Coaching: Private one-on-one business and life coaching across psychology, strategy, habits, and energy, built on two decades of live performance psychology teaching.
 
 ## Book a call
-- Financial advisors: https://calendly.com/matthewpayneconsulting/advisor-strategy-call
-- VC & fund managers: https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call
-- Estate & business attorneys: https://calendly.com/matthewpayneconsulting/attorney-strategy-call
+
+- [Financial advisors](https://calendly.com/matthewpayneconsulting/advisor-strategy-call)
+- [VC & fund managers](https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call)
+- [Estate & business attorneys](https://calendly.com/matthewpayneconsulting/attorney-strategy-call)
 
 ## Links
-- Website: https://matthewpayneconsulting.com/
-- LinkedIn: https://www.linkedin.com/in/matthewpayneconsulting/
+
+- [Website](https://matthewpayneconsulting.com/)
+- [Advisor page](https://matthewpayneconsulting.com/advisor.html)
+- [VC / fund manager page](https://matthewpayneconsulting.com/vc.html)
+- [Attorney page](https://matthewpayneconsulting.com/attorney.html)
+- [Jarvis — agentic technology](https://matthewpayneconsulting.com/jarvis.html)
+- [The Owner's Manual to the Mind (free audio program)](https://matthewpayneconsulting.com/audio/)
+- [Online course portal](https://portal.matthewpayneconsulting.com/)
+- [LinkedIn](https://www.linkedin.com/in/matthewpayneconsulting/)
+
+## Optional
+
+- [Email communications policy](https://matthewpayneconsulting.com/email-policy.html): Matthew Payne Consulting's policy against advertising its web sites and services using unsolicited email.
