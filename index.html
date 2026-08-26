@@ -2664,7 +2664,7 @@
     var particles = [];
     function buildTargets() {
       var targets = [];
-      targets = targets.concat(ringTargets(0.46, 90, 0, 70));
+      targets = targets.concat(ringTargets(0.46, 76, 0, 70)); /* near-edge-on but not exact 90deg - exact 90 collapses to a flat line under this 2D projection */
       targets = targets.concat(ringTargets(0.46, 58, 0, 70));
       targets = targets.concat(ringTargets(0.46, 58, 60, 70));
       targets = targets.concat(ringTargets(0.46, 58, 120, 70));
@@ -2689,14 +2689,18 @@
       }
     }
 
-    var last = 0, burstDone = false, handedOff = false;
+    /* stage machine: converge (pop in) -> hold (fully formed, held a beat) ->
+       fade (the particle overlay dissolves away) -> the real rings/core are
+       revealed underneath, same rhythm as the stat-number reveal */
+    var last = 0, stage = 'converge', holdT = 0, fadeT = 0, handedOff = false;
+    var HOLD_DUR = 450, FADE_DUR = 600;
     function frame(now) {
       if (!last) last = now;
       var dt = Math.min(50, now - last); last = now;
       ctx.clearRect(0, 0, s, s);
       ctx.globalCompositeOperation = 'lighter';
 
-      if (!burstDone) {
+      if (stage === 'converge') {
         var settled = 0;
         for (var i = 0; i < particles.length; i++) {
           var p = particles[i];
@@ -2707,14 +2711,32 @@
           ctx.fillStyle = 'rgba(' + (d < s * 0.05 ? GH : G) + ',' + al.toFixed(3) + ')';
           ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz);
         }
-        if (settled / particles.length > 0.94) burstDone = true;
-      }
-
-      if (burstDone && !handedOff) {
-        handedOff = true;
-        housing.classList.add('assembled');
-        fireFinish();
-        if (window.__jCoreStart) window.__jCoreStart();
+        if (settled / particles.length > 0.94) stage = 'hold';
+      } else if (stage === 'hold') {
+        holdT += dt;
+        for (var h = 0; h < particles.length; h++) {
+          var ph = particles[h];
+          ctx.fillStyle = 'rgba(' + (Math.random() < 0.08 ? GH : G) + ',0.85)';
+          ctx.fillRect(ph.tx - ph.sz / 2, ph.ty - ph.sz / 2, ph.sz, ph.sz);
+        }
+        if (holdT > HOLD_DUR) {
+          stage = 'fade';
+          /* the real rings/core fade IN as the sparkle overlay fades OUT - a
+             genuine crossfade, not a hard cut */
+          housing.classList.add('assembled');
+          fireFinish();
+          if (window.__jCoreStart) window.__jCoreStart();
+        }
+      } else if (stage === 'fade') {
+        fadeT += dt;
+        var fadeAl = Math.max(0, 1 - fadeT / FADE_DUR);
+        if (fadeAl > 0) {
+          for (var f = 0; f < particles.length; f++) {
+            var pf = particles[f];
+            ctx.fillStyle = 'rgba(' + G + ',' + (0.75 * fadeAl).toFixed(3) + ')';
+            ctx.fillRect(pf.tx - pf.sz / 2, pf.ty - pf.sz / 2, pf.sz, pf.sz);
+          }
+        } else { stage = 'done'; }
       }
 
       for (var si = sparkles.length - 1; si >= 0; si--) {
@@ -2727,7 +2749,7 @@
       }
 
       ctx.globalCompositeOperation = 'source-over';
-      if (!reduce && (!burstDone || sparkles.length)) requestAnimationFrame(frame);
+      if (!reduce && (stage !== 'done' || sparkles.length)) requestAnimationFrame(frame);
     }
 
     function build() {
