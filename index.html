@@ -2469,7 +2469,7 @@
     var tx = new Float32Array(N), ty = new Float32Array(N), tz = new Float32Array(N);
     var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
-    var phases = [];
+    var phases = [], textLetterIdx = [], textReleased = new Uint8Array(N), LETTER_STAGGER = 160;
     var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, gyroW = 0, textW = 0, started = false;
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
     var lines = [
@@ -2485,23 +2485,38 @@
       return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c];
     }
     function proj(q) { var sc = F / (F + q[2]); return [cx + q[0] * sc, cy + q[1] * sc, (q[2] + R * 1.3) / (2.6 * R)]; }
+    /* samples the string into a particle target cloud, tagging each point with
+       which letter it belongs to so the JARVIS phase can fly the letters in
+       one at a time (like the typed status line below it), not all at once */
     function textPoints(str, fontSize) {
       var W = 640, H = 260, o = document.createElement('canvas'); o.width = W; o.height = H;
       var g = o.getContext('2d');
       g.fillStyle = '#fff'; g.font = '600 ' + fontSize + 'px "Avenir Next", Helvetica, Arial, sans-serif';
-      g.textAlign = 'center'; g.textBaseline = 'middle';
-      if ('letterSpacing' in g) g.letterSpacing = Math.round(fontSize * 0.12) + 'px';
-      g.fillText(str, W / 2, H / 2);
-      var d = g.getImageData(0, 0, W, H).data, cand = [];
-      for (var y = 0; y < H; y += 2) for (var x = 0; x < W; x += 2) if (d[(y * W + x) * 4 + 3] > 110) cand.push([x, y]);
-      var pts = [];
+      g.textAlign = 'left'; g.textBaseline = 'middle';
+      var ls = Math.round(fontSize * 0.12);
+      if ('letterSpacing' in g) g.letterSpacing = ls + 'px';
+      var chars = str.split('');
+      var widths = chars.map(function (ch) { return g.measureText(ch).width; });
+      var totalW = widths.reduce(function (a, b) { return a + b; }, 0) + ls * (chars.length - 1);
+      var startX = W / 2 - totalW / 2;
+      var bounds = [], cum = startX;
+      for (var ci = 0; ci < chars.length; ci++) { bounds.push([cum, cum + widths[ci]]); cum += widths[ci] + ls; }
+      g.fillText(str, startX, H / 2);
+      var d = g.getImageData(0, 0, W, H).data, cand = [], candLetter = [];
+      for (var y = 0; y < H; y += 2) for (var x = 0; x < W; x += 2) if (d[(y * W + x) * 4 + 3] > 110) {
+        var li = 0; for (var b = 0; b < bounds.length; b++) { if (x >= bounds[b][0] && x < bounds[b][1]) { li = b; break; } }
+        cand.push([x, y]); candLetter.push(li);
+      }
+      var pts = [], letterIdx = [];
       for (var i = 0; i < N; i++) {
-        var c = cand[Math.floor(Math.random() * cand.length)] || [W / 2, H / 2];
+        var pick = Math.floor(Math.random() * cand.length);
+        var c = cand[pick] || [W / 2, H / 2];
         var lx = (c[0] - W / 2) / (W / 2) * R * 1.55;
         var ly = (c[1] - H / 2) / (H / 2) * R * 0.65;
         pts.push([lx, ly, (Math.random() - 0.5) * 6]);
+        letterIdx.push(candLetter[pick] || 0);
       }
-      return pts;
+      return { pts: pts, letterIdx: letterIdx };
     }
     function build() {
       s = core.clientWidth; if (!s) return false;
@@ -2519,21 +2534,26 @@
       /* sphere -> JARVIS -> gyroscope. JARVIS holds flat/readable, then eases
          into a small rock (see frame()) - it never spells anything else, this
          is a one-time brand reveal woven into the loop, not a ticker. */
+      var jarvisText = textPoints('JARVIS', Math.round(R * 0.82));
+      textLetterIdx = jarvisText.letterIdx;
       phases = [
         { pts: sphere, dur: 6000 },
-        { pts: textPoints('JARVIS', Math.round(R * 0.82)), dur: 3400 },
+        { pts: jarvisText.pts, dur: 3400, isText: true },
         { pts: gyro, dur: 6200 }
       ];
       return true;
     }
     function setTargets(pop) {
-      var p = phases[phase].pts;
+      var p = phases[phase].pts, isText = !!phases[phase].isText;
       for (var i = 0; i < N; i++) {
         tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2];
         /* pop in rather than drift/spin in: every new formation snaps together
            fast, same as the initial sphere, then eases back to a calm idle
-           drift once it's arrived (see the k/k0 decay in frame()) */
-        if (pop) k[i] = 0.16 + Math.random() * 0.14;
+           drift once it's arrived (see the k/k0 decay in frame()) - EXCEPT the
+           JARVIS text, which flies in one letter at a time instead (see the
+           staggered release in frame()), same rhythm as the typed line below it */
+        if (pop && !isText) k[i] = 0.16 + Math.random() * 0.14;
+        if (isText) { textReleased[i] = 0; k[i] = 0; }
       }
       settleT = 0; sparkled = false;
     }
@@ -2594,14 +2614,22 @@
         ctx.fillStyle = 'rgba(' + GH + ',' + (sf * 0.85).toFixed(3) + ')';
         ctx.fillRect(sp.x - sp.sz / 2, sp.y - sp.sz / 2, sp.sz, sp.sz);
       }
+      var isTextPhase = !!phases[phase].isText;
       for (i = 0; i < N; i++) {
-        k[i] += (k0[i] - k[i]) * 0.05;
+        if (isTextPhase && !textReleased[i]) {
+          /* held frozen (not drifting toward target yet) until this letter's
+             turn - flies the letters in one at a time instead of all at once */
+          if (phaseT > textLetterIdx[i] * LETTER_STAGGER) { textReleased[i] = 1; k[i] = 0.16 + Math.random() * 0.14; }
+        } else {
+          k[i] += (k0[i] - k[i]) * 0.05;
+        }
         px[i] += (tx[i] - px[i]) * k[i]; py[i] += (ty[i] - py[i]) * k[i]; pz[i] += (tz[i] - pz[i]) * k[i];
         var q = rot([px[i], py[i], pz[i]], ax, ay); var sc = F / (F + q[2]); var xp = cx + q[0] * sc, yp = cy + q[1] * sc;
         if (m.in) { var dx = xp - m.px, dy = yp - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
         ox[i] *= 0.88; oy[i] *= 0.88; xp += ox[i]; yp += oy[i];
         var depth = (q[2] + R) / (2 * R); var al = 0.18 + 0.72 * (1 - depth) + 0.1 * gyroW; var r = sz[i] * (0.7 + 0.8 * (1 - depth));
-        ctx.fillStyle = 'rgba(' + (depth < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; ctx.fillRect(xp - r / 2, yp - r / 2, r, r);
+        var hiCol = isTextPhase ? '224,190,120' : '240,214,150';
+        ctx.fillStyle = 'rgba(' + (depth < 0.4 ? hiCol : G) + ',' + Math.min(1, al).toFixed(3) + ')'; ctx.fillRect(xp - r / 2, yp - r / 2, r, r);
       }
       ctx.globalCompositeOperation = 'source-over';
       if (!reduce) requestAnimationFrame(frame);
