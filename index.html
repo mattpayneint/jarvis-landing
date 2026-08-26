@@ -692,11 +692,48 @@
   .j-row { border-top: 1px solid var(--hairline-dark); padding: 24px 0; }
   .j-row .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
   .j-row p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 52ch; }
-  .j-core { position: relative; width: min(450px, 84vw); aspect-ratio: 1; margin: 0 auto; transform-style: preserve-3d; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
+  /* the core now sits housed inside the Living Dial's rings, shrunk down to fit */
+  .ld-housing { position: relative; width: min(450px, 84vw); aspect-ratio: 1; margin: 0 auto; perspective: 1000px; }
+  .j-core { position: absolute; inset: 15%; transform-style: preserve-3d; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
   .j-core::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: -3%; height: 6%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); filter: blur(7px); transform: translateX(var(--shx, 0px)); }
   .j-glint { position: absolute; inset: 21%; border-radius: 50%; background: radial-gradient(circle at var(--gx, 32%) var(--gy, 26%), rgba(233,205,144,0.28), rgba(194,164,104,0.1) 30%, transparent 48%); transform: translateZ(44px); pointer-events: none; }
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
   .j-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transform: translateZ(10px); }
+  .ld-burst-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .liv-ring { position: absolute; border-radius: 50%; border: 1px solid var(--brass-soft); opacity: 0.85; }
+  .liv-ring.r1 { inset: 4%;  transform: rotateX(90deg); animation: livspinZ 46s linear infinite; }
+  .liv-ring.r2 { inset: 4%;  transform: rotateX(58deg) rotateY(0deg); border-color: var(--brass); animation: livspinZ 60s linear infinite reverse; }
+  .liv-ring.r3 { inset: 4%;  transform: rotateX(58deg) rotateY(60deg); animation: livspinZ 60s linear infinite reverse; }
+  .liv-ring.r4 { inset: 4%;  transform: rotateX(58deg) rotateY(120deg); animation: livspinZ 60s linear infinite reverse; }
+  @keyframes livspinZ { to { transform: rotateZ(360deg); } }
+  .liv-track { position: absolute; inset: 14%; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.28); }
+  .liv-node { position: absolute; inset: 14%; animation: livorbit 18s linear infinite; }
+  .liv-node .dot {
+    position: absolute; top: 50%; left: 100%; width: 8px; height: 8px; margin: -4px 0 0 -4px;
+    border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 10px rgba(194,164,104,0.7);
+    animation: livdot 18s linear infinite;
+  }
+  .liv-node .lbl {
+    position: absolute; top: 50%; left: 100%; margin-top: -9px; margin-left: 11px; transform-origin: -11px center;
+    font-family: ui-monospace, "SF Mono", monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--brass-hot, #E9CD90); white-space: nowrap; opacity: 0;
+  }
+  @keyframes livorbit { to { transform: rotate(360deg); } }
+  @keyframes livdot { 0%, 92%, 100% { background: var(--brass-soft); box-shadow: 0 0 10px rgba(194,164,104,0.7); } 4%, 8% { background: #E9CD90; box-shadow: 0 0 16px rgba(233,205,144,1); } }
+  @keyframes livlbl { 0%, 90%, 100% { opacity: 0; } 4%, 8% { opacity: 1; } }
+  @keyframes livcounterspin { to { transform: rotate(-360deg); } }
+  .liv-node.n1 { animation-delay: 0s; }   .liv-node.n1 .dot { animation-delay: 0s; }   .liv-node.n1 .lbl { animation: livlbl 18s linear infinite, livcounterspin 18s linear infinite; }
+  .liv-node.n2 { animation-delay: -3s; }  .liv-node.n2 .dot { animation-delay: -3s; }  .liv-node.n2 .lbl { animation: livlbl 18s linear infinite -3s, livcounterspin 18s linear infinite -3s; }
+  .liv-node.n3 { animation-delay: -6s; }  .liv-node.n3 .dot { animation-delay: -6s; }  .liv-node.n3 .lbl { animation: livlbl 18s linear infinite -6s, livcounterspin 18s linear infinite -6s; }
+  .liv-node.n4 { animation-delay: -9s; }  .liv-node.n4 .dot { animation-delay: -9s; }  .liv-node.n4 .lbl { animation: livlbl 18s linear infinite -9s, livcounterspin 18s linear infinite -9s; }
+  .liv-node.n5 { animation-delay: -12s; } .liv-node.n5 .dot { animation-delay: -12s; } .liv-node.n5 .lbl { animation: livlbl 18s linear infinite -12s, livcounterspin 18s linear infinite -12s; }
+  .liv-node.n6 { animation-delay: -15s; } .liv-node.n6 .dot { animation-delay: -15s; } .liv-node.n6 .lbl { animation: livlbl 18s linear infinite -15s, livcounterspin 18s linear infinite -15s; }
+  /* rings/track/nodes start invisible - the burst canvas plays the "sparkles
+     solidify into the instrument" handoff, then these fade up together with the core */
+  .ld-housing .liv-ring, .ld-housing .liv-track, .ld-housing .liv-node {
+    opacity: 0; transition: opacity 0.9s var(--ease);
+  }
+  .ld-housing.assembled .liv-ring, .ld-housing.assembled .liv-track, .ld-housing.assembled .liv-node { opacity: 1; }
   .j-type { margin-top: 14px; min-height: 14px; text-align: center; font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brass-soft); opacity: 0.58; white-space: nowrap; pointer-events: none; }
   .j-type .j-caret { display: inline-block; width: 1px; height: 10px; margin-left: 3px; vertical-align: -1px; background: var(--brass-soft); animation: jcaret 1s steps(2, start) infinite; }
   @keyframes jcaret { to { opacity: 0; } }
@@ -1102,6 +1139,9 @@
     .strat-path-glow { stroke-dashoffset: 0 !important; }
     .stat-line .n::after { transition: none; width: 100%; }
     .m-img { opacity: 1; transform: none; transition: none; }
+    .liv-ring, .liv-track, .liv-node, .liv-node .dot, .liv-node .lbl { animation: none; }
+    .ld-housing .liv-ring, .ld-housing .liv-track, .ld-housing .liv-node { opacity: 1; transition: none; }
+    .liv-node .lbl { opacity: 0; }
     .s-step.live .s-medal::after { animation: none; }
     html { scroll-behavior: auto; }
   }
@@ -1583,9 +1623,23 @@
       </div>
       <div class="j-sticky-stage">
         <div class="j-stick-inner reveal">
-          <div class="j-core" aria-hidden="true">
-            <canvas class="j-canvas"></canvas>
-            <span class="j-glint" aria-hidden="true"></span>
+          <div class="ld-housing" id="ldHousing" aria-hidden="true">
+            <canvas class="ld-burst-canvas" id="ldBurst"></canvas>
+            <div class="liv-ring r2"></div>
+            <div class="liv-ring r3"></div>
+            <div class="liv-ring r4"></div>
+            <div class="liv-ring r1"></div>
+            <div class="liv-track"></div>
+            <div class="liv-node n1"><div class="dot"></div><div class="lbl">Research</div></div>
+            <div class="liv-node n2"><div class="dot"></div><div class="lbl">Qualify</div></div>
+            <div class="liv-node n3"><div class="dot"></div><div class="lbl">Reach</div></div>
+            <div class="liv-node n4"><div class="dot"></div><div class="lbl">Follow Up</div></div>
+            <div class="liv-node n5"><div class="dot"></div><div class="lbl">Book</div></div>
+            <div class="liv-node n6"><div class="dot"></div><div class="lbl">Watch</div></div>
+            <div class="j-core">
+              <canvas class="j-canvas"></canvas>
+              <span class="j-glint" aria-hidden="true"></span>
+            </div>
           </div>
           <div class="j-label">J A R V I S</div>
           <div class="j-type" aria-hidden="true"><span class="j-type-text"></span><span class="j-caret"></span></div>
@@ -2407,7 +2461,7 @@
     if (!core || !canvas) return;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var mobile = window.matchMedia('(max-width: 900px)').matches;
-    var G = '226,196,130', GS = '194,164,104', GH = '255,236,190';
+    var G = '226,196,130', GH = '255,236,190';
     var ctx = canvas.getContext('2d');
     var s = 0, cx = 0, cy = 0, R = 0, F = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
     var N = mobile ? 900 : 1500;
@@ -2415,8 +2469,8 @@
     var tx = new Float32Array(N), ty = new Float32Array(N), tz = new Float32Array(N);
     var k = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
-    var NODES = 54, nodes = [], edges = [], pulses = [], phases = [];
-    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, netW = 0, gyroW = 0, started = false;
+    var phases = [];
+    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, gyroW = 0, textW = 0, started = false;
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
     var lines = [
       'Researching. 340 names, 62 firms, verified.',
@@ -2431,16 +2485,30 @@
       return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c];
     }
     function proj(q) { var sc = F / (F + q[2]); return [cx + q[0] * sc, cy + q[1] * sc, (q[2] + R * 1.3) / (2.6 * R)]; }
+    function textPoints(str, fontSize) {
+      var W = 640, H = 260, o = document.createElement('canvas'); o.width = W; o.height = H;
+      var g = o.getContext('2d');
+      g.fillStyle = '#fff'; g.font = '600 ' + fontSize + 'px "Avenir Next", Helvetica, Arial, sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      if ('letterSpacing' in g) g.letterSpacing = Math.round(fontSize * 0.12) + 'px';
+      g.fillText(str, W / 2, H / 2);
+      var d = g.getImageData(0, 0, W, H).data, cand = [];
+      for (var y = 0; y < H; y += 2) for (var x = 0; x < W; x += 2) if (d[(y * W + x) * 4 + 3] > 110) cand.push([x, y]);
+      var pts = [];
+      for (var i = 0; i < N; i++) {
+        var c = cand[Math.floor(Math.random() * cand.length)] || [W / 2, H / 2];
+        var lx = (c[0] - W / 2) / (W / 2) * R * 1.55;
+        var ly = (c[1] - H / 2) / (H / 2) * R * 0.65;
+        pts.push([lx, ly, (Math.random() - 0.5) * 6]);
+      }
+      return pts;
+    }
     function build() {
       s = core.clientWidth; if (!s) return false;
       canvas.width = s * dpr; canvas.height = s * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       cx = s / 2; cy = s / 2; R = s * 0.27; F = s * 1.5;
-      nodes = []; edges = []; pulses = [];
-      var sphere = [], net = [], gyro = [], g = Math.PI * (3 - Math.sqrt(5)), i;
+      var sphere = [], gyro = [], g = Math.PI * (3 - Math.sqrt(5)), i;
       for (i = 0; i < N; i++) { var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * R, y * R, Math.sin(t) * r * R]); }
-      for (i = 0; i < NODES; i++) nodes.push(sphere[Math.floor(i * N / NODES)]);
-      for (i = 0; i < N; i++) { var n = nodes[i % NODES], j = 1 + (Math.random() - 0.5) * 0.1; net.push([n[0] * j + (Math.random() - 0.5) * 7, n[1] * j + (Math.random() - 0.5) * 7, n[2] * j + (Math.random() - 0.5) * 7]); }
-      for (var a = 0; a < NODES; a++) for (var b = a + 1; b < NODES; b++) { var d = Math.hypot(nodes[a][0] - nodes[b][0], nodes[a][1] - nodes[b][1], nodes[a][2] - nodes[b][2]); if (d < R * 0.95) edges.push([a, b]); }
       for (i = 0; i < N; i++) {
         var th = Math.random() * Math.PI * 2, rr = R * (0.97 + (Math.random() - 0.5) * 0.07), w = i % 3, pt;
         if (w === 0) pt = [Math.cos(th) * rr, Math.sin(th) * rr, (Math.random() - 0.5) * 4];
@@ -2448,11 +2516,20 @@
         else pt = [Math.cos(th) * rr, (Math.random() - 0.5) * 4, Math.sin(th) * rr];
         gyro.push(rot(pt, 0.26, 0.26));
       }
-      for (i = 0; i < 14; i++) pulses.push({ e: Math.floor(Math.random() * edges.length), t: Math.random(), v: 0.006 + Math.random() * 0.008 });
-      phases = [{ pts: sphere, dur: 6500 }, { pts: net, dur: 6500 }, { pts: gyro, dur: 6200 }];
+      /* sphere -> JARVIS -> gyroscope. JARVIS holds flat/readable, then eases
+         into a small rock (see frame()) - it never spells anything else, this
+         is a one-time brand reveal woven into the loop, not a ticker. */
+      phases = [
+        { pts: sphere, dur: 6000 },
+        { pts: textPoints('JARVIS', Math.round(R * 0.82)), dur: 3400 },
+        { pts: gyro, dur: 6200 }
+      ];
       return true;
     }
-    function setTargets() { var p = phases[phase].pts; for (var i = 0; i < N; i++) { tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2]; } }
+    function setTargets() {
+      var p = phases[phase].pts; for (var i = 0; i < N; i++) { tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2]; }
+      settleT = 0; sparkled = false;
+    }
     function setLine(idx) { if (!typeEl || idx === typeIdx) return; typeIdx = idx; typePos = 0; typeTimer = 0; typeEl.textContent = ''; }
     function typeStep(dt) {
       if (!typeEl || typeIdx < 0) return;
@@ -2461,30 +2538,54 @@
       while (typeTimer > 38 && typePos < line.length) { typeTimer -= 38; typePos++; }
       typeEl.textContent = line.slice(0, typePos);
     }
+    /* the site's own signature sparkle burst (same physics as the stat-number
+       reveal) - fires once each phase has actually settled, not before */
+    var sparkles = [], sparkled = false, settleT = 0, SETTLE_AT = 2400;
+    function fireSparkle() {
+      for (var i = 0; i < 60; i++) {
+        var top = Math.random() < 0.7;
+        var sx = top ? cx + (Math.random() - 0.5) * R * 2.3 : cx + (Math.random() < 0.5 ? -1 : 1) * R * 1.15;
+        var sy = top ? cy - R * 1.05 : cy + (Math.random() - 0.5) * R * 1.6;
+        sparkles.push({ x: sx, y: sy, vx: (Math.random() - 0.5) * 1.5, vy: -(0.3 + Math.random() * 1.1), sz: 1 + Math.random() * 1.4, t: 0 });
+      }
+    }
     function frame(now) {
       if (!last) last = now;
       var dt = Math.min(50, now - last); last = now;
       m.x += (m.tx - m.x) * 0.06; m.y += (m.ty - m.y) * 0.06;
+      settleT += dt;
+      if (!sparkled && settleT > SETTLE_AT) { sparkled = true; fireSparkle(); }
       phaseT += dt;
       if (phaseT > phases[phase].dur) { phase = (phase + 1) % phases.length; phaseT = 0; setTargets(); setLine(phase); }
       typeStep(dt);
-      var hot = m.in ? 2 : 1, i;
-      netW += ((phase === 1 ? 1 : 0) - netW) * 0.04; gyroW += ((phase === 2 ? 1 : 0) - gyroW) * 0.04;
-      var spd = 0.00007 * hot * (1 + 3.2 * gyroW);
+      var hotM = m.in ? 2 : 1, i;
+      gyroW += ((phase === 2 ? 1 : 0) - gyroW) * 0.04;
+      textW += ((phase === 1 ? 1 : 0) - textW) * 0.04;
+      /* JARVIS stays legible left-to-right: it holds dead still while it
+         assembles and settles, then eases into a small rock afterward - never
+         past ~9 degrees, so it never flips into reading backwards/mirrored.
+         Mouse-tilt is dampened the same way, so hovering can't ruin it either. */
+      var holdMul = phase === 1 ? Math.max(0, Math.min(1, (phaseT - 1300) / 900)) : 1;
+      var spd = 0.00007 * hotM * (1 + 3.2 * gyroW) * (1 - textW);
       ry += spd * dt;
       var rxT = 0.12 + gyroW * 0.45 * Math.sin(now / 1400);
       rx += (rxT - rx) * 0.04;
-      var ax = rx + m.y * 0.35, ay = ry + m.x * 0.45;
+      var rockA = Math.sin(now / 2600) * 0.16 * holdMul, rockX = Math.sin(now / 3400) * 0.05 * holdMul;
+      var mtDamp = textW < 0.5 ? 1 : holdMul;
+      var ax = (rx * (1 - textW) + rockX * textW) + m.y * 0.35 * mtDamp;
+      var ay = (ry * (1 - textW) + rockA * textW) + m.x * 0.45 * mtDamp;
       ctx.clearRect(0, 0, s, s);
       var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.6);
       cg.addColorStop(0, 'rgba(' + G + ',' + (0.2 + 0.08 * Math.sin(now / 900)) + ')'); cg.addColorStop(1, 'rgba(' + G + ',0)');
       ctx.fillStyle = cg; ctx.fillRect(0, 0, s, s);
       ctx.globalCompositeOperation = 'lighter';
-      if (netW > 0.02) {
-        var pn = nodes.map(function (p) { return proj(rot(p, ax, ay)); });
-        ctx.lineWidth = 1;
-        for (i = 0; i < edges.length; i++) { var A = pn[edges[i][0]], B = pn[edges[i][1]]; var dz = 1 - (A[2] + B[2]) / 2; ctx.strokeStyle = 'rgba(' + GS + ',' + (netW * (0.05 + 0.28 * dz)).toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); }
-        for (i = 0; i < pulses.length; i++) { var pu = pulses[i]; pu.t += pu.v * hot; if (pu.t > 1) { pu.t = 0; pu.e = Math.floor(Math.random() * edges.length); } var A2 = pn[edges[pu.e][0]], B2 = pn[edges[pu.e][1]]; var x = A2[0] + (B2[0] - A2[0]) * pu.t, y = A2[1] + (B2[1] - A2[1]) * pu.t; ctx.fillStyle = 'rgba(' + GH + ',' + (netW * 0.95) + ')'; ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, 7); ctx.fill(); ctx.shadowBlur = 0; }
+      for (var si = sparkles.length - 1; si >= 0; si--) {
+        var sp = sparkles[si]; sp.t += dt;
+        var sf = 1 - sp.t / 850;
+        if (sf <= 0) { sparkles.splice(si, 1); continue; }
+        sp.x += sp.vx * dt * 0.06; sp.y += sp.vy * dt * 0.06;
+        ctx.fillStyle = 'rgba(' + GH + ',' + (sf * 0.85).toFixed(3) + ')';
+        ctx.fillRect(sp.x - sp.sz / 2, sp.y - sp.sz / 2, sp.sz, sp.sz);
       }
       for (i = 0; i < N; i++) {
         px[i] += (tx[i] - px[i]) * k[i]; py[i] += (ty[i] - py[i]) * k[i]; pz[i] += (tz[i] - pz[i]) * k[i];
@@ -2517,11 +2618,147 @@
       });
       zone.addEventListener('mouseleave', function () { m.tx = 0; m.ty = 0; m.in = false; m.px = -9999; m.py = -9999; });
     }
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { start(); io.disconnect(); } }, { rootMargin: '200px' });
-      io.observe(core);
-    } else start();
+    /* the Living Dial burst engine (below) now owns entrance timing - it calls
+       this once the rings have materialized, so the core arrives with them */
+    window.__jCoreStart = start;
     window.addEventListener('resize', function () { if (started && Math.abs(core.clientWidth - s) > 20) { started = false; last = 0; start(); } });
+  })();
+</script>
+<script>
+  /* The whole-graphic entrance: a sparkle explosion assembles the Living
+     Dial's rings/track/nodes and hands the core off to start at the same
+     instant - the same materialize language as the stat-number reveals. */
+  (function () {
+    var housing = document.getElementById('ldHousing');
+    var canvas = document.getElementById('ldBurst');
+    if (!housing || !canvas) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var ctx = canvas.getContext('2d');
+    var G = '226,196,130', GH = '255,236,190';
+    var s = 0, cx = 0, cy = 0;
+
+    function deg2rad(d) { return d * Math.PI / 180; }
+    function ringTargets(radiusFrac, degX, degY, count) {
+      var R = s * radiusFrac, ax = deg2rad(degX), ay = deg2rad(degY), pts = [];
+      for (var i = 0; i < count; i++) {
+        var t = i / count * Math.PI * 2;
+        var x0 = Math.cos(t) * R, y0 = Math.sin(t) * R, z0 = 0;
+        var c = Math.cos(ay), sn = Math.sin(ay);
+        var x1 = x0 * c + z0 * sn, z1 = -x0 * sn + z0 * c;
+        c = Math.cos(ax); sn = Math.sin(ax);
+        var y2 = y0 * c - z1 * sn, z2 = y0 * sn + z1 * c;
+        pts.push([x1, y2, z2]);
+      }
+      return pts;
+    }
+
+    var particles = [];
+    function buildTargets() {
+      var targets = [];
+      targets = targets.concat(ringTargets(0.46, 90, 0, 70));
+      targets = targets.concat(ringTargets(0.46, 58, 0, 70));
+      targets = targets.concat(ringTargets(0.46, 58, 60, 70));
+      targets = targets.concat(ringTargets(0.46, 58, 120, 70));
+      targets = targets.concat(ringTargets(0.36, 0, 0, 60));
+      particles = targets.map(function (t) {
+        var ang = Math.random() * Math.PI * 2, dist = s * (0.55 + Math.random() * 0.5);
+        return {
+          x: cx + Math.cos(ang) * dist, y: cy + Math.sin(ang) * dist,
+          tx: cx + t[0], ty: cy + t[1], z: t[2],
+          k: 0.045 + Math.random() * 0.05, sz: 1 + Math.random() * 1.3
+        };
+      });
+    }
+
+    var sparkles = [];
+    function fireFinish() {
+      for (var i = 0; i < 90; i++) {
+        var top = Math.random() < 0.7;
+        var sx = top ? cx + (Math.random() - 0.5) * s * 1.1 : cx + (Math.random() < 0.5 ? -1 : 1) * s * 0.5;
+        var sy = top ? cy - s * 0.5 : cy + (Math.random() - 0.5) * s * 0.7;
+        sparkles.push({ x: sx, y: sy, vx: (Math.random() - 0.5) * 1.6, vy: -(0.3 + Math.random() * 1.2), sz: 1 + Math.random() * 1.5, t: 0 });
+      }
+    }
+
+    var last = 0, burstDone = false, handedOff = false;
+    function frame(now) {
+      if (!last) last = now;
+      var dt = Math.min(50, now - last); last = now;
+      ctx.clearRect(0, 0, s, s);
+      ctx.globalCompositeOperation = 'lighter';
+
+      if (!burstDone) {
+        var settled = 0;
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          p.x += (p.tx - p.x) * p.k; p.y += (p.ty - p.y) * p.k;
+          var d = Math.hypot(p.tx - p.x, p.ty - p.y);
+          if (d < 1.2) settled++;
+          var al = 0.5 + 0.5 * (1 - Math.min(1, d / (s * 0.3)));
+          ctx.fillStyle = 'rgba(' + (d < s * 0.05 ? GH : G) + ',' + al.toFixed(3) + ')';
+          ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz);
+        }
+        if (settled / particles.length > 0.94) burstDone = true;
+      }
+
+      if (burstDone && !handedOff) {
+        handedOff = true;
+        housing.classList.add('assembled');
+        fireFinish();
+        if (window.__jCoreStart) window.__jCoreStart();
+      }
+
+      for (var si = sparkles.length - 1; si >= 0; si--) {
+        var sp = sparkles[si]; sp.t += dt;
+        var sf = 1 - sp.t / 900;
+        if (sf <= 0) { sparkles.splice(si, 1); continue; }
+        sp.x += sp.vx * dt * 0.06; sp.y += sp.vy * dt * 0.06;
+        ctx.fillStyle = 'rgba(' + GH + ',' + (sf * 0.85).toFixed(3) + ')';
+        ctx.fillRect(sp.x - sp.sz / 2, sp.y - sp.sz / 2, sp.sz, sp.sz);
+      }
+
+      ctx.globalCompositeOperation = 'source-over';
+      if (!reduce && (!burstDone || sparkles.length)) requestAnimationFrame(frame);
+    }
+
+    function build() {
+      s = housing.clientWidth; if (!s) return false;
+      canvas.width = s * dpr; canvas.height = s * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = s / 2; cy = s / 2;
+      buildTargets();
+      return true;
+    }
+
+    var started = false, retries = 0;
+    function begin() {
+      if (started) return;
+      if (reduce) { started = true; housing.classList.add('assembled'); if (window.__jCoreStart) window.__jCoreStart(); return; }
+      if (!build()) {
+        /* housing measured 0-width (can happen if layout/fonts hadn't settled
+           yet) - retry a few times rather than silently giving up forever */
+        if (retries++ < 20) { setTimeout(begin, 150); }
+        else forceAssemble();
+        return;
+      }
+      started = true;
+      requestAnimationFrame(frame);
+    }
+    /* hard safety net: no matter what goes wrong above, the graphic must never
+       be left permanently blank - force it visible after a few seconds either way */
+    function forceAssemble() {
+      if (started) return; started = true;
+      housing.classList.add('assembled');
+      if (window.__jCoreStart) window.__jCoreStart();
+    }
+    setTimeout(forceAssemble, 5000);
+
+    var ENTRANCE_DELAY = 500, armed = false;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting && !armed) { armed = true; setTimeout(begin, ENTRANCE_DELAY); }
+      }, { rootMargin: '200px' }).observe(housing);
+    } else setTimeout(begin, ENTRANCE_DELAY);
   })();
 </script>
 <script>
