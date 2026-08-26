@@ -2467,7 +2467,7 @@
     var N = mobile ? 900 : 1500;
     var px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
     var tx = new Float32Array(N), ty = new Float32Array(N), tz = new Float32Array(N);
-    var k = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
+    var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
     var phases = [];
     var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, gyroW = 0, textW = 0, started = false;
@@ -2526,8 +2526,15 @@
       ];
       return true;
     }
-    function setTargets() {
-      var p = phases[phase].pts; for (var i = 0; i < N; i++) { tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2]; }
+    function setTargets(pop) {
+      var p = phases[phase].pts;
+      for (var i = 0; i < N; i++) {
+        tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2];
+        /* pop in rather than drift/spin in: every new formation snaps together
+           fast, same as the initial sphere, then eases back to a calm idle
+           drift once it's arrived (see the k/k0 decay in frame()) */
+        if (pop) k[i] = 0.16 + Math.random() * 0.14;
+      }
       settleT = 0; sparkled = false;
     }
     function setLine(idx) { if (!typeEl || idx === typeIdx) return; typeIdx = idx; typePos = 0; typeTimer = 0; typeEl.textContent = ''; }
@@ -2556,7 +2563,7 @@
       settleT += dt;
       if (!sparkled && settleT > SETTLE_AT) { sparkled = true; fireSparkle(); }
       phaseT += dt;
-      if (phaseT > phases[phase].dur) { phase = (phase + 1) % phases.length; phaseT = 0; setTargets(); setLine(phase); }
+      if (phaseT > phases[phase].dur) { phase = (phase + 1) % phases.length; phaseT = 0; setTargets(true); setLine(phase); }
       typeStep(dt);
       var hotM = m.in ? 2 : 1, i;
       gyroW += ((phase === 2 ? 1 : 0) - gyroW) * 0.04;
@@ -2588,6 +2595,7 @@
         ctx.fillRect(sp.x - sp.sz / 2, sp.y - sp.sz / 2, sp.sz, sp.sz);
       }
       for (i = 0; i < N; i++) {
+        k[i] += (k0[i] - k[i]) * 0.05;
         px[i] += (tx[i] - px[i]) * k[i]; py[i] += (ty[i] - py[i]) * k[i]; pz[i] += (tz[i] - pz[i]) * k[i];
         var q = rot([px[i], py[i], pz[i]], ax, ay); var sc = F / (F + q[2]); var xp = cx + q[0] * sc, yp = cy + q[1] * sc;
         if (m.in) { var dx = xp - m.px, dy = yp - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
@@ -2600,8 +2608,8 @@
     }
     function start() {
       if (started) return; if (!build()) return; started = true;
-      for (var i = 0; i < N; i++) { k[i] = 0.025 + Math.random() * 0.045; sz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; }
-      setTargets(); setLine(0);
+      for (var i = 0; i < N; i++) { k0[i] = 0.025 + Math.random() * 0.045; k[i] = k0[i]; sz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; }
+      setTargets(true); setLine(0);
       if (reduce) { for (var j = 0; j < N; j++) { px[j] = tx[j]; py[j] = ty[j]; pz[j] = tz[j]; } }
       requestAnimationFrame(frame);
     }
