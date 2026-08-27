@@ -1,0 +1,146 @@
+/* Matthew Payne Consulting — article / answer pages
+   Extends the dark/gold VSL system in style.css (loaded after it).
+   Same palette, type, and elevation tokens; adds long-form prose,
+   the TLDR answer box, tables, and FAQ styling. */
+
+body.article-page .wrap { max-width: 780px; }
+
+.article-hero { padding: 28px 0 4px; }
+.article-hero h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  line-height: 1.15;
+  color: var(--ink);
+}
+.article-hero .sub { margin-top: 16px; }
+
+.byline {
+  margin-top: 20px;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.byline a { color: var(--gold); text-decoration: none; }
+
+/* The short-answer box — the direct answer, first thing on the page */
+.tldr {
+  margin: 40px 0;
+  padding: 28px 30px;
+  background: var(--bg-soft);
+  border: 1px solid var(--hairline);
+  border-left: 2px solid var(--gold);
+  box-shadow: var(--shadow-md);
+}
+.tldr h2 {
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 16px;
+}
+.tldr ul { list-style: none; margin: 0; padding: 0; }
+.tldr li {
+  position: relative;
+  padding-left: 24px;
+  margin: 12px 0;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.tldr li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+.tldr li strong { color: var(--ink); font-weight: 500; }
+
+/* Prose */
+.article h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.4vw, 1.85rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 58px 0 18px;
+}
+.article p {
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin: 0 0 18px;
+}
+.article p strong, .article li strong { color: var(--ink); font-weight: 500; }
+.article a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(198,166,103,0.4);
+}
+.article a:hover { text-decoration-color: var(--gold); }
+.article ul.plain {
+  margin: 0 0 18px 1.2em;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.article ul.plain li { margin: 8px 0; }
+
+/* Tables (wrapped so wide tables scroll on phones, never the page) */
+.table-scroll {
+  overflow-x: auto;
+  margin: 30px 0;
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-md);
+}
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+  background: var(--bg-soft);
+  font-size: 0.95rem;
+}
+.article th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.article td {
+  padding: 14px 16px;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.article tr:last-child td { border-bottom: none; }
+
+/* FAQ */
+.faq h3 {
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 1.05rem;
+  margin: 28px 0 8px;
+}
+
+.article .cta-row { margin: 52px 0; }
+
+.foot-links {
+  margin: 64px 0 24px;
+  padding-top: 26px;
+  border-top: 1px solid var(--hairline);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.9;
+}
+.foot-links a { color: var(--gold); text-decoration: none; }
