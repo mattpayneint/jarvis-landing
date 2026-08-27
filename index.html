@@ -802,6 +802,7 @@
   @keyframes travel { 0% { offset-distance: 0%; opacity: 0; } 6% { opacity: 1; } 88% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
   @media (prefers-reduced-motion: reduce) {
     .strat-ring, .strat-node.lit circle.halo, .strat-dot.go, .strat-compass .needle, .strat-compass .needle-s { animation: none; }
+    .meet-bezel { animation: none; }
     .strat-proj, .strat-proj-end { opacity: 0.75 !important; transition: none; }
     .strat-dot { opacity: 0; }
     .strat-path { stroke-dashoffset: 0 !important; transition: none; }
@@ -878,6 +879,17 @@
   .prog-portrait-stage:hover .prog-ring circle { animation-duration: 16s; }
   .prog-portrait-stage:hover .prog-ring .r2 { animation-duration: 11s; }
   .prog-portrait-stage .portrait-frame { position: relative; z-index: 1; }
+  /* Meet section: engraved rotating bezel text-ring — the "grand intro" gets the most ornate treatment */
+  .meet-bezel { position: absolute; top: 50%; left: 50%; width: 132%; height: auto; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; overflow: visible; animation: ringspin 90s linear infinite; }
+  .meet-bezel circle { fill: none; stroke: var(--brass-soft); stroke-width: 0.7; stroke-dasharray: 2 6; opacity: 0.32; transform-origin: 200px 220px; }
+  .meet-bezel-text { font-family: var(--serif); font-size: 9.5px; letter-spacing: 0.24em; fill: var(--brass); opacity: 0.8; }
+  .prog-portrait-stage:hover .meet-bezel { animation-duration: 36s; }
+  /* About section: quiet static hairline ring + credential caption — editorial restraint for the personal bio */
+  .about-hairline .strat-ring { animation: none; stroke-dasharray: none; stroke-width: 1; opacity: 0.26; }
+  .about-caption { margin-top: 22px; text-align: center; font-size: 10px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--brass); }
+  /* Programs section: tight solid frame, no ring — cleaner and more product-forward beside the engagement cards */
+  .portrait-frame.frame-solid::before { inset: 0; border: 1.5px solid var(--brass); animation: none; }
+  .portrait-frame.frame-solid:hover::before { transform: none; }
   .p-body { padding: 34px 38px 32px; flex: 1 1 auto; min-width: 0; }
   .program .k { font-size: 10.5px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); margin-bottom: 16px; transition: letter-spacing 0.7s var(--ease); }
   .program:hover .k { letter-spacing: 0.32em; }
@@ -1287,9 +1299,10 @@
       </div>
       <div class="v-meet-portrait reveal">
         <div class="prog-portrait-stage">
-          <svg class="prog-ring" viewBox="0 0 400 440" aria-hidden="true">
-            <circle class="strat-ring" cx="200" cy="220" r="172"/>
+          <svg class="meet-bezel" viewBox="0 0 400 440" aria-hidden="true">
+            <defs><path id="meetRingPath" d="M 200,220 m -172,0 a 172,172 0 1,1 344,0 a 172,172 0 1,1 -344,0" /></defs>
             <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
+            <text class="meet-bezel-text"><textPath href="#meetRingPath" startOffset="0%">TWENTY YEARS OF PRACTICE &#183; THREE STANDING PRACTICES &#183; ONE STANDARD &#183; </textPath></text>
           </svg>
           <div class="portrait-frame"><div class="portrait-clip"><img width="900" height="1500" loading="lazy" decoding="async" src="assets/a36-matt-vest.jpg" alt="Matthew Payne" /></div></div>
         </div>
@@ -1702,11 +1715,11 @@
         <svg class="about-sig reveal" viewBox="0 0 220 30" aria-hidden="true"><path d="M 4 22 C 40 10, 70 26, 105 16 C 140 6, 160 20, 216 10" /></svg>
       </div>
       <div class="prog-portrait-stage about-stage" data-plx="0.16">
-        <svg class="prog-ring" viewBox="0 0 400 440" aria-hidden="true">
+        <svg class="prog-ring about-hairline" viewBox="0 0 400 440" aria-hidden="true">
           <circle class="strat-ring" cx="200" cy="220" r="172"/>
-          <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
         </svg>
       <div class="portrait-frame reveal"><div class="portrait-clip"><img width="900" height="1243" loading="lazy" decoding="async" src="assets/a37-matt-about.jpg" alt="Matthew Payne" /></div></div>
+      <div class="about-caption">Speaker &middot; Trainer &middot; Coach</div>
       </div>
     </div>
   </div>
@@ -1717,11 +1730,7 @@
   <div class="wrap">
     <div class="prog-grid">
 <div class="prog-portrait-stage">
-        <svg class="prog-ring" viewBox="0 0 400 440" aria-hidden="true">
-          <circle class="strat-ring" cx="200" cy="220" r="172"/>
-          <circle class="strat-ring r2" cx="200" cy="220" r="150"/>
-        </svg>
-              <div class="portrait-frame reveal"><div class="portrait-clip"><img width="900" height="1297" loading="lazy" decoding="async" src="assets/a48-3ed6f0a44e.jpg" alt="Matthew Payne" /></div></div></div>
+              <div class="portrait-frame reveal frame-solid"><div class="portrait-clip"><img width="900" height="1297" loading="lazy" decoding="async" src="assets/a48-3ed6f0a44e.jpg" alt="Matthew Payne" /></div></div></div>
       <div>
         <div class="eyebrow reveal">Client Engagements</div>
         <h2 class="reveal about-h2" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 40px;"><span class="aw" style="transition-delay: 0ms">Two</span> <span class="aw" style="transition-delay: 70ms">ways</span> <span class="aw" style="transition-delay: 140ms">we</span> <span class="aw" style="transition-delay: 210ms">work</span> <span class="aw" style="transition-delay: 280ms">together</span></h2>
