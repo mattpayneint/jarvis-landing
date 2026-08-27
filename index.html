@@ -746,18 +746,25 @@
   .j-clone .jc em { color: var(--brass-soft); font-style: italic; }
   .j-clone .jc-hook { font-size: clamp(1.6rem, 3.2vw, 2.4rem); line-height: 1.3; margin-bottom: 18px; }
   @media (max-width: 860px) { .j-clone { padding-left: 24px; } }
-  .j-seq-head { margin-top: 96px; }
+  .j-seq-wrap { position: relative; margin-top: 96px; }
+  .j-seq-glow { position: absolute; inset: -80px -8% -40px -8%; overflow: hidden; pointer-events: none; z-index: 0; }
+  .j-seq-glow::before, .j-seq-glow::after { content: ""; position: absolute; border-radius: 50%; will-change: transform; }
+  .j-seq-glow::before { top: -12%; left: 6%; width: 32vw; height: 32vw; background: radial-gradient(circle, rgba(180,145,91,0.16), transparent 70%); filter: blur(60px); animation: mmSweepA 34s ease-in-out infinite; }
+  .j-seq-glow::after { bottom: -18%; right: 4%; width: 28vw; height: 28vw; background: radial-gradient(circle, rgba(180,145,91,0.13), transparent 70%); filter: blur(65px); animation: mmSweepB 42s ease-in-out infinite; }
+  .j-seq-head { position: relative; z-index: 1; }
   .j-seq-head h3 { font-family: var(--serif); font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--cream); max-width: 34ch; }
-  .j-seq { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
-  .j-seq .j-step.reveal { opacity: 0; transform: translateX(-60px); transition: opacity 0.8s var(--ease), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1); }
+  .j-seq { position: relative; z-index: 1; margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
+  .j-seq .j-step.reveal { opacity: 0; transform: translateX(-60px); transition: opacity 0.8s var(--ease), transform 0.95s cubic-bezier(0.22, 1, 0.36, 1), padding-left 0.4s var(--ease), border-color 0.4s var(--ease); }
   .j-seq .j-step.reveal:nth-child(even) { transform: translateX(60px); }
   .j-seq .j-step.reveal.in { opacity: 1; transform: none; }
   .j-scope .js-item.reveal { opacity: 0; transform: translateX(-48px); transition: opacity 0.7s var(--ease), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1); }
   .j-scope .js-item.reveal.in { opacity: 1; transform: none; }
   .j-impact-early.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s var(--ease), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1); }
   .j-impact-early.reveal.in { opacity: 1; transform: none; }
-  .j-step { display: flex; gap: 22px; border-top: 1px solid var(--hairline-dark); padding: 28px 0; align-items: flex-start; }
-  .j-step .jn { font-family: var(--serif); font-size: 1.3rem; color: var(--brass); flex: none; width: 42px; }
+  .j-step { display: flex; gap: 22px; border-top: 1px solid var(--hairline-dark); padding: 28px 0; align-items: flex-start; transition: padding-left 0.4s var(--ease), border-color 0.4s var(--ease); }
+  .j-step:hover { padding-left: 14px; border-top-color: rgba(194,164,104,0.4); }
+  .j-step .jn { font-family: var(--serif); font-size: 1.3rem; color: var(--brass); flex: none; width: 42px; transition: color 0.4s var(--ease), text-shadow 0.4s var(--ease); }
+  .j-step:hover .jn { color: var(--brass-soft); text-shadow: 0 0 16px rgba(194,164,104,0.5); }
   .j-step .t { font-family: var(--serif); font-size: 1.25rem; color: var(--cream); margin-bottom: 8px; }
   .j-step p { font-size: 14.5px; color: var(--cream-soft); margin: 0; max-width: 46ch; }
   .j-scope { margin-top: 80px; }
@@ -1119,6 +1126,7 @@
     .mm-bottom .btn, .mobile-menu .nav-social { opacity: 1; transform: none; }
     .mm-vign::before, .mm-vign::after { animation: none; }
     .coach-vign::before, .coach-vign::after { animation: none; }
+    .j-seq-glow::before, .j-seq-glow::after { animation: none; }
     #coaching-method video.coach-bg { display: none; }
     #coaching-method .coach-bg.fallback { display: block; }
     .j-ring, .j-orb { animation: none; }
@@ -1643,17 +1651,20 @@
       </div>
     </div>
 
-    <div class="j-seq-head">
-      <div class="eyebrow reveal">The Operator&rsquo;s Sequence</div>
-      <h3 class="reveal">There is an order to it. Jarvis runs every step, in sequence, every day.</h3>
-    </div>
-    <div class="j-seq">
-      <div class="j-step reveal"><span class="jn">I.</span><div><div class="t">Research</div><p>Jarvis studies your ideal client and builds the room: the right names, at the right firms, found and organized before you pour your first coffee.</p></div></div>
-      <div class="j-step reveal"><span class="jn">II.</span><div><div class="t">Qualify</div><p>Every prospect is verified and checked against your standards before a single word is sent. No wasted swings, no burned reputation.</p></div></div>
-      <div class="j-step reveal"><span class="jn">III.</span><div><div class="t">Reach</div><p>Outreach in your voice, across email and LinkedIn, timed and sequenced like a campaign. Because it is one.</p></div></div>
-      <div class="j-step reveal"><span class="jn">IV.</span><div><div class="t">Follow Up</div><p>The fortune is in the follow-up, and Jarvis has never forgotten one. Every conversation remembered, every promise kept, every quiet lead revived on schedule.</p></div></div>
-      <div class="j-step reveal"><span class="jn">V.</span><div><div class="t">Book</div><p>Qualified conversations land on your calendar. You walk in prepared, because Jarvis briefed you before the meeting.</p></div></div>
-      <div class="j-step reveal"><span class="jn">VI.</span><div><div class="t">Watch</div><p>While you sleep, Jarvis watches the whole machine. Pipeline health, reply flags, tomorrow&rsquo;s briefing already written when you wake.</p></div></div>
+    <div class="j-seq-wrap">
+      <div class="j-seq-glow" aria-hidden="true"></div>
+      <div class="j-seq-head">
+        <div class="eyebrow reveal">The Operator&rsquo;s Sequence</div>
+        <h3 class="reveal">There is an order to it. Jarvis runs every step, in sequence, every day.</h3>
+      </div>
+      <div class="j-seq">
+        <div class="j-step reveal"><span class="jn">I.</span><div><div class="t">Research</div><p>Jarvis studies your ideal client and builds the room: the right names, at the right firms, found and organized before you pour your first coffee.</p></div></div>
+        <div class="j-step reveal"><span class="jn">II.</span><div><div class="t">Qualify</div><p>Every prospect is verified and checked against your standards before a single word is sent. No wasted swings, no burned reputation.</p></div></div>
+        <div class="j-step reveal"><span class="jn">III.</span><div><div class="t">Reach</div><p>Outreach in your voice, across email and LinkedIn, timed and sequenced like a campaign. Because it is one.</p></div></div>
+        <div class="j-step reveal"><span class="jn">IV.</span><div><div class="t">Follow Up</div><p>The fortune is in the follow-up, and Jarvis has never forgotten one. Every conversation remembered, every promise kept, every quiet lead revived on schedule.</p></div></div>
+        <div class="j-step reveal"><span class="jn">V.</span><div><div class="t">Book</div><p>Qualified conversations land on your calendar. You walk in prepared, because Jarvis briefed you before the meeting.</p></div></div>
+        <div class="j-step reveal"><span class="jn">VI.</span><div><div class="t">Watch</div><p>While you sleep, Jarvis watches the whole machine. Pipeline health, reply flags, tomorrow&rsquo;s briefing already written when you wake.</p></div></div>
+      </div>
     </div>
 
     <div class="j-scope">
