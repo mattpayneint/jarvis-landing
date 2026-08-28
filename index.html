@@ -2479,33 +2479,28 @@
     var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), psz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
     var GSEG = 40, ASEG = 22;
-    var gridLines = [], nodes = [], arcs = [], continents = [];
+    var gridLines = [], nodes = [], arcs = [], contours = [];
     /* Three finishes on the SAME ball - shape and size never change, only the
        surface and the way it turns. No reassembly moment between phases
        (nothing to "trick" a skeptical viewer with) - one object read three
        ways: a wire globe with lit financial-center nodes and route arcs
-       (global reach), the original fine gold dust ball untouched, and a
-       matte bronze relief globe with real continent silhouettes filled in -
-       a brass desk-globe, not a glowing lamp. Each phase keeps its own
-       quiet tilt/spin so the loop never feels like the same clip on repeat. */
+       (global reach), the original fine gold dust ball untouched, and that
+       same dust ball with a few bright latitude contour rings drawn over it
+       (a survey-globe read, not a flat decal) - both later phases lean on
+       the two techniques that already read well rather than inventing a
+       third. Each phase keeps its own quiet tilt/spin so the loop never
+       feels like the same clip on repeat. */
     var CITIES = [
       [40.7, -74.0], [51.5, -0.1], [47.4, 8.5], [25.2, 55.3], [1.3, 103.8],
       [35.7, 139.7], [-33.9, 151.2], [34.0, -118.2], [43.7, -79.4], [46.2, 6.1],
       [22.3, 114.2], [-23.5, -46.6], [50.1, 8.7], [37.8, -122.4]
     ];
     var ROUTES = [[0, 1], [1, 3], [3, 4], [4, 6], [7, 5]];
-    /* rough continent silhouettes (lat, lon) - stylized, not surveyed */
-    var CONTINENTS = [
-      [[70, -160], [68, -100], [49, -125], [32, -117], [15, -95], [25, -80], [45, -65], [60, -75], [70, -100]],
-      [[12, -80], [5, -77], [-18, -70], [-35, -71], [-55, -68], [-38, -58], [-5, -35], [5, -52], [10, -62]],
-      [[60, 10], [68, 30], [45, 40], [30, 35], [10, 45], [-5, 40], [-25, 32], [-34, 20], [-20, 12], [0, 10], [15, -15], [36, -6], [45, 15]],
-      [[70, 90], [70, 140], [55, 160], [35, 140], [10, 105], [5, 95], [20, 75], [35, 60], [55, 55], [65, 70]],
-      [[-12, 130], [-11, 142], [-20, 149], [-34, 151], [-38, 145], [-35, 138], [-32, 115], [-20, 113], [-14, 125]]
-    ];
+    var CONTOUR_LATS = [-0.85, -0.55, -0.25, 0, 0.25, 0.55, 0.85];
     var PHASES = [
       { name: 'network', dur: 7200, yaw: 0.00006, pitch: 0.41 },
       { name: 'dust', dur: 6000, yaw: 0.00007, pitch: 0.12 },
-      { name: 'earth', dur: 6200, yaw: 0.00004, pitch: 0.27 }
+      { name: 'contour', dur: 6200, yaw: 0.00004, pitch: 0.27 }
     ];
     var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, started = false;
     var phaseW = [1, 0, 0];
@@ -2563,7 +2558,12 @@
       }
       nodes = CITIES.map(function (c) { return llPoint(c[0], c[1], R); });
       arcs = ROUTES.map(function (r) { return slerpArc(nodes[r[0]], nodes[r[1]], ASEG, 0.16); });
-      continents = CONTINENTS.map(function (poly) { return poly.map(function (p) { return llPoint(p[0], p[1], R); }); });
+      contours = [];
+      for (var cl = 0; cl < CONTOUR_LATS.length; cl++) {
+        var cyv = Math.sin(CONTOUR_LATS[cl]) * R, crad = Math.cos(CONTOUR_LATS[cl]) * R, cline = [];
+        for (var csi = 0; csi <= GSEG; csi++) { var ct = csi / GSEG * Math.PI * 2; cline.push([Math.cos(ct) * crad, cyv, Math.sin(ct) * crad]); }
+        contours.push(cline);
+      }
       return true;
     }
     function setLine(idx) { if (!typeEl || idx === typeIdx) return; typeIdx = idx; typePos = 0; typeTimer = 0; typeEl.textContent = ''; }
@@ -2618,40 +2618,25 @@
         ctx.fillStyle = 'rgba(' + GH + ',' + (sf * 0.85).toFixed(3) + ')';
         ctx.fillRect(sp.x - sp.sz / 2, sp.y - sp.sz / 2, sp.sz, sp.sz);
       }
-      /* relief globe: a matte bronze sphere (fixed studio-light shading, not
-         a drifting glow) with real continent silhouettes filled in gold and
-         a faint equator line - reads as a desk-globe sculpture, not a lamp */
+      /* contour globe: the same dust ball (see below - its draw is gated to
+         run under both this phase and the dust phase) with a few bright
+         latitude rings laid over it, like elevation contours on a survey
+         globe. Reuses the two techniques that already read well instead of
+         a third, riskier one. */
       if (phaseW[2] > 0.008) {
-        var og = ctx.createRadialGradient(cx - R * 0.32, cy - R * 0.36, R * 0.04, cx, cy, R * 1.02);
-        og.addColorStop(0, 'rgba(150,128,86,' + (0.5 * phaseW[2]).toFixed(3) + ')');
-        og.addColorStop(0.55, 'rgba(88,72,44,' + (0.48 * phaseW[2]).toFixed(3) + ')');
-        og.addColorStop(1, 'rgba(16,13,7,' + (0.55 * phaseW[2]).toFixed(3) + ')');
-        ctx.fillStyle = og;
-        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
-        for (var ci = 0; ci < continents.length; ci++) {
-          var poly = continents[ci], pts2 = [], sumD = 0, maxD = 0, pv;
-          for (var vi = 0; vi < poly.length; vi++) { pv = projPt(poly[vi], ax, ay); pts2.push(pv); sumD += pv.depth; if (pv.depth > maxD) maxD = pv.depth; }
-          /* gate on the WORST vertex, not the average - a landmass with any
-             point near/behind the horizon projects into a distorted shard,
-             so it fades out whole before that happens rather than folding */
-          if (maxD > 0.58) continue;
-          var avgD3 = sumD / poly.length;
-          var la = phaseW[2] * (1 - maxD / 0.58) * 0.85;
-          ctx.fillStyle = 'rgba(' + (avgD3 < 0.32 ? '224,192,132' : '176,148,96') + ',' + la.toFixed(3) + ')';
-          ctx.beginPath(); ctx.moveTo(pts2[0].x, pts2[0].y);
-          for (var vj = 1; vj < pts2.length; vj++) ctx.lineTo(pts2[vj].x, pts2[vj].y);
-          ctx.closePath(); ctx.fill();
+        var cgl, clpts, cprev, cprevD, cpi, cq, csc, cxp, cyp, cdepth;
+        for (cgl = 0; cgl < contours.length; cgl++) {
+          clpts = contours[cgl]; cprev = null; cprevD = 0;
+          for (cpi = 0; cpi < clpts.length; cpi++) {
+            cq = rot(clpts[cpi], ax, ay); csc = F / (F + cq[2]); cxp = cx + cq[0] * csc; cyp = cy + cq[1] * csc;
+            cdepth = (cq[2] + R) / (2 * R);
+            if (cprev) {
+              var cavg = (cdepth + cprevD) / 2;
+              if (cavg < 0.6) { ctx.strokeStyle = 'rgba(' + GH + ',' + Math.max(0, Math.min(1, (1 - cavg / 0.6) * phaseW[2] * 0.75)).toFixed(3) + ')'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(cprev[0], cprev[1]); ctx.lineTo(cxp, cyp); ctx.stroke(); }
+            }
+            cprev = [cxp, cyp]; cprevD = cdepth;
+          }
         }
-        var eqPrev = null, eqPrevD = 0;
-        for (var ei = 0; ei <= GSEG; ei++) {
-          var et = ei / GSEG * Math.PI * 2, eq = rot([Math.cos(et) * R, 0, Math.sin(et) * R], ax, ay);
-          var esc = F / (F + eq[2]), ex = cx + eq[0] * esc, ey = cy + eq[1] * esc, ed = (eq[2] + R) / (2 * R);
-          if (eqPrev) { var eavg = (ed + eqPrevD) / 2; if (eavg < 0.6) { ctx.strokeStyle = 'rgba(' + GH + ',' + (Math.max(0, (1 - eavg / 0.6)) * phaseW[2] * 0.22).toFixed(3) + ')'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(eqPrev[0], eqPrev[1]); ctx.lineTo(ex, ey); ctx.stroke(); } }
-          eqPrev = [ex, ey]; eqPrevD = ed;
-        }
-        ctx.strokeStyle = 'rgba(' + GH + ',' + (0.18 * phaseW[2]).toFixed(3) + ')';
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.arc(cx, cy, R * 0.99, 0, Math.PI * 2); ctx.stroke();
       }
       /* network globe: crisp meridians/parallels (back hemisphere faded so it
          wraps a solid object, not a see-through cage), lit financial-center
@@ -2708,15 +2693,18 @@
           ctx.beginPath(); ctx.arc(np.x, np.y, 1.6, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
         }
       }
-      /* dust: the original ball, untouched - fine stippled gold particles */
-      if (phaseW[1] > 0.008) {
+      /* dust: the original ball, untouched - fine stippled gold particles.
+         Also the base for the contour phase (phaseW[2]), so that phase isn't
+         a new render technique, just the proven dust ball plus rings. */
+      var dustW = phaseW[1] + phaseW[2];
+      if (dustW > 0.008) {
         for (i = 0; i < N; i++) {
           px[i] += (sx[i] - px[i]) * k[i]; py[i] += (sy[i] - py[i]) * k[i]; pz[i] += (sz[i] - pz[i]) * k[i];
           k[i] += (k0[i] - k[i]) * 0.05;
           var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy + q2[1] * sc2;
           if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
           ox[i] *= 0.88; oy[i] *= 0.88; xp3 += ox[i]; yp3 += oy[i];
-          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1]; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
+          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * dustW; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
           ctx.fillStyle = 'rgba(' + (depth3 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al4).toFixed(3) + ')'; ctx.fillRect(xp3 - r3 / 2, yp3 - r3 / 2, r3, r3);
         }
       }
@@ -2917,29 +2905,24 @@
     var G = '226,196,130', dpr = Math.min(window.devicePixelRatio || 1, 2);
     var MOB = window.matchMedia('(max-width: 900px)').matches, PM = MOB ? 0.6 : 1;
     /* Hero badge: a mini Jarvis core (same three-finish engine as the chapter,
-       scaled down) - wire globe with lit nodes, the original dust ball,
-       a matte relief globe with continents. Flies in via CSS; hover only
-       nudges tilt/pace. No chrome, no sparkles (Matt: "let it do what it does"). */
+       scaled down) - wire globe with lit nodes, the original dust ball, and
+       that same dust ball with a few bright latitude contour rings over it.
+       Flies in via CSS; hover only nudges tilt/pace. No chrome, no sparkles
+       (Matt: "let it do what it does"). */
     var badge = document.querySelector('.hero-jbadge'), jbCore = badge && badge.querySelector('.jb-core'), jbCv = badge && badge.querySelector('.jb-canvas');
     if (badge && jbCore && jbCv) {
       var GS = '194,164,104', GH = '255,236,190';
       var bctx = jbCv.getContext('2d');
       var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BGSEG = 22, BASEG = 14;
       var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), bsx = new Float32Array(BN), bsy = new Float32Array(BN), bsz2 = new Float32Array(BN), bk = new Float32Array(BN), bk0 = new Float32Array(BN), bsz = new Float32Array(BN);
-      var bGrid = [], bNodes = [], bArcs = [], bContinents = [];
+      var bGrid = [], bNodes = [], bArcs = [], bContours = [];
       var bCITIES = [[40.7, -74.0], [51.5, -0.1], [25.2, 55.3], [1.3, 103.8], [-33.9, 151.2], [43.7, -79.4], [37.8, -122.4]];
       var bROUTES = [[0, 1], [1, 2], [2, 3], [3, 4]];
-      var bCONTINENTS = [
-        [[70, -160], [49, -125], [15, -95], [45, -65], [70, -100]],
-        [[12, -80], [-18, -70], [-55, -68], [-5, -35], [10, -62]],
-        [[60, 10], [30, 35], [-25, 32], [0, 10], [45, 15]],
-        [[70, 90], [55, 160], [10, 105], [35, 60], [65, 70]],
-        [[-12, 130], [-34, 151], [-32, 115], [-14, 125]]
-      ];
+      var bCONTOUR_LATS = [-0.85, -0.55, -0.25, 0, 0.25, 0.55, 0.85];
       var bPHASES = [
         { name: 'network', dur: 5400, yaw: 0.00009, pitch: 0.41 },
         { name: 'dust', dur: 4600, yaw: 0.0001, pitch: 0.12 },
-        { name: 'earth', dur: 4800, yaw: 0.00006, pitch: 0.27 }
+        { name: 'contour', dur: 4800, yaw: 0.00006, pitch: 0.27 }
       ];
       var bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, blast = 0, brun = true, bbuilt = false;
       var bphaseW = [1, 0, 0];
@@ -2980,7 +2963,12 @@
         }
         bNodes = bCITIES.map(function (c) { return bllPoint(c[0], c[1], bR); });
         bArcs = bROUTES.map(function (r) { return bSlerp(bNodes[r[0]], bNodes[r[1]], BASEG, 0.18); });
-        bContinents = bCONTINENTS.map(function (poly) { return poly.map(function (p) { return bllPoint(p[0], p[1], bR); }); });
+        bContours = [];
+        for (var bcl = 0; bcl < bCONTOUR_LATS.length; bcl++) {
+          var bcyv = Math.sin(bCONTOUR_LATS[bcl]) * bR, bcrad = Math.cos(bCONTOUR_LATS[bcl]) * bR, bcline = [];
+          for (var bcsi = 0; bcsi <= BGSEG; bcsi++) { var bct = bcsi / BGSEG * Math.PI * 2; bcline.push([Math.cos(bct) * bcrad, bcyv, Math.sin(bct) * bcrad]); }
+          bContours.push(bcline);
+        }
         return true;
       }
       function bframe(now) {
@@ -3000,21 +2988,18 @@
         bctx.clearRect(0, 0, bs, bs);
         bctx.globalCompositeOperation = 'lighter';
         if (bphaseW[2] > 0.008) {
-          var og = bctx.createRadialGradient(bcx - bR * 0.32, bcy - bR * 0.36, bR * 0.04, bcx, bcy, bR * 1.02);
-          og.addColorStop(0, 'rgba(150,128,86,' + (0.5 * bphaseW[2]).toFixed(3) + ')');
-          og.addColorStop(0.55, 'rgba(88,72,44,' + (0.48 * bphaseW[2]).toFixed(3) + ')');
-          og.addColorStop(1, 'rgba(16,13,7,' + (0.55 * bphaseW[2]).toFixed(3) + ')');
-          bctx.fillStyle = og;
-          bctx.beginPath(); bctx.arc(bcx, bcy, bR, 0, Math.PI * 2); bctx.fill();
-          for (i = 0; i < bContinents.length; i++) {
-            var poly = bContinents[i], pts2 = [], sumD = 0, maxD = 0, pv;
-            for (var vi = 0; vi < poly.length; vi++) { pv = bproj(poly[vi], ax, ay); pts2.push(pv); sumD += pv.depth; if (pv.depth > maxD) maxD = pv.depth; }
-            if (maxD > 0.58) continue;
-            var la = bphaseW[2] * (1 - maxD / 0.58) * 0.85;
-            bctx.fillStyle = 'rgba(' + (sumD / poly.length < 0.32 ? '224,192,132' : '176,148,96') + ',' + la.toFixed(3) + ')';
-            bctx.beginPath(); bctx.moveTo(pts2[0].x, pts2[0].y);
-            for (var vj = 1; vj < pts2.length; vj++) bctx.lineTo(pts2[vj].x, pts2[vj].y);
-            bctx.closePath(); bctx.fill();
+          var bcgl, bclpts, bcprev, bcprevD, bcpi, bcq, bcsc, bcxp, bcyp, bcdepth;
+          for (bcgl = 0; bcgl < bContours.length; bcgl++) {
+            bclpts = bContours[bcgl]; bcprev = null; bcprevD = 0;
+            for (bcpi = 0; bcpi < bclpts.length; bcpi++) {
+              bcq = brot(bclpts[bcpi], ax, ay); bcsc = bF / (bF + bcq[2]); bcxp = bcx + bcq[0] * bcsc; bcyp = bcy + bcq[1] * bcsc;
+              bcdepth = (bcq[2] + bR) / (2 * bR);
+              if (bcprev) {
+                var bcavg = (bcdepth + bcprevD) / 2;
+                if (bcavg < 0.6) { bctx.strokeStyle = 'rgba(' + GH + ',' + Math.max(0, Math.min(1, (1 - bcavg / 0.6) * bphaseW[2] * 0.75)).toFixed(3) + ')'; bctx.lineWidth = 1; bctx.beginPath(); bctx.moveTo(bcprev[0], bcprev[1]); bctx.lineTo(bcxp, bcyp); bctx.stroke(); }
+              }
+              bcprev = [bcxp, bcyp]; bcprevD = bcdepth;
+            }
           }
         }
         if (bphaseW[0] > 0.008) {
@@ -3047,12 +3032,13 @@
             bctx.beginPath(); bctx.arc(np.x, np.y, 1.4, 0, 7); bctx.fill(); bctx.shadowBlur = 0;
           }
         }
-        if (bphaseW[1] > 0.008) {
+        var bDustW = bphaseW[1] + bphaseW[2];
+        if (bDustW > 0.008) {
           for (i = 0; i < BN; i++) {
             bpx[i] += (bsx[i] - bpx[i]) * bk[i]; bpy[i] += (bsy[i] - bpy[i]) * bk[i]; bpz[i] += (bsz2[i] - bpz[i]) * bk[i];
             bk[i] += (bk0[i] - bk[i]) * 0.06;
             var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy + q2[1] * sc2;
-            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1], r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
+            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bDustW, r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
             bctx.fillStyle = 'rgba(' + (depth2 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp2 - r / 2, yp2 - r / 2, r, r);
           }
         }
