@@ -747,10 +747,6 @@
   .j-clone .jc-hook { font-size: clamp(1.6rem, 3.2vw, 2.4rem); line-height: 1.3; margin-bottom: 18px; }
   @media (max-width: 860px) { .j-clone { padding-left: 24px; } }
   .j-seq-wrap { position: relative; margin-top: 96px; }
-  .j-seq-glow { position: absolute; inset: -80px -8% -40px -8%; overflow: hidden; pointer-events: none; z-index: 0; }
-  .j-seq-glow::before, .j-seq-glow::after { content: ""; position: absolute; border-radius: 50%; will-change: transform; }
-  .j-seq-glow::before { top: -12%; left: 6%; width: 32vw; height: 32vw; background: radial-gradient(circle, rgba(180,145,91,0.16), transparent 70%); filter: blur(60px); animation: mmSweepA 34s ease-in-out infinite; }
-  .j-seq-glow::after { bottom: -18%; right: 4%; width: 28vw; height: 28vw; background: radial-gradient(circle, rgba(180,145,91,0.13), transparent 70%); filter: blur(65px); animation: mmSweepB 42s ease-in-out infinite; }
   .j-seq-head { position: relative; z-index: 1; }
   .j-seq-head h3 { font-family: var(--serif); font-size: clamp(1.4rem, 2.6vw, 1.9rem); color: var(--cream); max-width: 34ch; }
   .j-seq { position: relative; z-index: 1; margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
@@ -1138,7 +1134,6 @@
     .mm-bottom .btn, .mobile-menu .nav-social { opacity: 1; transform: none; }
     .mm-vign::before, .mm-vign::after { animation: none; }
     .coach-vign::before, .coach-vign::after { animation: none; }
-    .j-seq-glow::before, .j-seq-glow::after { animation: none; }
     #coaching-method video.coach-bg { display: none; }
     #coaching-method .coach-bg.fallback { display: block; }
     .j-ring, .j-orb { animation: none; }
@@ -1665,7 +1660,6 @@
     </div>
 
     <div class="j-seq-wrap">
-      <div class="j-seq-glow" aria-hidden="true"></div>
       <div class="j-seq-head">
         <div class="eyebrow reveal">The Operator&rsquo;s Sequence</div>
         <h3 class="reveal">There is an order to it. Jarvis runs every step, in sequence, every day.</h3>
