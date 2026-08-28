@@ -2469,7 +2469,7 @@
     var N = mobile ? 900 : 1500;
     var px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
     var sx = new Float32Array(N), sy = new Float32Array(N), sz = new Float32Array(N);
-    var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), psz = new Float32Array(N);
+    var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), psz = new Float32Array(N), reveal = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
     var GSEG = 40, ASEG = 22;
     var gridLines = [], nodes = [], arcs = [], continents = [];
@@ -2578,8 +2578,13 @@
       { name: 'earth', dur: 5500 }
     ];
     var BALL_YAW = 0.00007, BALL_PITCH = 0.12;
-    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, started = false;
-    var phaseW = [1, 0, 0];
+    /* visit order: earth (2) first, then network (0), then dust (1) - the
+       PHASES/phaseW indices themselves stay content-fixed (0=network,
+       1=dust, 2=earth, matching every render block below), only the order
+       they're visited in changes */
+    var PHASE_ORDER = [2, 0, 1], orderIdx = 0;
+    var phase = PHASE_ORDER[0], phaseT = 0, last = 0, ry = 0, rx = 0.12, started = false;
+    var phaseW = [0, 0, 1];
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
     var lines = [
       'Researching. 340 names, 62 firms, verified.',
@@ -2667,7 +2672,7 @@
       settleT += dt;
       if (!sparkled && settleT > SETTLE_AT) { sparkled = true; fireSparkle(); }
       phaseT += dt;
-      if (phaseT > PHASES[phase].dur) { phase = (phase + 1) % PHASES.length; phaseT = 0; setLine(phase); }
+      if (phaseT > PHASES[phase].dur) { orderIdx = (orderIdx + 1) % PHASE_ORDER.length; phase = PHASE_ORDER[orderIdx]; phaseT = 0; setLine(phase); }
       typeStep(dt);
       var hotM = m.in ? 2 : 1, i, j;
       /* the crossfade below only dissolves which SURFACE is drawn - rotation
@@ -2768,15 +2773,23 @@
           ctx.beginPath(); ctx.arc(np.x, np.y, 1.6, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
         }
       }
-      /* dust: the original ball, untouched - fine stippled gold particles */
+      /* dust: the original ball, untouched - fine stippled gold particles.
+         Now the final phase - each particle switches on at its own staggered
+         moment (reveal[i], spread over ~2.6s) rather than the whole cloud
+         fading in together, like city lights coming on across a globe at
+         night. Only applies while dust is the CURRENT phase; leaving it is
+         still a plain uniform fade so the exit stays clean. */
       if (phaseW[1] > 0.008) {
+        var revealGate = (phase === 1);
         for (i = 0; i < N; i++) {
           px[i] += (sx[i] - px[i]) * k[i]; py[i] += (sy[i] - py[i]) * k[i]; pz[i] += (sz[i] - pz[i]) * k[i];
           k[i] += (k0[i] - k[i]) * 0.05;
           var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy + q2[1] * sc2;
           if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
           ox[i] *= 0.88; oy[i] *= 0.88; xp3 += ox[i]; yp3 += oy[i];
-          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1]; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
+          var rMul = 1;
+          if (revealGate) { var thresh = reveal[i] * 2600; rMul = phaseT >= thresh ? Math.min(1, (phaseT - thresh) / 300) : 0; }
+          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1] * rMul; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
           ctx.fillStyle = 'rgba(' + (depth3 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al4).toFixed(3) + ')'; ctx.fillRect(xp3 - r3 / 2, yp3 - r3 / 2, r3, r3);
         }
       }
@@ -2785,7 +2798,7 @@
     }
     function start() {
       if (started) return; if (!build()) return; started = true;
-      for (var i = 0; i < N; i++) { k0[i] = 0.025 + Math.random() * 0.045; k[i] = 0.16 + Math.random() * 0.14; psz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; }
+      for (var i = 0; i < N; i++) { k0[i] = 0.025 + Math.random() * 0.045; k[i] = 0.16 + Math.random() * 0.14; psz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; reveal[i] = Math.random(); }
       phaseW = [0, 0, 0]; phaseW[phase] = 1;
       settleT = 0; sparkled = false;
       setLine(phase);
@@ -2987,7 +3000,7 @@
       var GS = '194,164,104', GH = '255,236,190';
       var bctx = jbCv.getContext('2d');
       var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BGSEG = 22, BASEG = 14;
-      var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), bsx = new Float32Array(BN), bsy = new Float32Array(BN), bsz2 = new Float32Array(BN), bk = new Float32Array(BN), bk0 = new Float32Array(BN), bsz = new Float32Array(BN);
+      var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), bsx = new Float32Array(BN), bsy = new Float32Array(BN), bsz2 = new Float32Array(BN), bk = new Float32Array(BN), bk0 = new Float32Array(BN), bsz = new Float32Array(BN), breveal = new Float32Array(BN);
       var bGrid = [], bNodes = [], bArcs = [], bContinents = [];
       var bCITIES = [[40.7, -74.0], [51.5, -0.1], [25.2, 55.3], [1.3, 103.8], [-33.9, 151.2], [43.7, -79.4], [37.8, -122.4]];
       var bROUTES = [[0, 1], [1, 2], [2, 3], [3, 4]];
@@ -3078,8 +3091,9 @@
         { name: 'earth', dur: 5500 }
       ];
       var BALL_YAW = 0.00007, BALL_PITCH = 0.12;
-      var bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, blast = 0, brun = true, bbuilt = false;
-      var bphaseW = [1, 0, 0];
+      var BPHASE_ORDER = [2, 0, 1], borderIdx = 0;
+      var bphase = BPHASE_ORDER[0], bphaseT = 0, bry = 0, brx = 0.12, blast = 0, brun = true, bbuilt = false;
+      var bphaseW = [0, 0, 1];
       var bm = { x: 0, y: 0, tx: 0, ty: 0, in: false };
       function brot(p, ax, ay) { var c = Math.cos(ay), sn = Math.sin(ay); var x1 = p[0] * c + p[2] * sn, z1 = -p[0] * sn + p[2] * c; c = Math.cos(ax); sn = Math.sin(ax); return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c]; }
       function bllPoint(lat, lon, radius) { var la = lat * Math.PI / 180, lo = lon * Math.PI / 180, rad = Math.cos(la) * radius; return [rad * Math.cos(lo), Math.sin(la) * radius, rad * Math.sin(lo)]; }
@@ -3126,7 +3140,7 @@
         var dt = Math.min(50, now - blast); blast = now; var i, j;
         bm.x += (bm.tx - bm.x) * 0.06; bm.y += (bm.ty - bm.y) * 0.06;
         bphaseT += dt;
-        if (bphaseT > bPHASES[bphase].dur) { bphase = (bphase + 1) % bPHASES.length; bphaseT = 0; }
+        if (bphaseT > bPHASES[bphase].dur) { borderIdx = (borderIdx + 1) % BPHASE_ORDER.length; bphase = BPHASE_ORDER[borderIdx]; bphaseT = 0; }
         var hotM = bm.in ? 1.6 : 1;
         for (j = 0; j < 3; j++) bphaseW[j] += (((bphase === j) ? 1 : 0) - bphaseW[j]) * 0.05;
         bry += BALL_YAW * hotM * dt;
@@ -3183,11 +3197,14 @@
           }
         }
         if (bphaseW[1] > 0.008) {
+          var bRevealGate = (bphase === 1);
           for (i = 0; i < BN; i++) {
             bpx[i] += (bsx[i] - bpx[i]) * bk[i]; bpy[i] += (bsy[i] - bpy[i]) * bk[i]; bpz[i] += (bsz2[i] - bpz[i]) * bk[i];
             bk[i] += (bk0[i] - bk[i]) * 0.06;
             var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy + q2[1] * sc2;
-            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1], r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
+            var brMul = 1;
+            if (bRevealGate) { var bthresh = breveal[i] * 2600; brMul = bphaseT >= bthresh ? Math.min(1, (bphaseT - bthresh) / 300) : 0; }
+            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1] * brMul, r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
             bctx.fillStyle = 'rgba(' + (depth2 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp2 - r / 2, yp2 - r / 2, r, r);
           }
         }
@@ -3196,7 +3213,7 @@
       }
       function bstart() {
         if (!bbuild()) return false;
-        for (var i = 0; i < BN; i++) { bk0[i] = 0.025 + Math.random() * 0.045; bk[i] = 0.16 + Math.random() * 0.14; bsz[i] = 0.75 + Math.random() * 0.95; bpx[i] = (Math.random() - 0.5) * bs; bpy[i] = (Math.random() - 0.5) * bs; bpz[i] = (Math.random() - 0.5) * bs; }
+        for (var i = 0; i < BN; i++) { bk0[i] = 0.025 + Math.random() * 0.045; bk[i] = 0.16 + Math.random() * 0.14; bsz[i] = 0.75 + Math.random() * 0.95; bpx[i] = (Math.random() - 0.5) * bs; bpy[i] = (Math.random() - 0.5) * bs; bpz[i] = (Math.random() - 0.5) * bs; breveal[i] = Math.random(); }
         bphaseW = [0, 0, 0]; bphaseW[bphase] = 1;
         bbuilt = true; return true;
       }
