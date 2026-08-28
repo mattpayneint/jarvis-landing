@@ -2475,11 +2475,40 @@
     var s = 0, cx = 0, cy = 0, R = 0, F = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
     var N = mobile ? 900 : 1500;
     var px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
-    var tx = new Float32Array(N), ty = new Float32Array(N), tz = new Float32Array(N);
-    var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
+    var sx = new Float32Array(N), sy = new Float32Array(N), sz = new Float32Array(N);
+    var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), psz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
-    var phases = [], textLetterIdx = [], textReleased = new Uint8Array(N), LETTER_STAGGER = 160;
-    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, textW = 0, started = false;
+    var GSEG = 40, ASEG = 22;
+    var gridLines = [], nodes = [], arcs = [], continents = [];
+    /* Three finishes on the SAME ball - shape and size never change, only the
+       surface and the way it turns. No reassembly moment between phases
+       (nothing to "trick" a skeptical viewer with) - one object read three
+       ways: a wire globe with lit financial-center nodes and route arcs
+       (global reach), the original fine gold dust ball untouched, and a
+       matte bronze relief globe with real continent silhouettes filled in -
+       a brass desk-globe, not a glowing lamp. Each phase keeps its own
+       quiet tilt/spin so the loop never feels like the same clip on repeat. */
+    var CITIES = [
+      [40.7, -74.0], [51.5, -0.1], [47.4, 8.5], [25.2, 55.3], [1.3, 103.8],
+      [35.7, 139.7], [-33.9, 151.2], [34.0, -118.2], [43.7, -79.4], [46.2, 6.1],
+      [22.3, 114.2], [-23.5, -46.6], [50.1, 8.7], [37.8, -122.4]
+    ];
+    var ROUTES = [[0, 1], [1, 3], [3, 4], [4, 6], [7, 5]];
+    /* rough continent silhouettes (lat, lon) - stylized, not surveyed */
+    var CONTINENTS = [
+      [[70, -160], [68, -100], [49, -125], [32, -117], [15, -95], [25, -80], [45, -65], [60, -75], [70, -100]],
+      [[12, -80], [5, -77], [-18, -70], [-35, -71], [-55, -68], [-38, -58], [-5, -35], [5, -52], [10, -62]],
+      [[60, 10], [68, 30], [45, 40], [30, 35], [10, 45], [-5, 40], [-25, 32], [-34, 20], [-20, 12], [0, 10], [15, -15], [36, -6], [45, 15]],
+      [[70, 90], [70, 140], [55, 160], [35, 140], [10, 105], [5, 95], [20, 75], [35, 60], [55, 55], [65, 70]],
+      [[-12, 130], [-11, 142], [-20, 149], [-34, 151], [-38, 145], [-35, 138], [-32, 115], [-20, 113], [-14, 125]]
+    ];
+    var PHASES = [
+      { name: 'network', dur: 7200, yaw: 0.00006, pitch: 0.41 },
+      { name: 'dust', dur: 6000, yaw: 0.00007, pitch: 0.12 },
+      { name: 'earth', dur: 6200, yaw: 0.00004, pitch: 0.27 }
+    ];
+    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, started = false;
+    var phaseW = [1, 0, 0];
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
     var lines = [
       'Researching. 340 names, 62 firms, verified.',
@@ -2493,74 +2522,49 @@
       c = Math.cos(ax); sn = Math.sin(ax);
       return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c];
     }
-    function proj(q) { var sc = F / (F + q[2]); return [cx + q[0] * sc, cy + q[1] * sc, (q[2] + R * 1.3) / (2.6 * R)]; }
-    /* samples the string into a particle target cloud, tagging each point with
-       which letter it belongs to so the JARVIS phase can fly the letters in
-       one at a time (like the typed status line below it), not all at once */
-    function textPoints(str, fontSize) {
-      var W = 640, H = 260, o = document.createElement('canvas'); o.width = W; o.height = H;
-      var g = o.getContext('2d');
-      g.fillStyle = '#fff'; g.font = '600 ' + fontSize + 'px "Avenir Next", Helvetica, Arial, sans-serif';
-      g.textAlign = 'left'; g.textBaseline = 'middle';
-      var ls = Math.round(fontSize * 0.12);
-      if ('letterSpacing' in g) g.letterSpacing = ls + 'px';
-      var chars = str.split('');
-      var widths = chars.map(function (ch) { return g.measureText(ch).width; });
-      var totalW = widths.reduce(function (a, b) { return a + b; }, 0) + ls * (chars.length - 1);
-      var startX = W / 2 - totalW / 2;
-      var bounds = [], cum = startX;
-      for (var ci = 0; ci < chars.length; ci++) { bounds.push([cum, cum + widths[ci]]); cum += widths[ci] + ls; }
-      g.fillText(str, startX, H / 2);
-      var d = g.getImageData(0, 0, W, H).data, cand = [], candLetter = [];
-      for (var y = 0; y < H; y += 2) for (var x = 0; x < W; x += 2) if (d[(y * W + x) * 4 + 3] > 110) {
-        var li = 0; for (var b = 0; b < bounds.length; b++) { if (x >= bounds[b][0] && x < bounds[b][1]) { li = b; break; } }
-        cand.push([x, y]); candLetter.push(li);
+    function llPoint(lat, lon, radius) {
+      var la = lat * Math.PI / 180, lo = lon * Math.PI / 180, rad = Math.cos(la) * radius;
+      return [rad * Math.cos(lo), Math.sin(la) * radius, rad * Math.sin(lo)];
+    }
+    function slerpArc(a, b, steps, bulge) {
+      var la = Math.hypot(a[0], a[1], a[2]), lb = Math.hypot(b[0], b[1], b[2]);
+      var ua = [a[0] / la, a[1] / la, a[2] / la], ub = [b[0] / lb, b[1] / lb, b[2] / lb];
+      var dot = Math.max(-1, Math.min(1, ua[0] * ub[0] + ua[1] * ub[1] + ua[2] * ub[2]));
+      var omega = Math.acos(dot) || 0.0001, sinO = Math.sin(omega) || 0.0001, pts = [];
+      for (var i = 0; i <= steps; i++) {
+        var u = i / steps, wa = Math.sin((1 - u) * omega) / sinO, wb = Math.sin(u * omega) / sinO;
+        var rad = R * (1 + bulge * Math.sin(Math.PI * u));
+        pts.push([(ua[0] * wa + ub[0] * wb) * rad, (ua[1] * wa + ub[1] * wb) * rad, (ua[2] * wa + ub[2] * wb) * rad]);
       }
-      var pts = [], letterIdx = [];
-      for (var i = 0; i < N; i++) {
-        var pick = Math.floor(Math.random() * cand.length);
-        var c = cand[pick] || [W / 2, H / 2];
-        var lx = (c[0] - W / 2) / (W / 2) * R * 1.55;
-        var ly = (c[1] - H / 2) / (H / 2) * R * 0.65;
-        pts.push([lx, ly, (Math.random() - 0.5) * 6]);
-        letterIdx.push(candLetter[pick] || 0);
-      }
-      return { pts: pts, letterIdx: letterIdx };
+      return pts;
     }
     function build() {
       s = core.clientWidth; if (!s) return false;
       canvas.width = s * dpr; canvas.height = s * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       cx = s / 2; cy = s / 2; R = s * 0.27; F = s * 1.5;
-      var sphere = [], g = Math.PI * (3 - Math.sqrt(5)), i;
-      for (i = 0; i < N; i++) { var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * R, y * R, Math.sin(t) * r * R]); }
-      /* sphere -> JARVIS -> sphere. JARVIS holds flat/readable, then eases
-         into a small rock (see frame()) - it never spells anything else, this
-         is a one-time brand reveal woven into the loop, not a ticker. Third
-         phase reassembles the same ball rather than the old wireframe
-         gyroscope cage - Matt wants the icon to stay in the vein of the
-         original ball throughout, not open up into a third distinct shape. */
-      var jarvisText = textPoints('JARVIS', Math.round(R * 0.82));
-      textLetterIdx = jarvisText.letterIdx;
-      phases = [
-        { pts: sphere, dur: 6000 },
-        { pts: jarvisText.pts, dur: 3400, isText: true },
-        { pts: sphere, dur: 6200 }
-      ];
-      return true;
-    }
-    function setTargets(pop) {
-      var p = phases[phase].pts, isText = !!phases[phase].isText;
-      for (var i = 0; i < N; i++) {
-        tx[i] = p[i][0]; ty[i] = p[i][1]; tz[i] = p[i][2];
-        /* pop in rather than drift/spin in: every new formation snaps together
-           fast, same as the initial sphere, then eases back to a calm idle
-           drift once it's arrived (see the k/k0 decay in frame()) - EXCEPT the
-           JARVIS text, which flies in one letter at a time instead (see the
-           staggered release in frame()), same rhythm as the typed line below it */
-        if (pop && !isText) k[i] = 0.16 + Math.random() * 0.14;
-        if (isText) { textReleased[i] = 0; k[i] = 0; }
+      var g = Math.PI * (3 - Math.sqrt(5)), i;
+      for (i = 0; i < N; i++) { var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sx[i] = Math.cos(t) * r * R; sy[i] = y * R; sz[i] = Math.sin(t) * r * R; }
+      /* wire-globe grid: meridians share the vertical axis (Earth-style),
+         parallels ring it at fixed latitudes - smooth stroked circles, not
+         scattered particles, so it reads as a crisp engraved globe rather
+         than a fuzzy cage. */
+      gridLines = [];
+      var mi, si, t2;
+      for (mi = 0; mi < 5; mi++) {
+        var lon = mi / 5 * Math.PI, line1 = [];
+        for (si = 0; si <= GSEG; si++) { t2 = si / GSEG * Math.PI * 2; line1.push([Math.sin(t2) * Math.cos(lon) * R, Math.cos(t2) * R, Math.sin(t2) * Math.sin(lon) * R]); }
+        gridLines.push(line1);
       }
-      settleT = 0; sparkled = false;
+      var lats = [-0.62, -0.3, 0, 0.3, 0.62];
+      for (var li = 0; li < lats.length; li++) {
+        var yv = Math.sin(lats[li]) * R, rad = Math.cos(lats[li]) * R, line2 = [];
+        for (si = 0; si <= GSEG; si++) { t2 = si / GSEG * Math.PI * 2; line2.push([Math.cos(t2) * rad, yv, Math.sin(t2) * rad]); }
+        gridLines.push(line2);
+      }
+      nodes = CITIES.map(function (c) { return llPoint(c[0], c[1], R); });
+      arcs = ROUTES.map(function (r) { return slerpArc(nodes[r[0]], nodes[r[1]], ASEG, 0.16); });
+      continents = CONTINENTS.map(function (poly) { return poly.map(function (p) { return llPoint(p[0], p[1], R); }); });
+      return true;
     }
     function setLine(idx) { if (!typeEl || idx === typeIdx) return; typeIdx = idx; typePos = 0; typeTimer = 0; typeEl.textContent = ''; }
     function typeStep(dt) {
@@ -2571,15 +2575,19 @@
       typeEl.textContent = line.slice(0, typePos);
     }
     /* the site's own signature sparkle burst (same physics as the stat-number
-       reveal) - fires once each phase has actually settled, not before */
+       reveal) - fires once, when the ball first arrives, not on every loop */
     var sparkles = [], sparkled = false, settleT = 0, SETTLE_AT = 2400;
     function fireSparkle() {
       for (var i = 0; i < 60; i++) {
         var top = Math.random() < 0.7;
-        var sx = top ? cx + (Math.random() - 0.5) * R * 2.3 : cx + (Math.random() < 0.5 ? -1 : 1) * R * 1.15;
-        var sy = top ? cy - R * 1.05 : cy + (Math.random() - 0.5) * R * 1.6;
-        sparkles.push({ x: sx, y: sy, vx: (Math.random() - 0.5) * 1.5, vy: -(0.3 + Math.random() * 1.1), sz: 1 + Math.random() * 1.4, t: 0 });
+        var spx = top ? cx + (Math.random() - 0.5) * R * 2.3 : cx + (Math.random() < 0.5 ? -1 : 1) * R * 1.15;
+        var spy = top ? cy - R * 1.05 : cy + (Math.random() - 0.5) * R * 1.6;
+        sparkles.push({ x: spx, y: spy, vx: (Math.random() - 0.5) * 1.5, vy: -(0.3 + Math.random() * 1.1), sz: 1 + Math.random() * 1.4, t: 0 });
       }
+    }
+    function projPt(p, ax, ay) {
+      var q = rot(p, ax, ay), sc = F / (F + q[2]);
+      return { x: cx + q[0] * sc, y: cy + q[1] * sc, depth: (q[2] + R) / (2 * R) };
     }
     function frame(now) {
       if (!last) last = now;
@@ -2588,61 +2596,140 @@
       settleT += dt;
       if (!sparkled && settleT > SETTLE_AT) { sparkled = true; fireSparkle(); }
       phaseT += dt;
-      if (phaseT > phases[phase].dur) { phase = (phase + 1) % phases.length; phaseT = 0; setTargets(true); setLine(phase); }
+      if (phaseT > PHASES[phase].dur) { phase = (phase + 1) % PHASES.length; phaseT = 0; setLine(phase); }
       typeStep(dt);
-      var hotM = m.in ? 2 : 1, i;
-      textW += ((phase === 1 ? 1 : 0) - textW) * 0.04;
-      /* JARVIS stays legible left-to-right: it holds dead still while it
-         assembles and settles, then eases into a small rock afterward - never
-         past ~9 degrees, so it never flips into reading backwards/mirrored.
-         Mouse-tilt is dampened the same way, so hovering can't ruin it either. */
-      var holdMul = phase === 1 ? Math.max(0, Math.min(1, (phaseT - 1300) / 900)) : 1;
-      var spd = 0.00007 * hotM * (1 - textW);
-      ry += spd * dt;
-      var rxT = 0.12;
-      rx += (rxT - rx) * 0.04;
-      var rockA = Math.sin(now / 2600) * 0.16 * holdMul, rockX = Math.sin(now / 3400) * 0.05 * holdMul;
-      var mtDamp = textW < 0.5 ? 1 : holdMul;
-      var ax = (rx * (1 - textW) + rockX * textW) + m.y * 0.35 * mtDamp;
-      var ay = (ry * (1 - textW) + rockA * textW) + m.x * 0.45 * mtDamp;
+      var hotM = m.in ? 2 : 1, i, j;
+      for (j = 0; j < 3; j++) phaseW[j] += (((phase === j) ? 1 : 0) - phaseW[j]) * 0.035;
+      var yawNow = phaseW[0] * PHASES[0].yaw + phaseW[1] * PHASES[1].yaw + phaseW[2] * PHASES[2].yaw;
+      ry += yawNow * hotM * dt;
+      var rxT = phaseW[0] * PHASES[0].pitch + phaseW[1] * PHASES[1].pitch + phaseW[2] * PHASES[2].pitch;
+      rx += (rxT - rx) * 0.035;
+      var ax = rx + m.y * 0.35, ay = ry + m.x * 0.45;
       ctx.clearRect(0, 0, s, s);
       var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.6);
       cg.addColorStop(0, 'rgba(' + G + ',' + (0.2 + 0.08 * Math.sin(now / 900)) + ')'); cg.addColorStop(1, 'rgba(' + G + ',0)');
       ctx.fillStyle = cg; ctx.fillRect(0, 0, s, s);
       ctx.globalCompositeOperation = 'lighter';
-      for (var si = sparkles.length - 1; si >= 0; si--) {
-        var sp = sparkles[si]; sp.t += dt;
+      for (var si2 = sparkles.length - 1; si2 >= 0; si2--) {
+        var sp = sparkles[si2]; sp.t += dt;
         var sf = 1 - sp.t / 850;
-        if (sf <= 0) { sparkles.splice(si, 1); continue; }
+        if (sf <= 0) { sparkles.splice(si2, 1); continue; }
         sp.x += sp.vx * dt * 0.06; sp.y += sp.vy * dt * 0.06;
         ctx.fillStyle = 'rgba(' + GH + ',' + (sf * 0.85).toFixed(3) + ')';
         ctx.fillRect(sp.x - sp.sz / 2, sp.y - sp.sz / 2, sp.sz, sp.sz);
       }
-      var isTextPhase = !!phases[phase].isText;
-      for (i = 0; i < N; i++) {
-        if (isTextPhase && !textReleased[i]) {
-          /* held frozen (not drifting toward target yet) until this letter's
-             turn - flies the letters in one at a time instead of all at once */
-          if (phaseT > textLetterIdx[i] * LETTER_STAGGER) { textReleased[i] = 1; k[i] = 0.16 + Math.random() * 0.14; }
-        } else {
-          k[i] += (k0[i] - k[i]) * 0.05;
+      /* relief globe: a matte bronze sphere (fixed studio-light shading, not
+         a drifting glow) with real continent silhouettes filled in gold and
+         a faint equator line - reads as a desk-globe sculpture, not a lamp */
+      if (phaseW[2] > 0.008) {
+        var og = ctx.createRadialGradient(cx - R * 0.32, cy - R * 0.36, R * 0.04, cx, cy, R * 1.02);
+        og.addColorStop(0, 'rgba(150,128,86,' + (0.5 * phaseW[2]).toFixed(3) + ')');
+        og.addColorStop(0.55, 'rgba(88,72,44,' + (0.48 * phaseW[2]).toFixed(3) + ')');
+        og.addColorStop(1, 'rgba(16,13,7,' + (0.55 * phaseW[2]).toFixed(3) + ')');
+        ctx.fillStyle = og;
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+        for (var ci = 0; ci < continents.length; ci++) {
+          var poly = continents[ci], pts2 = [], sumD = 0, maxD = 0, pv;
+          for (var vi = 0; vi < poly.length; vi++) { pv = projPt(poly[vi], ax, ay); pts2.push(pv); sumD += pv.depth; if (pv.depth > maxD) maxD = pv.depth; }
+          /* gate on the WORST vertex, not the average - a landmass with any
+             point near/behind the horizon projects into a distorted shard,
+             so it fades out whole before that happens rather than folding */
+          if (maxD > 0.58) continue;
+          var avgD3 = sumD / poly.length;
+          var la = phaseW[2] * (1 - maxD / 0.58) * 0.85;
+          ctx.fillStyle = 'rgba(' + (avgD3 < 0.32 ? '224,192,132' : '176,148,96') + ',' + la.toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(pts2[0].x, pts2[0].y);
+          for (var vj = 1; vj < pts2.length; vj++) ctx.lineTo(pts2[vj].x, pts2[vj].y);
+          ctx.closePath(); ctx.fill();
         }
-        px[i] += (tx[i] - px[i]) * k[i]; py[i] += (ty[i] - py[i]) * k[i]; pz[i] += (tz[i] - pz[i]) * k[i];
-        var q = rot([px[i], py[i], pz[i]], ax, ay); var sc = F / (F + q[2]); var xp = cx + q[0] * sc, yp = cy + q[1] * sc;
-        if (m.in) { var dx = xp - m.px, dy = yp - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
-        ox[i] *= 0.88; oy[i] *= 0.88; xp += ox[i]; yp += oy[i];
-        var depth = (q[2] + R) / (2 * R); var al = 0.18 + 0.72 * (1 - depth); var r = sz[i] * (0.7 + 0.8 * (1 - depth));
-        var hiCol = isTextPhase ? '224,190,120' : '240,214,150';
-        ctx.fillStyle = 'rgba(' + (depth < 0.4 ? hiCol : G) + ',' + Math.min(1, al).toFixed(3) + ')'; ctx.fillRect(xp - r / 2, yp - r / 2, r, r);
+        var eqPrev = null, eqPrevD = 0;
+        for (var ei = 0; ei <= GSEG; ei++) {
+          var et = ei / GSEG * Math.PI * 2, eq = rot([Math.cos(et) * R, 0, Math.sin(et) * R], ax, ay);
+          var esc = F / (F + eq[2]), ex = cx + eq[0] * esc, ey = cy + eq[1] * esc, ed = (eq[2] + R) / (2 * R);
+          if (eqPrev) { var eavg = (ed + eqPrevD) / 2; if (eavg < 0.6) { ctx.strokeStyle = 'rgba(' + GH + ',' + (Math.max(0, (1 - eavg / 0.6)) * phaseW[2] * 0.22).toFixed(3) + ')'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(eqPrev[0], eqPrev[1]); ctx.lineTo(ex, ey); ctx.stroke(); } }
+          eqPrev = [ex, ey]; eqPrevD = ed;
+        }
+        ctx.strokeStyle = 'rgba(' + GH + ',' + (0.18 * phaseW[2]).toFixed(3) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(cx, cy, R * 0.99, 0, Math.PI * 2); ctx.stroke();
+      }
+      /* network globe: crisp meridians/parallels (back hemisphere faded so it
+         wraps a solid object, not a see-through cage), lit financial-center
+         nodes, and a few raised route arcs with a traveling pulse - the same
+         "comet on a path" motion language used elsewhere on this page */
+      if (phaseW[0] > 0.008) {
+        ctx.lineWidth = 0.9;
+        var gl, lpts, prev, prevDepth, pi2, q, scP, xp2, yp2, depth2;
+        for (gl = 0; gl < gridLines.length; gl++) {
+          lpts = gridLines[gl]; prev = null; prevDepth = 0;
+          for (pi2 = 0; pi2 < lpts.length; pi2++) {
+            q = rot(lpts[pi2], ax, ay); scP = F / (F + q[2]); xp2 = cx + q[0] * scP; yp2 = cy + q[1] * scP;
+            depth2 = (q[2] + R) / (2 * R);
+            if (prev) {
+              var avgD = (depth2 + prevDepth) / 2;
+              if (avgD < 0.6) {
+                var al2 = (1 - avgD / 0.6) * phaseW[0] * 0.8;
+                ctx.strokeStyle = 'rgba(' + G + ',' + Math.max(0, Math.min(1, al2)).toFixed(3) + ')';
+                ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(xp2, yp2); ctx.stroke();
+              }
+            }
+            prev = [xp2, yp2]; prevDepth = depth2;
+          }
+        }
+        for (var ar = 0; ar < arcs.length; ar++) {
+          var apts = arcs[ar]; prev = null; prevDepth = 0;
+          for (pi2 = 0; pi2 < apts.length; pi2++) {
+            var pr = projPt(apts[pi2], ax, ay);
+            if (prev) {
+              var avgD2 = (pr.depth + prevDepth) / 2;
+              if (avgD2 < 0.66) {
+                var al3 = (1 - avgD2 / 0.66) * phaseW[0] * 0.55;
+                ctx.strokeStyle = 'rgba(' + GH + ',' + Math.max(0, Math.min(1, al3)).toFixed(3) + ')';
+                ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(pr.x, pr.y); ctx.stroke();
+              }
+            }
+            prev = [pr.x, pr.y]; prevDepth = pr.depth;
+          }
+          var pulseU = ((now / 2600 + ar / arcs.length) % 1);
+          var pIdx = Math.min(apts.length - 1, Math.floor(pulseU * apts.length));
+          var pp2 = projPt(apts[pIdx], ax, ay);
+          if (pp2.depth < 0.62) {
+            ctx.fillStyle = 'rgba(' + GH + ',' + (phaseW[0] * (1 - pp2.depth / 0.62)).toFixed(3) + ')';
+            ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 5;
+            ctx.beginPath(); ctx.arc(pp2.x, pp2.y, 1.5, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+          }
+        }
+        for (var nI = 0; nI < nodes.length; nI++) {
+          var np = projPt(nodes[nI], ax, ay);
+          if (np.depth > 0.6) continue;
+          var na = phaseW[0] * (1 - np.depth / 0.6);
+          ctx.fillStyle = 'rgba(' + GH + ',' + (na * 0.95).toFixed(3) + ')';
+          ctx.shadowColor = 'rgba(' + G + ',1)'; ctx.shadowBlur = 4;
+          ctx.beginPath(); ctx.arc(np.x, np.y, 1.6, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+        }
+      }
+      /* dust: the original ball, untouched - fine stippled gold particles */
+      if (phaseW[1] > 0.008) {
+        for (i = 0; i < N; i++) {
+          px[i] += (sx[i] - px[i]) * k[i]; py[i] += (sy[i] - py[i]) * k[i]; pz[i] += (sz[i] - pz[i]) * k[i];
+          k[i] += (k0[i] - k[i]) * 0.05;
+          var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy + q2[1] * sc2;
+          if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
+          ox[i] *= 0.88; oy[i] *= 0.88; xp3 += ox[i]; yp3 += oy[i];
+          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1]; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
+          ctx.fillStyle = 'rgba(' + (depth3 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al4).toFixed(3) + ')'; ctx.fillRect(xp3 - r3 / 2, yp3 - r3 / 2, r3, r3);
+        }
       }
       ctx.globalCompositeOperation = 'source-over';
       if (!reduce) requestAnimationFrame(frame);
     }
     function start() {
       if (started) return; if (!build()) return; started = true;
-      for (var i = 0; i < N; i++) { k0[i] = 0.025 + Math.random() * 0.045; k[i] = k0[i]; sz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; }
-      setTargets(true); setLine(0);
-      if (reduce) { for (var j = 0; j < N; j++) { px[j] = tx[j]; py[j] = ty[j]; pz[j] = tz[j]; } }
+      for (var i = 0; i < N; i++) { k0[i] = 0.025 + Math.random() * 0.045; k[i] = 0.16 + Math.random() * 0.14; psz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; }
+      phaseW = [0, 0, 0]; phaseW[phase] = 1;
+      settleT = 0; sparkled = false;
+      setLine(phase);
+      if (reduce) { for (var j = 0; j < N; j++) { px[j] = sx[j]; py[j] = sy[j]; pz[j] = sz[j]; } }
       requestAnimationFrame(frame);
     }
     var zone = core.closest('.j-sticky-wrap') || core.parentElement;
@@ -2829,66 +2916,154 @@
     if (reduce) return;
     var G = '226,196,130', dpr = Math.min(window.devicePixelRatio || 1, 2);
     var MOB = window.matchMedia('(max-width: 900px)').matches, PM = MOB ? 0.6 : 1;
-    /* Hero badge: a mini Jarvis core (same sphere → network → sphere engine as the chapter, scaled down).
-       Flies in via CSS; hover only nudges the orb's tilt and pace. No chrome, no sparkles (Matt: "let it do what it does"). */
+    /* Hero badge: a mini Jarvis core (same three-finish engine as the chapter,
+       scaled down) - wire globe with lit nodes, the original dust ball,
+       a matte relief globe with continents. Flies in via CSS; hover only
+       nudges tilt/pace. No chrome, no sparkles (Matt: "let it do what it does"). */
     var badge = document.querySelector('.hero-jbadge'), jbCore = badge && badge.querySelector('.jb-core'), jbCv = badge && badge.querySelector('.jb-canvas');
     if (badge && jbCore && jbCv) {
       var GS = '194,164,104', GH = '255,236,190';
       var bctx = jbCv.getContext('2d');
-      var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BNODES = 22;
-      var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), btx = new Float32Array(BN), bty = new Float32Array(BN), btz = new Float32Array(BN), bk = new Float32Array(BN), bsz = new Float32Array(BN);
-      var bnodes = [], bedges = [], bpulses = [], bphases = [], bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, bnetW = 0, blast = 0, brun = true, bbuilt = false;
+      var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BGSEG = 22, BASEG = 14;
+      var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), bsx = new Float32Array(BN), bsy = new Float32Array(BN), bsz2 = new Float32Array(BN), bk = new Float32Array(BN), bk0 = new Float32Array(BN), bsz = new Float32Array(BN);
+      var bGrid = [], bNodes = [], bArcs = [], bContinents = [];
+      var bCITIES = [[40.7, -74.0], [51.5, -0.1], [25.2, 55.3], [1.3, 103.8], [-33.9, 151.2], [43.7, -79.4], [37.8, -122.4]];
+      var bROUTES = [[0, 1], [1, 2], [2, 3], [3, 4]];
+      var bCONTINENTS = [
+        [[70, -160], [49, -125], [15, -95], [45, -65], [70, -100]],
+        [[12, -80], [-18, -70], [-55, -68], [-5, -35], [10, -62]],
+        [[60, 10], [30, 35], [-25, 32], [0, 10], [45, 15]],
+        [[70, 90], [55, 160], [10, 105], [35, 60], [65, 70]],
+        [[-12, 130], [-34, 151], [-32, 115], [-14, 125]]
+      ];
+      var bPHASES = [
+        { name: 'network', dur: 5400, yaw: 0.00009, pitch: 0.41 },
+        { name: 'dust', dur: 4600, yaw: 0.0001, pitch: 0.12 },
+        { name: 'earth', dur: 4800, yaw: 0.00006, pitch: 0.27 }
+      ];
+      var bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, blast = 0, brun = true, bbuilt = false;
+      var bphaseW = [1, 0, 0];
       var bm = { x: 0, y: 0, tx: 0, ty: 0, in: false };
       function brot(p, ax, ay) { var c = Math.cos(ay), sn = Math.sin(ay); var x1 = p[0] * c + p[2] * sn, z1 = -p[0] * sn + p[2] * c; c = Math.cos(ax); sn = Math.sin(ax); return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c]; }
-      function bproj(q) { var sc = bF / (bF + q[2]); return [bcx + q[0] * sc, bcy + q[1] * sc, (q[2] + bR * 1.3) / (2.6 * bR)]; }
+      function bllPoint(lat, lon, radius) { var la = lat * Math.PI / 180, lo = lon * Math.PI / 180, rad = Math.cos(la) * radius; return [rad * Math.cos(lo), Math.sin(la) * radius, rad * Math.sin(lo)]; }
+      function bSlerp(a, b, steps, bulge) {
+        var la = Math.hypot(a[0], a[1], a[2]), lb = Math.hypot(b[0], b[1], b[2]);
+        var ua = [a[0] / la, a[1] / la, a[2] / la], ub = [b[0] / lb, b[1] / lb, b[2] / lb];
+        var dot = Math.max(-1, Math.min(1, ua[0] * ub[0] + ua[1] * ub[1] + ua[2] * ub[2]));
+        var omega = Math.acos(dot) || 0.0001, sinO = Math.sin(omega) || 0.0001, pts = [];
+        for (var i = 0; i <= steps; i++) {
+          var u = i / steps, wa = Math.sin((1 - u) * omega) / sinO, wb = Math.sin(u * omega) / sinO;
+          var rad = bR * (1 + bulge * Math.sin(Math.PI * u));
+          pts.push([(ua[0] * wa + ub[0] * wb) * rad, (ua[1] * wa + ub[1] * wb) * rad, (ua[2] * wa + ub[2] * wb) * rad]);
+        }
+        return pts;
+      }
+      function bproj(p, ax, ay) { var q = brot(p, ax, ay), sc = bF / (bF + q[2]); return { x: bcx + q[0] * sc, y: bcy + q[1] * sc, depth: (q[2] + bR) / (2 * bR) }; }
       function bbuild() {
         bs = jbCore.clientWidth; if (!bs) return false;
         jbCv.width = bs * dpr; jbCv.height = bs * dpr; bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         bcx = bs / 2; bcy = bs / 2; bR = bs * 0.36; bF = bs * 1.6;
-        bnodes = []; bedges = []; bpulses = [];
-        var sphere = [], net = [], g = Math.PI * (3 - Math.sqrt(5)), i;
-        for (i = 0; i < BN; i++) { var y = 1 - (i / (BN - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * bR, y * bR, Math.sin(t) * r * bR]); }
-        for (i = 0; i < BNODES; i++) bnodes.push(sphere[Math.floor(i * BN / BNODES)]);
-        for (i = 0; i < BN; i++) { var n = bnodes[i % BNODES], j = 1 + (Math.random() - 0.5) * 0.1; net.push([n[0] * j + (Math.random() - 0.5) * 2.2, n[1] * j + (Math.random() - 0.5) * 2.2, n[2] * j + (Math.random() - 0.5) * 2.2]); }
-        for (var a = 0; a < BNODES; a++) for (var b = a + 1; b < BNODES; b++) { var d = Math.hypot(bnodes[a][0] - bnodes[b][0], bnodes[a][1] - bnodes[b][1], bnodes[a][2] - bnodes[b][2]); if (d < bR * 1.05) bedges.push([a, b]); }
-        for (i = 0; i < 6; i++) bpulses.push({ e: Math.floor(Math.random() * bedges.length), t: Math.random(), v: 0.008 + Math.random() * 0.01 });
-        bphases = [{ pts: sphere, dur: 6500 }, { pts: net, dur: 6500 }, { pts: sphere, dur: 6200 }];
+        var g = Math.PI * (3 - Math.sqrt(5)), i;
+        for (i = 0; i < BN; i++) { var y = 1 - (i / (BN - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; bsx[i] = Math.cos(t) * r * bR; bsy[i] = y * bR; bsz2[i] = Math.sin(t) * r * bR; }
+        bGrid = [];
+        var mi, si, t2;
+        for (mi = 0; mi < 4; mi++) {
+          var lon = mi / 4 * Math.PI, l1 = [];
+          for (si = 0; si <= BGSEG; si++) { t2 = si / BGSEG * Math.PI * 2; l1.push([Math.sin(t2) * Math.cos(lon) * bR, Math.cos(t2) * bR, Math.sin(t2) * Math.sin(lon) * bR]); }
+          bGrid.push(l1);
+        }
+        var lats = [-0.5, 0, 0.5];
+        for (var li = 0; li < lats.length; li++) {
+          var yv = Math.sin(lats[li]) * bR, rad = Math.cos(lats[li]) * bR, l2 = [];
+          for (si = 0; si <= BGSEG; si++) { t2 = si / BGSEG * Math.PI * 2; l2.push([Math.cos(t2) * rad, yv, Math.sin(t2) * rad]); }
+          bGrid.push(l2);
+        }
+        bNodes = bCITIES.map(function (c) { return bllPoint(c[0], c[1], bR); });
+        bArcs = bROUTES.map(function (r) { return bSlerp(bNodes[r[0]], bNodes[r[1]], BASEG, 0.18); });
+        bContinents = bCONTINENTS.map(function (poly) { return poly.map(function (p) { return bllPoint(p[0], p[1], bR); }); });
         return true;
       }
-      function bTargets() { var p = bphases[bphase].pts; for (var i = 0; i < BN; i++) { btx[i] = p[i][0]; bty[i] = p[i][1]; btz[i] = p[i][2]; } }
       function bframe(now) {
         if (!brun) return;
         if (!blast) blast = now;
-        var dt = Math.min(50, now - blast); blast = now; var i;
+        var dt = Math.min(50, now - blast); blast = now; var i, j;
         bm.x += (bm.tx - bm.x) * 0.06; bm.y += (bm.ty - bm.y) * 0.06;
         bphaseT += dt;
-        if (bphaseT > bphases[bphase].dur) { bphase = (bphase + 1) % bphases.length; bphaseT = 0; bTargets(); }
+        if (bphaseT > bPHASES[bphase].dur) { bphase = (bphase + 1) % bPHASES.length; bphaseT = 0; }
         var hotM = bm.in ? 1.6 : 1;
-        bnetW += ((bphase === 1 ? 1 : 0) - bnetW) * 0.04;
-        bry += 0.00009 * hotM * dt;
-        var rxT = 0.12; brx += (rxT - brx) * 0.04;
+        for (j = 0; j < 3; j++) bphaseW[j] += (((bphase === j) ? 1 : 0) - bphaseW[j]) * 0.045;
+        var yawNow = bphaseW[0] * bPHASES[0].yaw + bphaseW[1] * bPHASES[1].yaw + bphaseW[2] * bPHASES[2].yaw;
+        bry += yawNow * hotM * dt;
+        var rxT = bphaseW[0] * bPHASES[0].pitch + bphaseW[1] * bPHASES[1].pitch + bphaseW[2] * bPHASES[2].pitch;
+        brx += (rxT - brx) * 0.045;
         var ax = brx + bm.y * 0.35, ay = bry + bm.x * 0.45;
         bctx.clearRect(0, 0, bs, bs);
         bctx.globalCompositeOperation = 'lighter';
-        if (bnetW > 0.02) {
-          var pn = bnodes.map(function (p) { return bproj(brot(p, ax, ay)); });
-          bctx.lineWidth = 0.7;
-          for (i = 0; i < bedges.length; i++) { var A = pn[bedges[i][0]], B = pn[bedges[i][1]]; var dz = 1 - (A[2] + B[2]) / 2; bctx.strokeStyle = 'rgba(' + GS + ',' + (bnetW * (0.08 + 0.38 * dz)).toFixed(3) + ')'; bctx.beginPath(); bctx.moveTo(A[0], A[1]); bctx.lineTo(B[0], B[1]); bctx.stroke(); }
-          for (i = 0; i < bpulses.length; i++) { var pu = bpulses[i]; pu.t += pu.v * hotM; if (pu.t > 1) { pu.t = 0; pu.e = Math.floor(Math.random() * bedges.length); } var A2 = pn[bedges[pu.e][0]], B2 = pn[bedges[pu.e][1]]; bctx.fillStyle = 'rgba(' + GH + ',' + (bnetW * 0.95) + ')'; bctx.shadowColor = 'rgba(' + G + ',1)'; bctx.shadowBlur = 6; bctx.beginPath(); bctx.arc(A2[0] + (B2[0] - A2[0]) * pu.t, A2[1] + (B2[1] - A2[1]) * pu.t, 1.3, 0, 7); bctx.fill(); bctx.shadowBlur = 0; }
+        if (bphaseW[2] > 0.008) {
+          var og = bctx.createRadialGradient(bcx - bR * 0.32, bcy - bR * 0.36, bR * 0.04, bcx, bcy, bR * 1.02);
+          og.addColorStop(0, 'rgba(150,128,86,' + (0.5 * bphaseW[2]).toFixed(3) + ')');
+          og.addColorStop(0.55, 'rgba(88,72,44,' + (0.48 * bphaseW[2]).toFixed(3) + ')');
+          og.addColorStop(1, 'rgba(16,13,7,' + (0.55 * bphaseW[2]).toFixed(3) + ')');
+          bctx.fillStyle = og;
+          bctx.beginPath(); bctx.arc(bcx, bcy, bR, 0, Math.PI * 2); bctx.fill();
+          for (i = 0; i < bContinents.length; i++) {
+            var poly = bContinents[i], pts2 = [], sumD = 0, maxD = 0, pv;
+            for (var vi = 0; vi < poly.length; vi++) { pv = bproj(poly[vi], ax, ay); pts2.push(pv); sumD += pv.depth; if (pv.depth > maxD) maxD = pv.depth; }
+            if (maxD > 0.58) continue;
+            var la = bphaseW[2] * (1 - maxD / 0.58) * 0.85;
+            bctx.fillStyle = 'rgba(' + (sumD / poly.length < 0.32 ? '224,192,132' : '176,148,96') + ',' + la.toFixed(3) + ')';
+            bctx.beginPath(); bctx.moveTo(pts2[0].x, pts2[0].y);
+            for (var vj = 1; vj < pts2.length; vj++) bctx.lineTo(pts2[vj].x, pts2[vj].y);
+            bctx.closePath(); bctx.fill();
+          }
         }
-        for (i = 0; i < BN; i++) {
-          bpx[i] += (btx[i] - bpx[i]) * bk[i]; bpy[i] += (bty[i] - bpy[i]) * bk[i]; bpz[i] += (btz[i] - bpz[i]) * bk[i];
-          var q = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc = bF / (bF + q[2]), xp = bcx + q[0] * sc, yp = bcy + q[1] * sc;
-          var depth = (q[2] + bR) / (2 * bR), al = 0.18 + 0.72 * (1 - depth), r = bsz[i] * (0.7 + 0.8 * (1 - depth));
-          bctx.fillStyle = 'rgba(' + (depth < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp - r / 2, yp - r / 2, r, r);
+        if (bphaseW[0] > 0.008) {
+          bctx.lineWidth = 0.7;
+          var gl, lpts, prev, prevD, pi2, q, sc, xp, yp, depth;
+          for (gl = 0; gl < bGrid.length; gl++) {
+            lpts = bGrid[gl]; prev = null; prevD = 0;
+            for (pi2 = 0; pi2 < lpts.length; pi2++) {
+              q = brot(lpts[pi2], ax, ay); sc = bF / (bF + q[2]); xp = bcx + q[0] * sc; yp = bcy + q[1] * sc;
+              depth = (q[2] + bR) / (2 * bR);
+              if (prev) {
+                var avgD = (depth + prevD) / 2;
+                if (avgD < 0.6) { bctx.strokeStyle = 'rgba(' + GS + ',' + Math.max(0, Math.min(1, (1 - avgD / 0.6) * bphaseW[0] * 0.8)).toFixed(3) + ')'; bctx.beginPath(); bctx.moveTo(prev[0], prev[1]); bctx.lineTo(xp, yp); bctx.stroke(); }
+              }
+              prev = [xp, yp]; prevD = depth;
+            }
+          }
+          for (var ar = 0; ar < bArcs.length; ar++) {
+            var apts = bArcs[ar]; prev = null; prevD = 0;
+            for (pi2 = 0; pi2 < apts.length; pi2++) {
+              var pr = bproj(apts[pi2], ax, ay);
+              if (prev) { var avgD2 = (pr.depth + prevD) / 2; if (avgD2 < 0.66) { bctx.strokeStyle = 'rgba(' + GH + ',' + Math.max(0, Math.min(1, (1 - avgD2 / 0.66) * bphaseW[0] * 0.5)).toFixed(3) + ')'; bctx.beginPath(); bctx.moveTo(prev[0], prev[1]); bctx.lineTo(pr.x, pr.y); bctx.stroke(); } }
+              prev = [pr.x, pr.y]; prevD = pr.depth;
+            }
+          }
+          for (i = 0; i < bNodes.length; i++) {
+            var np = bproj(bNodes[i], ax, ay); if (np.depth > 0.6) continue;
+            bctx.fillStyle = 'rgba(' + GH + ',' + (bphaseW[0] * (1 - np.depth / 0.6) * 0.95).toFixed(3) + ')';
+            bctx.shadowColor = 'rgba(' + G + ',1)'; bctx.shadowBlur = 4;
+            bctx.beginPath(); bctx.arc(np.x, np.y, 1.4, 0, 7); bctx.fill(); bctx.shadowBlur = 0;
+          }
+        }
+        if (bphaseW[1] > 0.008) {
+          for (i = 0; i < BN; i++) {
+            bpx[i] += (bsx[i] - bpx[i]) * bk[i]; bpy[i] += (bsy[i] - bpy[i]) * bk[i]; bpz[i] += (bsz2[i] - bpz[i]) * bk[i];
+            bk[i] += (bk0[i] - bk[i]) * 0.06;
+            var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy + q2[1] * sc2;
+            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1], r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
+            bctx.fillStyle = 'rgba(' + (depth2 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp2 - r / 2, yp2 - r / 2, r, r);
+          }
         }
         bctx.globalCompositeOperation = 'source-over';
         requestAnimationFrame(bframe);
       }
       function bstart() {
         if (!bbuild()) return false;
-        for (var i = 0; i < BN; i++) { bk[i] = 0.025 + Math.random() * 0.045; bsz[i] = 0.75 + Math.random() * 0.95; bpx[i] = (Math.random() - 0.5) * bs; bpy[i] = (Math.random() - 0.5) * bs; bpz[i] = (Math.random() - 0.5) * bs; }
-        bTargets(); bbuilt = true; return true;
+        for (var i = 0; i < BN; i++) { bk0[i] = 0.025 + Math.random() * 0.045; bk[i] = 0.16 + Math.random() * 0.14; bsz[i] = 0.75 + Math.random() * 0.95; bpx[i] = (Math.random() - 0.5) * bs; bpy[i] = (Math.random() - 0.5) * bs; bpz[i] = (Math.random() - 0.5) * bs; }
+        bphaseW = [0, 0, 0]; bphaseW[bphase] = 1;
+        bbuilt = true; return true;
       }
       if (bstart()) requestAnimationFrame(bframe);
       badge.addEventListener('mouseleave', function () { bm.tx = 0; bm.ty = 0; bm.in = false; });
