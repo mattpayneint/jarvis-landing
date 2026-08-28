@@ -2573,9 +2573,9 @@
        phases, nothing about the spin ever snaps or blends, so there is
        nothing to read as a jump/jitter at the transition. */
     var PHASES = [
-      { name: 'network', dur: 5500 },
-      { name: 'dust', dur: 5500 },
-      { name: 'earth', dur: 5500 }
+      { name: 'network', dur: 7000 },
+      { name: 'dust', dur: 7000 },
+      { name: 'earth', dur: 7000 }
     ];
     var BALL_YAW = 0.00007, BALL_PITCH = 0.12;
     /* visit order: earth (2) first, then network (0), then dust (1) - the
@@ -2679,7 +2679,7 @@
          itself is one constant spin the whole time (see BALL_YAW/PITCH
          above), so there's nothing about the motion to snap or blend at a
          transition, exactly like the original single ball. */
-      for (j = 0; j < 3; j++) phaseW[j] += (((phase === j) ? 1 : 0) - phaseW[j]) * 0.05;
+      for (j = 0; j < 3; j++) phaseW[j] += (((phase === j) ? 1 : 0) - phaseW[j]) * 0.035;
       ry += BALL_YAW * hotM * dt;
       rx += (BALL_PITCH - rx) * 0.04;
       var ax = rx + m.y * 0.35, ay = ry + m.x * 0.45;
@@ -3086,9 +3086,9 @@
         [[70.7, 57.5], [70.8, 53.7], [72, 51.5], [75.1, 55.6], [75.6, 57.9], [76.8, 66.2], [76.5, 68.9], [74.3, 58.5], [72.4, 55.4], [71.5, 55.6]]
       ];
       var bPHASES = [
-        { name: 'network', dur: 5500 },
-        { name: 'dust', dur: 5500 },
-        { name: 'earth', dur: 5500 }
+        { name: 'network', dur: 7000 },
+        { name: 'dust', dur: 7000 },
+        { name: 'earth', dur: 7000 }
       ];
       var BALL_YAW = 0.00007, BALL_PITCH = 0.12;
       var BPHASE_ORDER = [2, 0, 1], borderIdx = 0;
@@ -3142,7 +3142,7 @@
         bphaseT += dt;
         if (bphaseT > bPHASES[bphase].dur) { borderIdx = (borderIdx + 1) % BPHASE_ORDER.length; bphase = BPHASE_ORDER[borderIdx]; bphaseT = 0; }
         var hotM = bm.in ? 1.6 : 1;
-        for (j = 0; j < 3; j++) bphaseW[j] += (((bphase === j) ? 1 : 0) - bphaseW[j]) * 0.05;
+        for (j = 0; j < 3; j++) bphaseW[j] += (((bphase === j) ? 1 : 0) - bphaseW[j]) * 0.035;
         bry += BALL_YAW * hotM * dt;
         brx += (BALL_PITCH - brx) * 0.04;
         var ax = brx + bm.y * 0.35, ay = bry + bm.x * 0.45;
