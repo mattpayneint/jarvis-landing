@@ -362,7 +362,7 @@
   .hero .sub { font-size: 1.1rem; color: rgba(242,237,225,0.75); max-width: 46ch; margin-top: 26px; opacity: 0; animation: rise 1s var(--ease) 1.3s forwards; }
   .hero-actions { display: flex; gap: 30px; align-items: center; margin-top: 38px; opacity: 0; animation: rise 1s var(--ease) 1.55s forwards; }
   .hero-actions .quiet-link { color: rgba(242,237,225,0.8); }
-  /* Hero Jarvis badge: a living mini Jarvis core (sphere → network → gyroscope, same engine as the chapter)
+  /* Hero Jarvis badge: a living mini Jarvis core (sphere → network → sphere, same engine as the chapter)
      with "Agentic Technology" beside it. No box. Flies in, lands with a flash, sparkles around the circle. */
   .hero-jbadge { position: relative; display: inline-flex; align-items: center; gap: 22px; margin-top: 26px; width: fit-content; font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; text-decoration: none; color: var(--brass-soft); opacity: 0; transform: translate(-54px, 30px) scale(0.88); will-change: transform, opacity; animation: jbfly 1.5s var(--ease) 1.85s both; transition: color 0.4s var(--ease); }
   .hero-jbadge .jb-text { display: flex; flex-direction: column; gap: 7px; }
@@ -2479,7 +2479,7 @@
     var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), sz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
     var phases = [], textLetterIdx = [], textReleased = new Uint8Array(N), LETTER_STAGGER = 160;
-    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, gyroW = 0, textW = 0, started = false;
+    var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, textW = 0, started = false;
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
     var lines = [
       'Researching. 340 names, 62 firms, verified.',
@@ -2531,24 +2531,20 @@
       s = core.clientWidth; if (!s) return false;
       canvas.width = s * dpr; canvas.height = s * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       cx = s / 2; cy = s / 2; R = s * 0.27; F = s * 1.5;
-      var sphere = [], gyro = [], g = Math.PI * (3 - Math.sqrt(5)), i;
+      var sphere = [], g = Math.PI * (3 - Math.sqrt(5)), i;
       for (i = 0; i < N; i++) { var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * R, y * R, Math.sin(t) * r * R]); }
-      for (i = 0; i < N; i++) {
-        var th = Math.random() * Math.PI * 2, rr = R * (0.97 + (Math.random() - 0.5) * 0.07), w = i % 3, pt;
-        if (w === 0) pt = [Math.cos(th) * rr, Math.sin(th) * rr, (Math.random() - 0.5) * 4];
-        else if (w === 1) pt = [(Math.random() - 0.5) * 4, Math.cos(th) * rr, Math.sin(th) * rr];
-        else pt = [Math.cos(th) * rr, (Math.random() - 0.5) * 4, Math.sin(th) * rr];
-        gyro.push(rot(pt, 0.26, 0.26));
-      }
-      /* sphere -> JARVIS -> gyroscope. JARVIS holds flat/readable, then eases
+      /* sphere -> JARVIS -> sphere. JARVIS holds flat/readable, then eases
          into a small rock (see frame()) - it never spells anything else, this
-         is a one-time brand reveal woven into the loop, not a ticker. */
+         is a one-time brand reveal woven into the loop, not a ticker. Third
+         phase reassembles the same ball rather than the old wireframe
+         gyroscope cage - Matt wants the icon to stay in the vein of the
+         original ball throughout, not open up into a third distinct shape. */
       var jarvisText = textPoints('JARVIS', Math.round(R * 0.82));
       textLetterIdx = jarvisText.letterIdx;
       phases = [
         { pts: sphere, dur: 6000 },
         { pts: jarvisText.pts, dur: 3400, isText: true },
-        { pts: gyro, dur: 6200 }
+        { pts: sphere, dur: 6200 }
       ];
       return true;
     }
@@ -2595,16 +2591,15 @@
       if (phaseT > phases[phase].dur) { phase = (phase + 1) % phases.length; phaseT = 0; setTargets(true); setLine(phase); }
       typeStep(dt);
       var hotM = m.in ? 2 : 1, i;
-      gyroW += ((phase === 2 ? 1 : 0) - gyroW) * 0.04;
       textW += ((phase === 1 ? 1 : 0) - textW) * 0.04;
       /* JARVIS stays legible left-to-right: it holds dead still while it
          assembles and settles, then eases into a small rock afterward - never
          past ~9 degrees, so it never flips into reading backwards/mirrored.
          Mouse-tilt is dampened the same way, so hovering can't ruin it either. */
       var holdMul = phase === 1 ? Math.max(0, Math.min(1, (phaseT - 1300) / 900)) : 1;
-      var spd = 0.00007 * hotM * (1 + 3.2 * gyroW) * (1 - textW);
+      var spd = 0.00007 * hotM * (1 - textW);
       ry += spd * dt;
-      var rxT = 0.12 + gyroW * 0.45 * Math.sin(now / 1400);
+      var rxT = 0.12;
       rx += (rxT - rx) * 0.04;
       var rockA = Math.sin(now / 2600) * 0.16 * holdMul, rockX = Math.sin(now / 3400) * 0.05 * holdMul;
       var mtDamp = textW < 0.5 ? 1 : holdMul;
@@ -2636,7 +2631,7 @@
         var q = rot([px[i], py[i], pz[i]], ax, ay); var sc = F / (F + q[2]); var xp = cx + q[0] * sc, yp = cy + q[1] * sc;
         if (m.in) { var dx = xp - m.px, dy = yp - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
         ox[i] *= 0.88; oy[i] *= 0.88; xp += ox[i]; yp += oy[i];
-        var depth = (q[2] + R) / (2 * R); var al = 0.18 + 0.72 * (1 - depth) + 0.1 * gyroW; var r = sz[i] * (0.7 + 0.8 * (1 - depth));
+        var depth = (q[2] + R) / (2 * R); var al = 0.18 + 0.72 * (1 - depth); var r = sz[i] * (0.7 + 0.8 * (1 - depth));
         var hiCol = isTextPhase ? '224,190,120' : '240,214,150';
         ctx.fillStyle = 'rgba(' + (depth < 0.4 ? hiCol : G) + ',' + Math.min(1, al).toFixed(3) + ')'; ctx.fillRect(xp - r / 2, yp - r / 2, r, r);
       }
@@ -2834,7 +2829,7 @@
     if (reduce) return;
     var G = '226,196,130', dpr = Math.min(window.devicePixelRatio || 1, 2);
     var MOB = window.matchMedia('(max-width: 900px)').matches, PM = MOB ? 0.6 : 1;
-    /* Hero badge: a mini Jarvis core (same sphere → network → gyroscope engine as the chapter, scaled down).
+    /* Hero badge: a mini Jarvis core (same sphere → network → sphere engine as the chapter, scaled down).
        Flies in via CSS; hover only nudges the orb's tilt and pace. No chrome, no sparkles (Matt: "let it do what it does"). */
     var badge = document.querySelector('.hero-jbadge'), jbCore = badge && badge.querySelector('.jb-core'), jbCv = badge && badge.querySelector('.jb-canvas');
     if (badge && jbCore && jbCv) {
@@ -2842,7 +2837,7 @@
       var bctx = jbCv.getContext('2d');
       var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BNODES = 22;
       var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), btx = new Float32Array(BN), bty = new Float32Array(BN), btz = new Float32Array(BN), bk = new Float32Array(BN), bsz = new Float32Array(BN);
-      var bnodes = [], bedges = [], bpulses = [], bphases = [], bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, bnetW = 0, bgyroW = 0, blast = 0, brun = true, bbuilt = false;
+      var bnodes = [], bedges = [], bpulses = [], bphases = [], bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, bnetW = 0, blast = 0, brun = true, bbuilt = false;
       var bm = { x: 0, y: 0, tx: 0, ty: 0, in: false };
       function brot(p, ax, ay) { var c = Math.cos(ay), sn = Math.sin(ay); var x1 = p[0] * c + p[2] * sn, z1 = -p[0] * sn + p[2] * c; c = Math.cos(ax); sn = Math.sin(ax); return [x1, p[1] * c - z1 * sn, p[1] * sn + z1 * c]; }
       function bproj(q) { var sc = bF / (bF + q[2]); return [bcx + q[0] * sc, bcy + q[1] * sc, (q[2] + bR * 1.3) / (2.6 * bR)]; }
@@ -2851,20 +2846,13 @@
         jbCv.width = bs * dpr; jbCv.height = bs * dpr; bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         bcx = bs / 2; bcy = bs / 2; bR = bs * 0.36; bF = bs * 1.6;
         bnodes = []; bedges = []; bpulses = [];
-        var sphere = [], net = [], gyro = [], g = Math.PI * (3 - Math.sqrt(5)), i;
+        var sphere = [], net = [], g = Math.PI * (3 - Math.sqrt(5)), i;
         for (i = 0; i < BN; i++) { var y = 1 - (i / (BN - 1)) * 2, r = Math.sqrt(1 - y * y), t = g * i; sphere.push([Math.cos(t) * r * bR, y * bR, Math.sin(t) * r * bR]); }
         for (i = 0; i < BNODES; i++) bnodes.push(sphere[Math.floor(i * BN / BNODES)]);
         for (i = 0; i < BN; i++) { var n = bnodes[i % BNODES], j = 1 + (Math.random() - 0.5) * 0.1; net.push([n[0] * j + (Math.random() - 0.5) * 2.2, n[1] * j + (Math.random() - 0.5) * 2.2, n[2] * j + (Math.random() - 0.5) * 2.2]); }
         for (var a = 0; a < BNODES; a++) for (var b = a + 1; b < BNODES; b++) { var d = Math.hypot(bnodes[a][0] - bnodes[b][0], bnodes[a][1] - bnodes[b][1], bnodes[a][2] - bnodes[b][2]); if (d < bR * 1.05) bedges.push([a, b]); }
-        for (i = 0; i < BN; i++) {
-          var th = Math.random() * Math.PI * 2, rr = bR * (0.97 + (Math.random() - 0.5) * 0.07), w = i % 3, pt;
-          if (w === 0) pt = [Math.cos(th) * rr, Math.sin(th) * rr, (Math.random() - 0.5) * 1.4];
-          else if (w === 1) pt = [(Math.random() - 0.5) * 1.4, Math.cos(th) * rr, Math.sin(th) * rr];
-          else pt = [Math.cos(th) * rr, (Math.random() - 0.5) * 1.4, Math.sin(th) * rr];
-          gyro.push(brot(pt, 0.26, 0.26));
-        }
         for (i = 0; i < 6; i++) bpulses.push({ e: Math.floor(Math.random() * bedges.length), t: Math.random(), v: 0.008 + Math.random() * 0.01 });
-        bphases = [{ pts: sphere, dur: 6500 }, { pts: net, dur: 6500 }, { pts: gyro, dur: 6200 }];
+        bphases = [{ pts: sphere, dur: 6500 }, { pts: net, dur: 6500 }, { pts: sphere, dur: 6200 }];
         return true;
       }
       function bTargets() { var p = bphases[bphase].pts; for (var i = 0; i < BN; i++) { btx[i] = p[i][0]; bty[i] = p[i][1]; btz[i] = p[i][2]; } }
@@ -2876,9 +2864,9 @@
         bphaseT += dt;
         if (bphaseT > bphases[bphase].dur) { bphase = (bphase + 1) % bphases.length; bphaseT = 0; bTargets(); }
         var hotM = bm.in ? 1.6 : 1;
-        bnetW += ((bphase === 1 ? 1 : 0) - bnetW) * 0.04; bgyroW += ((bphase === 2 ? 1 : 0) - bgyroW) * 0.04;
-        bry += 0.00009 * hotM * (1 + 3.2 * bgyroW) * dt;
-        var rxT = 0.12 + bgyroW * 0.45 * Math.sin(now / 1400); brx += (rxT - brx) * 0.04;
+        bnetW += ((bphase === 1 ? 1 : 0) - bnetW) * 0.04;
+        bry += 0.00009 * hotM * dt;
+        var rxT = 0.12; brx += (rxT - brx) * 0.04;
         var ax = brx + bm.y * 0.35, ay = bry + bm.x * 0.45;
         bctx.clearRect(0, 0, bs, bs);
         bctx.globalCompositeOperation = 'lighter';
@@ -2891,7 +2879,7 @@
         for (i = 0; i < BN; i++) {
           bpx[i] += (btx[i] - bpx[i]) * bk[i]; bpy[i] += (bty[i] - bpy[i]) * bk[i]; bpz[i] += (btz[i] - bpz[i]) * bk[i];
           var q = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc = bF / (bF + q[2]), xp = bcx + q[0] * sc, yp = bcy + q[1] * sc;
-          var depth = (q[2] + bR) / (2 * bR), al = 0.18 + 0.72 * (1 - depth) + 0.1 * bgyroW, r = bsz[i] * (0.7 + 0.8 * (1 - depth));
+          var depth = (q[2] + bR) / (2 * bR), al = 0.18 + 0.72 * (1 - depth), r = bsz[i] * (0.7 + 0.8 * (1 - depth));
           bctx.fillStyle = 'rgba(' + (depth < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp - r / 2, yp - r / 2, r, r);
         }
         bctx.globalCompositeOperation = 'source-over';
