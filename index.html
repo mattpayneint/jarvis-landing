@@ -2479,29 +2479,37 @@
     var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), psz = new Float32Array(N);
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
     var GSEG = 40, ASEG = 22;
-    var gridLines = [], nodes = [], arcs = [], contours = [];
-    /* Three finishes on the SAME ball - shape and size never change, only the
-       surface and the way it turns. No reassembly moment between phases
-       (nothing to "trick" a skeptical viewer with) - one object read three
-       ways: a wire globe with lit financial-center nodes and route arcs
-       (global reach), the original fine gold dust ball untouched, and that
-       same dust ball with a few bright latitude contour rings drawn over it
-       (a survey-globe read, not a flat decal) - both later phases lean on
-       the two techniques that already read well rather than inventing a
-       third. Each phase keeps its own quiet tilt/spin so the loop never
-       feels like the same clip on repeat. */
+    var gridLines = [], nodes = [], arcs = [], continents = [];
+    /* Three finishes on the SAME ball - shape and size never change:
+       a wire globe with lit financial-center nodes and route arcs (global
+       reach), the original fine gold dust ball untouched, and Earth itself -
+       continents mapped onto the sphere the way they read from orbit. */
     var CITIES = [
       [40.7, -74.0], [51.5, -0.1], [47.4, 8.5], [25.2, 55.3], [1.3, 103.8],
       [35.7, 139.7], [-33.9, 151.2], [34.0, -118.2], [43.7, -79.4], [46.2, 6.1],
       [22.3, 114.2], [-23.5, -46.6], [50.1, 8.7], [37.8, -122.4]
     ];
     var ROUTES = [[0, 1], [1, 3], [3, 4], [4, 6], [7, 5]];
-    var CONTOUR_LATS = [-0.85, -0.55, -0.25, 0, 0.25, 0.55, 0.85];
-    var PHASES = [
-      { name: 'network', dur: 7200, yaw: 0.00006, pitch: 0.41 },
-      { name: 'dust', dur: 6000, yaw: 0.00007, pitch: 0.12 },
-      { name: 'contour', dur: 6200, yaw: 0.00004, pitch: 0.27 }
+    /* stylized coastlines (lat, lon), traced as continuous loops - not
+       survey-accurate but detailed enough to read as the real continents,
+       not abstract blobs */
+    var CONTINENTS = [
+      [[71, -156], [60, -165], [49, -123], [32, -117], [23, -106], [15, -92], [9, -79], [18, -88], [25, -97], [29, -89], [25, -80], [32, -81], [35, -76], [41, -71], [45, -67], [47, -52], [60, -64], [68, -81], [70, -127]],
+      [[12, -72], [8, -77], [2, -80], [-5, -81], [-18, -70], [-33, -72], [-52, -74], [-55, -68], [-42, -64], [-34, -58], [-23, -43], [-8, -35], [-1, -48], [5, -52], [10, -64]],
+      [[31, -9], [37, 10], [32, 32], [12, 43], [-1, 42], [-16, 40], [-26, 33], [-34, 20], [-29, 17], [-6, 12], [4, 9], [6, -3], [14, -17], [21, -17]],
+      [[71, 25], [60, 30], [69, 33], [73, 80], [77, 105], [70, 161], [60, 160], [43, 145], [35, 140], [31, 121], [22, 114], [10, 106], [1, 104], [8, 77], [22, 69], [25, 55], [29, 48], [37, 36], [36, 23], [45, 15], [43, 9], [36, -6], [43, -9], [49, -5], [51, 4], [60, 5]],
+      [[-11, 132], [-12, 143], [-24, 153], [-34, 151], [-38, 145], [-35, 138], [-32, 115], [-20, 113], [-14, 126]]
     ];
+    /* one constant rotation (yaw/pitch) for all three phases, exactly like
+       the original single ball - only the surface crossfades between
+       phases, nothing about the spin ever snaps or blends, so there is
+       nothing to read as a jump/jitter at the transition. */
+    var PHASES = [
+      { name: 'network', dur: 5500 },
+      { name: 'dust', dur: 5500 },
+      { name: 'earth', dur: 5500 }
+    ];
+    var BALL_YAW = 0.00007, BALL_PITCH = 0.12;
     var phase = 0, phaseT = 0, last = 0, ry = 0, rx = 0.12, started = false;
     var phaseW = [1, 0, 0];
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
@@ -2558,12 +2566,7 @@
       }
       nodes = CITIES.map(function (c) { return llPoint(c[0], c[1], R); });
       arcs = ROUTES.map(function (r) { return slerpArc(nodes[r[0]], nodes[r[1]], ASEG, 0.16); });
-      contours = [];
-      for (var cl = 0; cl < CONTOUR_LATS.length; cl++) {
-        var cyv = Math.sin(CONTOUR_LATS[cl]) * R, crad = Math.cos(CONTOUR_LATS[cl]) * R, cline = [];
-        for (var csi = 0; csi <= GSEG; csi++) { var ct = csi / GSEG * Math.PI * 2; cline.push([Math.cos(ct) * crad, cyv, Math.sin(ct) * crad]); }
-        contours.push(cline);
-      }
+      continents = CONTINENTS.map(function (poly) { return poly.map(function (p) { return llPoint(p[0], p[1], R); }); });
       return true;
     }
     function setLine(idx) { if (!typeEl || idx === typeIdx) return; typeIdx = idx; typePos = 0; typeTimer = 0; typeEl.textContent = ''; }
@@ -2599,11 +2602,13 @@
       if (phaseT > PHASES[phase].dur) { phase = (phase + 1) % PHASES.length; phaseT = 0; setLine(phase); }
       typeStep(dt);
       var hotM = m.in ? 2 : 1, i, j;
-      for (j = 0; j < 3; j++) phaseW[j] += (((phase === j) ? 1 : 0) - phaseW[j]) * 0.035;
-      var yawNow = phaseW[0] * PHASES[0].yaw + phaseW[1] * PHASES[1].yaw + phaseW[2] * PHASES[2].yaw;
-      ry += yawNow * hotM * dt;
-      var rxT = phaseW[0] * PHASES[0].pitch + phaseW[1] * PHASES[1].pitch + phaseW[2] * PHASES[2].pitch;
-      rx += (rxT - rx) * 0.035;
+      /* the crossfade below only dissolves which SURFACE is drawn - rotation
+         itself is one constant spin the whole time (see BALL_YAW/PITCH
+         above), so there's nothing about the motion to snap or blend at a
+         transition, exactly like the original single ball. */
+      for (j = 0; j < 3; j++) phaseW[j] += (((phase === j) ? 1 : 0) - phaseW[j]) * 0.05;
+      ry += BALL_YAW * hotM * dt;
+      rx += (BALL_PITCH - rx) * 0.04;
       var ax = rx + m.y * 0.35, ay = ry + m.x * 0.45;
       ctx.clearRect(0, 0, s, s);
       var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.6);
@@ -2618,24 +2623,26 @@
         ctx.fillStyle = 'rgba(' + GH + ',' + (sf * 0.85).toFixed(3) + ')';
         ctx.fillRect(sp.x - sp.sz / 2, sp.y - sp.sz / 2, sp.sz, sp.sz);
       }
-      /* contour globe: the same dust ball (see below - its draw is gated to
-         run under both this phase and the dust phase) with a few bright
-         latitude rings laid over it, like elevation contours on a survey
-         globe. Reuses the two techniques that already read well instead of
-         a third, riskier one. */
+      /* earth: continents mapped onto the sphere, filled in gold on a matte
+         globe - gated on the WORST vertex per landmass (not the average) so
+         a coastline near the horizon fades out whole instead of folding
+         into a distorted shard mid-transition */
       if (phaseW[2] > 0.008) {
-        var cgl, clpts, cprev, cprevD, cpi, cq, csc, cxp, cyp, cdepth;
-        for (cgl = 0; cgl < contours.length; cgl++) {
-          clpts = contours[cgl]; cprev = null; cprevD = 0;
-          for (cpi = 0; cpi < clpts.length; cpi++) {
-            cq = rot(clpts[cpi], ax, ay); csc = F / (F + cq[2]); cxp = cx + cq[0] * csc; cyp = cy + cq[1] * csc;
-            cdepth = (cq[2] + R) / (2 * R);
-            if (cprev) {
-              var cavg = (cdepth + cprevD) / 2;
-              if (cavg < 0.6) { ctx.strokeStyle = 'rgba(' + GH + ',' + Math.max(0, Math.min(1, (1 - cavg / 0.6) * phaseW[2] * 0.75)).toFixed(3) + ')'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(cprev[0], cprev[1]); ctx.lineTo(cxp, cyp); ctx.stroke(); }
-            }
-            cprev = [cxp, cyp]; cprevD = cdepth;
-          }
+        var eog = ctx.createRadialGradient(cx - R * 0.32, cy - R * 0.36, R * 0.04, cx, cy, R * 1.02);
+        eog.addColorStop(0, 'rgba(150,128,86,' + (0.5 * phaseW[2]).toFixed(3) + ')');
+        eog.addColorStop(0.55, 'rgba(88,72,44,' + (0.48 * phaseW[2]).toFixed(3) + ')');
+        eog.addColorStop(1, 'rgba(16,13,7,' + (0.55 * phaseW[2]).toFixed(3) + ')');
+        ctx.fillStyle = eog;
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+        for (var eci = 0; eci < continents.length; eci++) {
+          var epoly = continents[eci], epts = [], emaxD = 0, epv;
+          for (var evi = 0; evi < epoly.length; evi++) { epv = projPt(epoly[evi], ax, ay); epts.push(epv); if (epv.depth > emaxD) emaxD = epv.depth; }
+          if (emaxD > 0.58) continue;
+          var ela = phaseW[2] * (1 - emaxD / 0.58) * 0.85;
+          ctx.fillStyle = 'rgba(214,182,124,' + ela.toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(epts[0].x, epts[0].y);
+          for (var evj = 1; evj < epts.length; evj++) ctx.lineTo(epts[evj].x, epts[evj].y);
+          ctx.closePath(); ctx.fill();
         }
       }
       /* network globe: crisp meridians/parallels (back hemisphere faded so it
@@ -2693,18 +2700,15 @@
           ctx.beginPath(); ctx.arc(np.x, np.y, 1.6, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
         }
       }
-      /* dust: the original ball, untouched - fine stippled gold particles.
-         Also the base for the contour phase (phaseW[2]), so that phase isn't
-         a new render technique, just the proven dust ball plus rings. */
-      var dustW = phaseW[1] + phaseW[2];
-      if (dustW > 0.008) {
+      /* dust: the original ball, untouched - fine stippled gold particles */
+      if (phaseW[1] > 0.008) {
         for (i = 0; i < N; i++) {
           px[i] += (sx[i] - px[i]) * k[i]; py[i] += (sy[i] - py[i]) * k[i]; pz[i] += (sz[i] - pz[i]) * k[i];
           k[i] += (k0[i] - k[i]) * 0.05;
           var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy + q2[1] * sc2;
           if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
           ox[i] *= 0.88; oy[i] *= 0.88; xp3 += ox[i]; yp3 += oy[i];
-          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * dustW; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
+          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1]; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
           ctx.fillStyle = 'rgba(' + (depth3 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al4).toFixed(3) + ')'; ctx.fillRect(xp3 - r3 / 2, yp3 - r3 / 2, r3, r3);
         }
       }
@@ -2906,8 +2910,9 @@
     var MOB = window.matchMedia('(max-width: 900px)').matches, PM = MOB ? 0.6 : 1;
     /* Hero badge: a mini Jarvis core (same three-finish engine as the chapter,
        scaled down) - wire globe with lit nodes, the original dust ball, and
-       that same dust ball with a few bright latitude contour rings over it.
-       Flies in via CSS; hover only nudges tilt/pace. No chrome, no sparkles
+       an 80-facet flat-shaded gem. Each phase HOLDS for its full duration
+       and snaps to the next (no continuous cross-blend). Flies in via CSS;
+       hover only nudges tilt/pace. No chrome, no sparkles
        (Matt: "let it do what it does"). */
     var badge = document.querySelector('.hero-jbadge'), jbCore = badge && badge.querySelector('.jb-core'), jbCv = badge && badge.querySelector('.jb-canvas');
     if (badge && jbCore && jbCv) {
@@ -2915,15 +2920,22 @@
       var bctx = jbCv.getContext('2d');
       var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BGSEG = 22, BASEG = 14;
       var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), bsx = new Float32Array(BN), bsy = new Float32Array(BN), bsz2 = new Float32Array(BN), bk = new Float32Array(BN), bk0 = new Float32Array(BN), bsz = new Float32Array(BN);
-      var bGrid = [], bNodes = [], bArcs = [], bContours = [];
+      var bGrid = [], bNodes = [], bArcs = [], bContinents = [];
       var bCITIES = [[40.7, -74.0], [51.5, -0.1], [25.2, 55.3], [1.3, 103.8], [-33.9, 151.2], [43.7, -79.4], [37.8, -122.4]];
       var bROUTES = [[0, 1], [1, 2], [2, 3], [3, 4]];
-      var bCONTOUR_LATS = [-0.85, -0.55, -0.25, 0, 0.25, 0.55, 0.85];
-      var bPHASES = [
-        { name: 'network', dur: 5400, yaw: 0.00009, pitch: 0.41 },
-        { name: 'dust', dur: 4600, yaw: 0.0001, pitch: 0.12 },
-        { name: 'contour', dur: 4800, yaw: 0.00006, pitch: 0.27 }
+      var bCONTINENTS = [
+        [[71, -156], [49, -123], [23, -106], [9, -79], [25, -97], [25, -80], [35, -76], [47, -52], [68, -81]],
+        [[12, -72], [2, -80], [-18, -70], [-52, -74], [-42, -64], [-23, -43], [5, -52]],
+        [[31, -9], [32, 32], [12, 43], [-26, 33], [-34, 20], [-6, 12], [14, -17]],
+        [[71, 25], [73, 80], [70, 161], [35, 140], [22, 114], [8, 77], [25, 55], [36, 23], [43, 9], [36, -6], [60, 5]],
+        [[-11, 132], [-24, 153], [-38, 145], [-32, 115], [-14, 126]]
       ];
+      var bPHASES = [
+        { name: 'network', dur: 5500 },
+        { name: 'dust', dur: 5500 },
+        { name: 'earth', dur: 5500 }
+      ];
+      var BALL_YAW = 0.00007, BALL_PITCH = 0.12;
       var bphase = 0, bphaseT = 0, bry = 0, brx = 0.12, blast = 0, brun = true, bbuilt = false;
       var bphaseW = [1, 0, 0];
       var bm = { x: 0, y: 0, tx: 0, ty: 0, in: false };
@@ -2963,12 +2975,7 @@
         }
         bNodes = bCITIES.map(function (c) { return bllPoint(c[0], c[1], bR); });
         bArcs = bROUTES.map(function (r) { return bSlerp(bNodes[r[0]], bNodes[r[1]], BASEG, 0.18); });
-        bContours = [];
-        for (var bcl = 0; bcl < bCONTOUR_LATS.length; bcl++) {
-          var bcyv = Math.sin(bCONTOUR_LATS[bcl]) * bR, bcrad = Math.cos(bCONTOUR_LATS[bcl]) * bR, bcline = [];
-          for (var bcsi = 0; bcsi <= BGSEG; bcsi++) { var bct = bcsi / BGSEG * Math.PI * 2; bcline.push([Math.cos(bct) * bcrad, bcyv, Math.sin(bct) * bcrad]); }
-          bContours.push(bcline);
-        }
+        bContinents = bCONTINENTS.map(function (poly) { return poly.map(function (p) { return bllPoint(p[0], p[1], bR); }); });
         return true;
       }
       function bframe(now) {
@@ -2979,27 +2986,28 @@
         bphaseT += dt;
         if (bphaseT > bPHASES[bphase].dur) { bphase = (bphase + 1) % bPHASES.length; bphaseT = 0; }
         var hotM = bm.in ? 1.6 : 1;
-        for (j = 0; j < 3; j++) bphaseW[j] += (((bphase === j) ? 1 : 0) - bphaseW[j]) * 0.045;
-        var yawNow = bphaseW[0] * bPHASES[0].yaw + bphaseW[1] * bPHASES[1].yaw + bphaseW[2] * bPHASES[2].yaw;
-        bry += yawNow * hotM * dt;
-        var rxT = bphaseW[0] * bPHASES[0].pitch + bphaseW[1] * bPHASES[1].pitch + bphaseW[2] * bPHASES[2].pitch;
-        brx += (rxT - brx) * 0.045;
+        for (j = 0; j < 3; j++) bphaseW[j] += (((bphase === j) ? 1 : 0) - bphaseW[j]) * 0.05;
+        bry += BALL_YAW * hotM * dt;
+        brx += (BALL_PITCH - brx) * 0.04;
         var ax = brx + bm.y * 0.35, ay = bry + bm.x * 0.45;
         bctx.clearRect(0, 0, bs, bs);
         bctx.globalCompositeOperation = 'lighter';
         if (bphaseW[2] > 0.008) {
-          var bcgl, bclpts, bcprev, bcprevD, bcpi, bcq, bcsc, bcxp, bcyp, bcdepth;
-          for (bcgl = 0; bcgl < bContours.length; bcgl++) {
-            bclpts = bContours[bcgl]; bcprev = null; bcprevD = 0;
-            for (bcpi = 0; bcpi < bclpts.length; bcpi++) {
-              bcq = brot(bclpts[bcpi], ax, ay); bcsc = bF / (bF + bcq[2]); bcxp = bcx + bcq[0] * bcsc; bcyp = bcy + bcq[1] * bcsc;
-              bcdepth = (bcq[2] + bR) / (2 * bR);
-              if (bcprev) {
-                var bcavg = (bcdepth + bcprevD) / 2;
-                if (bcavg < 0.6) { bctx.strokeStyle = 'rgba(' + GH + ',' + Math.max(0, Math.min(1, (1 - bcavg / 0.6) * bphaseW[2] * 0.75)).toFixed(3) + ')'; bctx.lineWidth = 1; bctx.beginPath(); bctx.moveTo(bcprev[0], bcprev[1]); bctx.lineTo(bcxp, bcyp); bctx.stroke(); }
-              }
-              bcprev = [bcxp, bcyp]; bcprevD = bcdepth;
-            }
+          var beog = bctx.createRadialGradient(bcx - bR * 0.32, bcy - bR * 0.36, bR * 0.04, bcx, bcy, bR * 1.02);
+          beog.addColorStop(0, 'rgba(150,128,86,' + (0.5 * bphaseW[2]).toFixed(3) + ')');
+          beog.addColorStop(0.55, 'rgba(88,72,44,' + (0.48 * bphaseW[2]).toFixed(3) + ')');
+          beog.addColorStop(1, 'rgba(16,13,7,' + (0.55 * bphaseW[2]).toFixed(3) + ')');
+          bctx.fillStyle = beog;
+          bctx.beginPath(); bctx.arc(bcx, bcy, bR, 0, Math.PI * 2); bctx.fill();
+          for (var beci = 0; beci < bContinents.length; beci++) {
+            var bepoly = bContinents[beci], bepts = [], bemaxD = 0, bepv;
+            for (var bevi = 0; bevi < bepoly.length; bevi++) { bepv = bproj(bepoly[bevi], ax, ay); bepts.push(bepv); if (bepv.depth > bemaxD) bemaxD = bepv.depth; }
+            if (bemaxD > 0.58) continue;
+            var bela = bphaseW[2] * (1 - bemaxD / 0.58) * 0.85;
+            bctx.fillStyle = 'rgba(214,182,124,' + bela.toFixed(3) + ')';
+            bctx.beginPath(); bctx.moveTo(bepts[0].x, bepts[0].y);
+            for (var bevj = 1; bevj < bepts.length; bevj++) bctx.lineTo(bepts[bevj].x, bepts[bevj].y);
+            bctx.closePath(); bctx.fill();
           }
         }
         if (bphaseW[0] > 0.008) {
@@ -3032,13 +3040,12 @@
             bctx.beginPath(); bctx.arc(np.x, np.y, 1.4, 0, 7); bctx.fill(); bctx.shadowBlur = 0;
           }
         }
-        var bDustW = bphaseW[1] + bphaseW[2];
-        if (bDustW > 0.008) {
+        if (bphaseW[1] > 0.008) {
           for (i = 0; i < BN; i++) {
             bpx[i] += (bsx[i] - bpx[i]) * bk[i]; bpy[i] += (bsy[i] - bpy[i]) * bk[i]; bpz[i] += (bsz2[i] - bpz[i]) * bk[i];
             bk[i] += (bk0[i] - bk[i]) * 0.06;
             var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy + q2[1] * sc2;
-            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bDustW, r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
+            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1], r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
             bctx.fillStyle = 'rgba(' + (depth2 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp2 - r / 2, yp2 - r / 2, r, r);
           }
         }
