@@ -2728,7 +2728,7 @@
     }
     function projPt(p, ax, ay) {
       var q = rot(p, ax, ay), sc = F / (F + q[2]);
-      return { x: cx + q[0] * sc, y: cy + q[1] * sc, depth: (q[2] + R) / (2 * R) };
+      return { x: cx + q[0] * sc, y: cy - q[1] * sc, depth: (q[2] + R) / (2 * R) };
     }
     function frame(now) {
       if (!last) last = now;
@@ -2793,7 +2793,7 @@
         for (gl = 0; gl < gridLines.length; gl++) {
           lpts = gridLines[gl]; prev = null; prevDepth = 0;
           for (pi2 = 0; pi2 < lpts.length; pi2++) {
-            q = rot(lpts[pi2], ax, ay); scP = F / (F + q[2]); xp2 = cx + q[0] * scP; yp2 = cy + q[1] * scP;
+            q = rot(lpts[pi2], ax, ay); scP = F / (F + q[2]); xp2 = cx + q[0] * scP; yp2 = cy - q[1] * scP;
             depth2 = (q[2] + R) / (2 * R);
             if (prev) {
               var avgD = (depth2 + prevDepth) / 2;
@@ -2883,7 +2883,7 @@
             var ex1 = ep2[0] * cAy + ep2[2] * sAy, ez1 = -ep2[0] * sAy + ep2[2] * cAy;
             var ey1 = ep2[1] * cAx - ez1 * sAx, ez2 = ep2[1] * sAx + ez1 * cAx;
             var esc2 = F / (F + ez2);
-            fillBufX[evi2] = cx + ex1 * esc2; fillBufY[evi2] = cy + ey1 * esc2;
+            fillBufX[evi2] = cx + ex1 * esc2; fillBufY[evi2] = cy - ey1 * esc2;
             var edepth2 = (ez2 + R) / (2 * R);
             if (edepth2 > emaxD2) emaxD2 = edepth2;
           }
@@ -2903,7 +2903,7 @@
         for (gl = 0; gl < gridLines.length; gl++) {
           lpts = gridLines[gl]; prev = null; prevDepth = 0;
           for (pi2 = 0; pi2 < lpts.length; pi2++) {
-            q = rot(lpts[pi2], ax, ay); scP = F / (F + q[2]); xp2 = cx + q[0] * scP; yp2 = cy + q[1] * scP;
+            q = rot(lpts[pi2], ax, ay); scP = F / (F + q[2]); xp2 = cx + q[0] * scP; yp2 = cy - q[1] * scP;
             depth2 = (q[2] + R) / (2 * R);
             if (prev) {
               var avgDg = (depth2 + prevDepth) / 2;
@@ -2920,7 +2920,7 @@
         for (i = 0; i < N; i++) {
           px[i] += (sx[i] - px[i]) * k[i]; py[i] += (sy[i] - py[i]) * k[i]; pz[i] += (sz[i] - pz[i]) * k[i];
           k[i] += (k0[i] - k[i]) * 0.05;
-          var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy + q2[1] * sc2;
+          var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy - q2[1] * sc2;
           if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
           ox[i] *= 0.88; oy[i] *= 0.88; xp3 += ox[i]; yp3 += oy[i];
           var depth3 = (q2[2] + R) / (2 * R), al4;
@@ -3290,7 +3290,7 @@
         }
         return pts;
       }
-      function bproj(p, ax, ay) { var q = brot(p, ax, ay), sc = bF / (bF + q[2]); return { x: bcx + q[0] * sc, y: bcy + q[1] * sc, depth: (q[2] + bR) / (2 * bR) }; }
+      function bproj(p, ax, ay) { var q = brot(p, ax, ay), sc = bF / (bF + q[2]); return { x: bcx + q[0] * sc, y: bcy - q[1] * sc, depth: (q[2] + bR) / (2 * bR) }; }
       /* same land test and west-to-east reveal ranking as the chapter globe
          (see .j-core above) - duplicated rather than shared since this badge
          is a separate closure/engine. */
@@ -3385,7 +3385,7 @@
           for (gl = 0; gl < bGrid.length; gl++) {
             lpts = bGrid[gl]; prev = null; prevD = 0;
             for (pi2 = 0; pi2 < lpts.length; pi2++) {
-              q = brot(lpts[pi2], ax, ay); sc = bF / (bF + q[2]); xp = bcx + q[0] * sc; yp = bcy + q[1] * sc;
+              q = brot(lpts[pi2], ax, ay); sc = bF / (bF + q[2]); xp = bcx + q[0] * sc; yp = bcy - q[1] * sc;
               depth = (q[2] + bR) / (2 * bR);
               if (prev) {
                 var avgD = (depth + prevD) / 2;
@@ -3430,7 +3430,7 @@
               var bex1 = bep2[0] * bcAy + bep2[2] * bsAy, bez1 = -bep2[0] * bsAy + bep2[2] * bcAy;
               var bey1 = bep2[1] * bcAx - bez1 * bsAx, bez2 = bep2[1] * bsAx + bez1 * bcAx;
               var besc2 = bF / (bF + bez2);
-              bFillBufX[bevi2] = bcx + bex1 * besc2; bFillBufY[bevi2] = bcy + bey1 * besc2;
+              bFillBufX[bevi2] = bcx + bex1 * besc2; bFillBufY[bevi2] = bcy - bey1 * besc2;
               var bedepth2 = (bez2 + bR) / (2 * bR);
               if (bedepth2 > bemaxD2) bemaxD2 = bedepth2;
             }
@@ -3446,7 +3446,7 @@
           for (var bgl = 0; bgl < bGrid.length; bgl++) {
             var blpts = bGrid[bgl], bprev = null, bprevD = 0;
             for (var bpi2 = 0; bpi2 < blpts.length; bpi2++) {
-              var bq = brot(blpts[bpi2], ax, ay), bscP = bF / (bF + bq[2]), bxp2 = bcx + bq[0] * bscP, byp2 = bcy + bq[1] * bscP;
+              var bq = brot(blpts[bpi2], ax, ay), bscP = bF / (bF + bq[2]), bxp2 = bcx + bq[0] * bscP, byp2 = bcy - bq[1] * bscP;
               var bdepth2b = (bq[2] + bR) / (2 * bR);
               if (bprev) {
                 var bavgDg = (bdepth2b + bprevD) / 2;
@@ -3462,7 +3462,7 @@
           for (i = 0; i < BN; i++) {
             bpx[i] += (bsx[i] - bpx[i]) * bk[i]; bpy[i] += (bsy[i] - bpy[i]) * bk[i]; bpz[i] += (bsz2[i] - bpz[i]) * bk[i];
             bk[i] += (bk0[i] - bk[i]) * 0.06;
-            var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy + q2[1] * sc2;
+            var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy - q2[1] * sc2;
             var depth2 = (q2[2] + bR) / (2 * bR), al;
             if (!bRevealGate) {
               al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1];
