@@ -698,7 +698,12 @@
   .ld-housing { position: relative; width: min(450px, 84vw); aspect-ratio: 1; margin: 0 auto; perspective: 1000px; }
   .j-core { position: absolute; inset: 15%; transform-style: preserve-3d; transform: scale(0.55); opacity: 0; transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s var(--ease); }
   .j-core::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: -3%; height: 6%; background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%); filter: blur(7px); transform: translateX(var(--shx, 0px)); }
-  .j-glint { position: absolute; inset: 21%; border-radius: 50%; background: radial-gradient(circle at var(--gx, 32%) var(--gy, 26%), rgba(233,205,144,0.28), rgba(194,164,104,0.1) 30%, transparent 48%); transform: translateZ(44px); pointer-events: none; }
+  /* disabled 2026-08-30 per Matt: this cursor-follow hotspot blew out into an
+     ugly saturated brown/rust patch wherever it landed on the globe -
+     especially over the solid continent fill - and was straining to look at
+     on hover. Element/JS positioning (--gx/--gy) kept harmless, just nothing
+     to render. */
+  .j-glint { display: none; }
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
   .j-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transform: translateZ(10px); }
   .ld-burst-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -2470,6 +2475,24 @@
     var px = new Float32Array(N), py = new Float32Array(N), pz = new Float32Array(N);
     var sx = new Float32Array(N), sy = new Float32Array(N), sz = new Float32Array(N);
     var k = new Float32Array(N), k0 = new Float32Array(N), ox = new Float32Array(N), oy = new Float32Array(N), psz = new Float32Array(N), reveal = new Float32Array(N);
+    var landC = new Int16Array(N);
+    var fillBufX = new Float32Array(150), fillBufY = new Float32Array(150);
+    /* a soft round glow, pre-rendered once as a real radial gradient and
+       stamped under lit dots via drawImage - the flat squares this replaced
+       had hard edges that read as pixelated/blocky at this size; a proper
+       gradient bitmap looks smooth at any scale for the cost of one cheap
+       blit per particle, no per-frame blur or gradient math. */
+    var glowSprite = (function () {
+      var gsz = Math.round(28 * dpr), gc = document.createElement('canvas');
+      gc.width = gsz; gc.height = gsz;
+      var gctx = gc.getContext('2d');
+      var grad = gctx.createRadialGradient(gsz / 2, gsz / 2, 0, gsz / 2, gsz / 2, gsz / 2);
+      grad.addColorStop(0, 'rgba(255,236,190,0.95)');
+      grad.addColorStop(0.4, 'rgba(255,236,190,0.32)');
+      grad.addColorStop(1, 'rgba(255,236,190,0)');
+      gctx.fillStyle = grad; gctx.fillRect(0, 0, gsz, gsz);
+      return gc;
+    })();
     var m = { x: 0, y: 0, tx: 0, ty: 0, in: false, px: -9999, py: -9999 };
     var GSEG = 40, ASEG = 22;
     var gridLines = [], nodes = [], arcs = [], continents = [];
@@ -2614,6 +2637,38 @@
       }
       return pts;
     }
+    /* land test for the dust phase below - same coastline rings the earth
+       phase fills, just used as point-in-polygon masks instead of fills so
+       individual dust particles know whether they sit on a landmass. Plain
+       planar ray-casting in lat/lon space, not spherical - fine at this
+       icon scale, the one seam it can misjudge (Eurasia's antimeridian
+       crossing near the Bering Strait) is invisible at globe-icon size. */
+    function pointInPoly(lon, lat, poly) {
+      var inside = false, j = poly.length - 1;
+      for (var i = 0; i < poly.length; j = i++) {
+        var lati = poly[i][0], loni = poly[i][1], latj = poly[j][0], lonj = poly[j][1];
+        if (((lati > lat) !== (latj > lat)) && (lon < (lonj - loni) * (lat - lati) / (latj - lati) + loni)) inside = !inside;
+      }
+      return inside;
+    }
+    /* each landmass's reveal position in the sweep - ranked by centroid
+       longitude so the dust phase lights continent by continent west to
+       east, like dawn breaking across the globe, rather than lighting a
+       random scatter of particles. */
+    var CONT_RANK = (function () {
+      var withLon = CONTINENTS.map(function (poly, idx) {
+        var lons = poly.map(function (p) { return p[1]; });
+        var mixed = lons.some(function (l) { return l < -90; }) && lons.some(function (l) { return l > 90; });
+        var sum = 0;
+        for (var i = 0; i < lons.length; i++) { var l = lons[i]; if (mixed && l < 0) l += 360; sum += l; }
+        var avg = sum / lons.length; if (mixed && avg > 180) avg -= 360;
+        return { idx: idx, lon: avg };
+      });
+      withLon.sort(function (a, b) { return a.lon - b.lon; });
+      var rank = new Float32Array(CONTINENTS.length);
+      withLon.forEach(function (e, order) { rank[e.idx] = withLon.length > 1 ? order / (withLon.length - 1) : 0; });
+      return rank;
+    })();
     function build() {
       s = core.clientWidth; if (!s) return false;
       canvas.width = s * dpr; canvas.height = s * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -2640,6 +2695,16 @@
       nodes = CITIES.map(function (c) { return llPoint(c[0], c[1], R); });
       arcs = ROUTES.map(function (r) { return slerpArc(nodes[r[0]], nodes[r[1]], ASEG, 0.16); });
       continents = CONTINENTS.map(function (poly) { return poly.map(function (p) { return llPoint(p[0], p[1], R); }); });
+      /* tag every dust particle with the landmass it sits on (-1 = ocean) -
+         computed once here from its fixed sphere position (sx/sy/sz never
+         change), not per-frame, so this costs nothing during animation. */
+      for (i = 0; i < N; i++) {
+        var dLat = Math.asin(Math.max(-1, Math.min(1, sy[i] / R))) * 180 / Math.PI;
+        var dLon = Math.atan2(sz[i], sx[i]) * 180 / Math.PI;
+        var hit = -1;
+        for (var ci = 0; ci < CONTINENTS.length; ci++) { if (pointInPoly(dLon, dLat, CONTINENTS[ci])) { hit = ci; break; } }
+        landC[i] = hit;
+      }
       return true;
     }
     function setLine(idx) { if (!typeEl || idx === typeIdx) return; typeIdx = idx; typePos = 0; typeTimer = 0; typeEl.textContent = ''; }
@@ -2773,13 +2838,84 @@
           ctx.beginPath(); ctx.arc(np.x, np.y, 1.6, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
         }
       }
-      /* dust: the original ball, untouched - fine stippled gold particles.
-         Now the final phase - each particle switches on at its own staggered
-         moment (reveal[i], spread over ~2.6s) rather than the whole cloud
-         fading in together, like city lights coming on across a globe at
-         night. Only applies while dust is the CURRENT phase; leaving it is
-         still a plain uniform fade so the exit stays clean. */
+      /* dust: the same fine stippled gold particles as before, but now the
+         lit ones trace the continents - each particle already knows if it
+         sits on land (landC[i], tagged once in build()). Land particles
+         switch on continent by continent, west to east (reveal[i] holds
+         each landmass's sweep position, CONT_RANK, with a little per-
+         particle jitter so it isn't a hard strobe); ocean particles hold at
+         a low constant glow so they read as backdrop, never washing out
+         into the same brightness as land - the continent shapes stay
+         legible for the whole phase instead of the sphere becoming a
+         uniform dust ball again. Only applies while dust is the CURRENT
+         phase; leaving it is still a plain uniform fade so the exit stays
+         clean. */
       if (phaseW[1] > 0.008) {
+        /* the same offset "lit from one side" sphere-body shading the earth
+           phase uses for its sense of roundness/depth (bright toward the
+           upper-left, dark toward the rim) - just at night brightness
+           instead of daylight gold, so the ball reads as a genuine 3D globe
+           under the lights instead of a flat glowing disc. */
+        var nog = ctx.createRadialGradient(cx - R * 0.32, cy - R * 0.36, R * 0.04, cx, cy, R * 1.02);
+        nog.addColorStop(0, 'rgba(72,61,39,' + (0.55 * phaseW[1]).toFixed(3) + ')');
+        nog.addColorStop(0.55, 'rgba(32,27,17,' + (0.5 * phaseW[1]).toFixed(3) + ')');
+        nog.addColorStop(1, 'rgba(3,3,2,' + (0.62 * phaseW[1]).toFixed(3) + ')');
+        ctx.fillStyle = nog;
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+        /* every landmass, faintly visible the whole phase - like continents
+           barely visible at night before any city lights are on. Unlike the
+           particles below, this isn't gated by the reveal sweep - the whole
+           map is there from the start, and the lights switch on over it.
+           Same silhouette/worst-vertex depth gate the earth phase uses to
+           fill solid, just a fraction of the opacity. */
+        /* rotation trig computed once for the whole loop below (rot()/projPt()
+           recompute it per call - fine at earth-phase's few-times-a-cycle
+           cost, wasteful run every frame for ~1500 vertices); projections
+           written into a reused buffer instead of a fresh array of {x,y,depth}
+           objects per landmass per frame - the previous version's per-frame
+           allocation was a second contributor to the rotation stutter
+           alongside the shadowBlur above. */
+        var cAy = Math.cos(ay), sAy = Math.sin(ay), cAx = Math.cos(ax), sAx = Math.sin(ax);
+        for (var eci2 = 0; eci2 < continents.length; eci2++) {
+          var epoly2 = continents[eci2], emaxD2 = 0, elen2 = epoly2.length;
+          for (var evi2 = 0; evi2 < elen2; evi2++) {
+            var ep2 = epoly2[evi2];
+            var ex1 = ep2[0] * cAy + ep2[2] * sAy, ez1 = -ep2[0] * sAy + ep2[2] * cAy;
+            var ey1 = ep2[1] * cAx - ez1 * sAx, ez2 = ep2[1] * sAx + ez1 * cAx;
+            var esc2 = F / (F + ez2);
+            fillBufX[evi2] = cx + ex1 * esc2; fillBufY[evi2] = cy + ey1 * esc2;
+            var edepth2 = (ez2 + R) / (2 * R);
+            if (edepth2 > emaxD2) emaxD2 = edepth2;
+          }
+          if (emaxD2 > 0.58) continue;
+          var ela2 = phaseW[1] * (1 - emaxD2 / 0.58) * 0.14;
+          if (ela2 <= 0.002) continue;
+          ctx.fillStyle = 'rgba(214,182,124,' + ela2.toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(fillBufX[0], fillBufY[0]);
+          for (var evj2 = 1; evj2 < elen2; evj2++) ctx.lineTo(fillBufX[evj2], fillBufY[evj2]);
+          ctx.closePath(); ctx.fill();
+        }
+        /* faint meridian/parallel lines, borrowed from the network globe -
+           gives the sphere visible curvature/structure under the continent
+           lights instead of a flat glowing disc, without competing with the
+           lit dust for attention (a quarter of the network phase's opacity). */
+        ctx.lineWidth = 0.7;
+        for (gl = 0; gl < gridLines.length; gl++) {
+          lpts = gridLines[gl]; prev = null; prevDepth = 0;
+          for (pi2 = 0; pi2 < lpts.length; pi2++) {
+            q = rot(lpts[pi2], ax, ay); scP = F / (F + q[2]); xp2 = cx + q[0] * scP; yp2 = cy + q[1] * scP;
+            depth2 = (q[2] + R) / (2 * R);
+            if (prev) {
+              var avgDg = (depth2 + prevDepth) / 2;
+              if (avgDg < 0.6) {
+                var alg = (1 - avgDg / 0.6) * phaseW[1] * 0.2;
+                ctx.strokeStyle = 'rgba(' + G + ',' + Math.max(0, Math.min(1, alg)).toFixed(3) + ')';
+                ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(xp2, yp2); ctx.stroke();
+              }
+            }
+            prev = [xp2, yp2]; prevDepth = depth2;
+          }
+        }
         var revealGate = (phase === 1);
         for (i = 0; i < N; i++) {
           px[i] += (sx[i] - px[i]) * k[i]; py[i] += (sy[i] - py[i]) * k[i]; pz[i] += (sz[i] - pz[i]) * k[i];
@@ -2787,9 +2923,35 @@
           var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy + q2[1] * sc2;
           if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
           ox[i] *= 0.88; oy[i] *= 0.88; xp3 += ox[i]; yp3 += oy[i];
-          var rMul = 1;
-          if (revealGate) { var thresh = reveal[i] * 2600; rMul = phaseT >= thresh ? Math.min(1, (phaseT - thresh) / 300) : 0; }
-          var depth3 = (q2[2] + R) / (2 * R); var al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1] * rMul; var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
+          var depth3 = (q2[2] + R) / (2 * R), al4;
+          if (!revealGate) {
+            al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1];
+          } else if (landC[i] < 0) {
+            /* ocean: a faint, near-flat backdrop - never bright enough to
+               compete with lit land, regardless of camera-facing depth shading */
+            al4 = (0.03 + 0.05 * (1 - depth3)) * phaseW[1];
+          } else {
+            /* land: a bright floor nearly independent of depth, so a lit
+               continent reads clearly even rotated toward the dim side - like
+               city lights still visible near the terminator, not shaded down
+               into the ambient dust the way the old uniform ball was. */
+            var thresh = reveal[i] * 2200, rMul = phaseT >= thresh ? Math.min(1, (phaseT - thresh) / 300) : 0;
+            al4 = (0.46 + 0.32 * (1 - depth3)) * phaseW[1] * rMul;
+          }
+          var r3 = psz[i] * (0.7 + 0.8 * (1 - depth3));
+          /* a soft round glow on fully-lit land particles only, stamped from
+             the pre-rendered sprite above (not ctx.shadowBlur, too expensive
+             once ~400 particles are lit at once - see the note where
+             glowSprite is built for the full history: shadowBlur stuttered
+             the rotation, a flat square halo looked pixelated instead of
+             sharp, this is the fix for both). Drawn before the core square
+             so the sharp dot sits on top of its own glow, not blended into it. */
+          if (revealGate && landC[i] >= 0 && al4 > 0.15) {
+            var glowSize = r3 * 5.5;
+            ctx.globalAlpha = Math.min(1, al4 * 0.65);
+            ctx.drawImage(glowSprite, xp3 - glowSize / 2, yp3 - glowSize / 2, glowSize, glowSize);
+            ctx.globalAlpha = 1;
+          }
           ctx.fillStyle = 'rgba(' + (depth3 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al4).toFixed(3) + ')'; ctx.fillRect(xp3 - r3 / 2, yp3 - r3 / 2, r3, r3);
         }
       }
@@ -2798,7 +2960,11 @@
     }
     function start() {
       if (started) return; if (!build()) return; started = true;
-      for (var i = 0; i < N; i++) { k0[i] = 0.025 + Math.random() * 0.045; k[i] = 0.16 + Math.random() * 0.14; psz[i] = 0.9 + Math.random() * 1.3; px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s; reveal[i] = Math.random(); }
+      for (var i = 0; i < N; i++) {
+        k0[i] = 0.025 + Math.random() * 0.045; k[i] = 0.16 + Math.random() * 0.14; psz[i] = 0.9 + Math.random() * 1.3;
+        px[i] = (Math.random() - 0.5) * s; py[i] = (Math.random() - 0.5) * s; pz[i] = (Math.random() - 0.5) * s;
+        reveal[i] = landC[i] >= 0 ? Math.min(1, Math.max(0, CONT_RANK[landC[i]] + (Math.random() - 0.5) * 0.12)) : Math.random();
+      }
       phaseW = [0, 0, 0]; phaseW[phase] = 1;
       settleT = 0; sparkled = false;
       setLine(phase);
@@ -3001,6 +3167,21 @@
       var bctx = jbCv.getContext('2d');
       var bs = 0, bcx = 0, bcy = 0, bR = 0, bF = 0, BN = MOB ? 340 : 560, BGSEG = 22, BASEG = 14;
       var bpx = new Float32Array(BN), bpy = new Float32Array(BN), bpz = new Float32Array(BN), bsx = new Float32Array(BN), bsy = new Float32Array(BN), bsz2 = new Float32Array(BN), bk = new Float32Array(BN), bk0 = new Float32Array(BN), bsz = new Float32Array(BN), breveal = new Float32Array(BN);
+      var bLandC = new Int16Array(BN), bFillBufX = new Float32Array(150), bFillBufY = new Float32Array(150);
+      /* same pre-rendered glow sprite as the chapter core (see .j-core above
+         for the full rationale) - a real radial gradient stamped via
+         drawImage, not a flat square or ctx.shadowBlur. */
+      var bGlowSprite = (function () {
+        var gsz = Math.round(28 * dpr), gc = document.createElement('canvas');
+        gc.width = gsz; gc.height = gsz;
+        var gctx = gc.getContext('2d');
+        var grad = gctx.createRadialGradient(gsz / 2, gsz / 2, 0, gsz / 2, gsz / 2, gsz / 2);
+        grad.addColorStop(0, 'rgba(255,236,190,0.95)');
+        grad.addColorStop(0.4, 'rgba(255,236,190,0.32)');
+        grad.addColorStop(1, 'rgba(255,236,190,0)');
+        gctx.fillStyle = grad; gctx.fillRect(0, 0, gsz, gsz);
+        return gc;
+      })();
       var bGrid = [], bNodes = [], bArcs = [], bContinents = [];
       var bCITIES = [[40.7, -74.0], [51.5, -0.1], [25.2, 55.3], [1.3, 103.8], [-33.9, 151.2], [43.7, -79.4], [37.8, -122.4]];
       var bROUTES = [[0, 1], [1, 2], [2, 3], [3, 4]];
@@ -3110,6 +3291,31 @@
         return pts;
       }
       function bproj(p, ax, ay) { var q = brot(p, ax, ay), sc = bF / (bF + q[2]); return { x: bcx + q[0] * sc, y: bcy + q[1] * sc, depth: (q[2] + bR) / (2 * bR) }; }
+      /* same land test and west-to-east reveal ranking as the chapter globe
+         (see .j-core above) - duplicated rather than shared since this badge
+         is a separate closure/engine. */
+      function bPointInPoly(lon, lat, poly) {
+        var inside = false, j = poly.length - 1;
+        for (var i = 0; i < poly.length; j = i++) {
+          var lati = poly[i][0], loni = poly[i][1], latj = poly[j][0], lonj = poly[j][1];
+          if (((lati > lat) !== (latj > lat)) && (lon < (lonj - loni) * (lat - lati) / (latj - lati) + loni)) inside = !inside;
+        }
+        return inside;
+      }
+      var BCONT_RANK = (function () {
+        var withLon = bCONTINENTS.map(function (poly, idx) {
+          var lons = poly.map(function (p) { return p[1]; });
+          var mixed = lons.some(function (l) { return l < -90; }) && lons.some(function (l) { return l > 90; });
+          var sum = 0;
+          for (var i = 0; i < lons.length; i++) { var l = lons[i]; if (mixed && l < 0) l += 360; sum += l; }
+          var avg = sum / lons.length; if (mixed && avg > 180) avg -= 360;
+          return { idx: idx, lon: avg };
+        });
+        withLon.sort(function (a, b) { return a.lon - b.lon; });
+        var rank = new Float32Array(bCONTINENTS.length);
+        withLon.forEach(function (e, order) { rank[e.idx] = withLon.length > 1 ? order / (withLon.length - 1) : 0; });
+        return rank;
+      })();
       function bbuild() {
         bs = jbCore.clientWidth; if (!bs) return false;
         jbCv.width = bs * dpr; jbCv.height = bs * dpr; bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -3132,6 +3338,13 @@
         bNodes = bCITIES.map(function (c) { return bllPoint(c[0], c[1], bR); });
         bArcs = bROUTES.map(function (r) { return bSlerp(bNodes[r[0]], bNodes[r[1]], BASEG, 0.18); });
         bContinents = bCONTINENTS.map(function (poly) { return poly.map(function (p) { return bllPoint(p[0], p[1], bR); }); });
+        for (i = 0; i < BN; i++) {
+          var bdLat = Math.asin(Math.max(-1, Math.min(1, bsy[i] / bR))) * 180 / Math.PI;
+          var bdLon = Math.atan2(bsz2[i], bsx[i]) * 180 / Math.PI;
+          var bhit = -1;
+          for (var bci = 0; bci < bCONTINENTS.length; bci++) { if (bPointInPoly(bdLon, bdLat, bCONTINENTS[bci])) { bhit = bci; break; } }
+          bLandC[i] = bhit;
+        }
         return true;
       }
       function bframe(now) {
@@ -3197,14 +3410,75 @@
           }
         }
         if (bphaseW[1] > 0.008) {
+          /* same night-globe treatment as the chapter core: offset "lit from
+             one side" body shading for depth, every landmass faintly visible
+             throughout, faint grid texture, then the particles - lit land
+             ones sweeping on west to east, ocean ones held at a low constant
+             glow. See .j-core above for the full rationale; kept in lockstep
+             here so the badge and the chapter globe read as the same object. */
+          var bnog = bctx.createRadialGradient(bcx - bR * 0.32, bcy - bR * 0.36, bR * 0.04, bcx, bcy, bR * 1.02);
+          bnog.addColorStop(0, 'rgba(72,61,39,' + (0.55 * bphaseW[1]).toFixed(3) + ')');
+          bnog.addColorStop(0.55, 'rgba(32,27,17,' + (0.5 * bphaseW[1]).toFixed(3) + ')');
+          bnog.addColorStop(1, 'rgba(3,3,2,' + (0.62 * bphaseW[1]).toFixed(3) + ')');
+          bctx.fillStyle = bnog;
+          bctx.beginPath(); bctx.arc(bcx, bcy, bR, 0, Math.PI * 2); bctx.fill();
+          var bcAy = Math.cos(ay), bsAy = Math.sin(ay), bcAx = Math.cos(ax), bsAx = Math.sin(ax);
+          for (var beci2 = 0; beci2 < bContinents.length; beci2++) {
+            var bepoly2 = bContinents[beci2], bemaxD2 = 0, belen2 = bepoly2.length;
+            for (var bevi2 = 0; bevi2 < belen2; bevi2++) {
+              var bep2 = bepoly2[bevi2];
+              var bex1 = bep2[0] * bcAy + bep2[2] * bsAy, bez1 = -bep2[0] * bsAy + bep2[2] * bcAy;
+              var bey1 = bep2[1] * bcAx - bez1 * bsAx, bez2 = bep2[1] * bsAx + bez1 * bcAx;
+              var besc2 = bF / (bF + bez2);
+              bFillBufX[bevi2] = bcx + bex1 * besc2; bFillBufY[bevi2] = bcy + bey1 * besc2;
+              var bedepth2 = (bez2 + bR) / (2 * bR);
+              if (bedepth2 > bemaxD2) bemaxD2 = bedepth2;
+            }
+            if (bemaxD2 > 0.58) continue;
+            var bela2 = bphaseW[1] * (1 - bemaxD2 / 0.58) * 0.14;
+            if (bela2 <= 0.002) continue;
+            bctx.fillStyle = 'rgba(214,182,124,' + bela2.toFixed(3) + ')';
+            bctx.beginPath(); bctx.moveTo(bFillBufX[0], bFillBufY[0]);
+            for (var bevj2 = 1; bevj2 < belen2; bevj2++) bctx.lineTo(bFillBufX[bevj2], bFillBufY[bevj2]);
+            bctx.closePath(); bctx.fill();
+          }
+          bctx.lineWidth = 0.6;
+          for (var bgl = 0; bgl < bGrid.length; bgl++) {
+            var blpts = bGrid[bgl], bprev = null, bprevD = 0;
+            for (var bpi2 = 0; bpi2 < blpts.length; bpi2++) {
+              var bq = brot(blpts[bpi2], ax, ay), bscP = bF / (bF + bq[2]), bxp2 = bcx + bq[0] * bscP, byp2 = bcy + bq[1] * bscP;
+              var bdepth2b = (bq[2] + bR) / (2 * bR);
+              if (bprev) {
+                var bavgDg = (bdepth2b + bprevD) / 2;
+                if (bavgDg < 0.6) {
+                  bctx.strokeStyle = 'rgba(' + G + ',' + Math.max(0, Math.min(1, (1 - bavgDg / 0.6) * bphaseW[1] * 0.2)).toFixed(3) + ')';
+                  bctx.beginPath(); bctx.moveTo(bprev[0], bprev[1]); bctx.lineTo(bxp2, byp2); bctx.stroke();
+                }
+              }
+              bprev = [bxp2, byp2]; bprevD = bdepth2b;
+            }
+          }
           var bRevealGate = (bphase === 1);
           for (i = 0; i < BN; i++) {
             bpx[i] += (bsx[i] - bpx[i]) * bk[i]; bpy[i] += (bsy[i] - bpy[i]) * bk[i]; bpz[i] += (bsz2[i] - bpz[i]) * bk[i];
             bk[i] += (bk0[i] - bk[i]) * 0.06;
             var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy + q2[1] * sc2;
-            var brMul = 1;
-            if (bRevealGate) { var bthresh = breveal[i] * 2600; brMul = bphaseT >= bthresh ? Math.min(1, (bphaseT - bthresh) / 300) : 0; }
-            var depth2 = (q2[2] + bR) / (2 * bR), al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1] * brMul, r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
+            var depth2 = (q2[2] + bR) / (2 * bR), al;
+            if (!bRevealGate) {
+              al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1];
+            } else if (bLandC[i] < 0) {
+              al = (0.03 + 0.05 * (1 - depth2)) * bphaseW[1];
+            } else {
+              var bthresh = breveal[i] * 2200, brMul = bphaseT >= bthresh ? Math.min(1, (bphaseT - bthresh) / 300) : 0;
+              al = (0.46 + 0.32 * (1 - depth2)) * bphaseW[1] * brMul;
+            }
+            var r = bsz[i] * (0.7 + 0.8 * (1 - depth2));
+            if (bRevealGate && bLandC[i] >= 0 && al > 0.15) {
+              var bglowSize = r * 5.5;
+              bctx.globalAlpha = Math.min(1, al * 0.65);
+              bctx.drawImage(bGlowSprite, xp2 - bglowSize / 2, yp2 - bglowSize / 2, bglowSize, bglowSize);
+              bctx.globalAlpha = 1;
+            }
             bctx.fillStyle = 'rgba(' + (depth2 < 0.4 ? '240,214,150' : G) + ',' + Math.min(1, al).toFixed(3) + ')'; bctx.fillRect(xp2 - r / 2, yp2 - r / 2, r, r);
           }
         }
@@ -3213,7 +3487,11 @@
       }
       function bstart() {
         if (!bbuild()) return false;
-        for (var i = 0; i < BN; i++) { bk0[i] = 0.025 + Math.random() * 0.045; bk[i] = 0.16 + Math.random() * 0.14; bsz[i] = 0.75 + Math.random() * 0.95; bpx[i] = (Math.random() - 0.5) * bs; bpy[i] = (Math.random() - 0.5) * bs; bpz[i] = (Math.random() - 0.5) * bs; breveal[i] = Math.random(); }
+        for (var i = 0; i < BN; i++) {
+          bk0[i] = 0.025 + Math.random() * 0.045; bk[i] = 0.16 + Math.random() * 0.14; bsz[i] = 0.75 + Math.random() * 0.95;
+          bpx[i] = (Math.random() - 0.5) * bs; bpy[i] = (Math.random() - 0.5) * bs; bpz[i] = (Math.random() - 0.5) * bs;
+          breveal[i] = bLandC[i] >= 0 ? Math.min(1, Math.max(0, BCONT_RANK[bLandC[i]] + (Math.random() - 0.5) * 0.12)) : Math.random();
+        }
         bphaseW = [0, 0, 0]; bphaseW[bphase] = 1;
         bbuilt = true; return true;
       }
