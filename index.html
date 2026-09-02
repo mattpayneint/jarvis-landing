@@ -347,6 +347,25 @@
   @keyframes herodrift { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-1.1%, 0.7%, 0); } }
   /* asymmetric on purpose - a long, slow push in, then a quicker, quieter return; not a mirrored back-and-forth */
   @keyframes herozoom { 0% { transform: scale(1.0) translate(0,0); } 70% { transform: scale(1.07) translate(-0.6%, -0.4%); } 100% { transform: scale(1.0) translate(0,0); } }
+  /* Depth stack (added 2026-09-01, v3 — real segmentation, not a mask trick): v1/v2 sliced ONE photo into
+     gradient bands and gave each a different scroll speed — invisible, because all "layers" showed identical
+     content, so there was nothing for the eye to separate. Fixed by actually segmenting the photo (rembg /
+     u2net) into two genuinely different assets: the full photo, blurred into a soft atmospheric backdrop, and
+     a real alpha-transparent cutout of just the building silhouette (assets/hero-skyline-cutout.webp), kept
+     sharp. Sharp foreground vs. soft background is what makes differential scroll-speed actually read as depth.
+     See WEBSITE-DESIGN-STANDARD.md, "Multi-layer depth stacks". */
+  .hero-plane { position: absolute; inset: 0; will-change: transform; pointer-events: none; overflow: hidden; }
+  .hero-plane--far { filter: blur(3px) saturate(0.82) brightness(0.88); transform: scale(1.7); }
+  .hero-cutout-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 38% 46%; }
+  @media (max-width: 860px) { .hero-plane--near { opacity: 0.92; } }
+  /* Real foreground element (added 2026-09-01, v4): the photo alone can't produce visible depth — buildings and
+     sky share one seam, so there's only ever a thin gap to reveal. A frame with genuine open air on all sides,
+     parallaxed against the (still lagging) photo, gives the eye an obvious, unambiguous separation to read.
+     Shape grammar per WEBSITE-DESIGN-STANDARD.md Part 5: rectangles get corner brackets, gold rules. */
+  .hero-frame-corner { position: absolute; width: 72px; height: 72px; border: 0 solid var(--brass-soft); opacity: 0.7; }
+  .hero-frame-corner.tl { top: 16%; left: 6%; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .hero-frame-corner.br { bottom: 18%; right: 6%; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+  @media (max-width: 860px) { .hero-frame-corner { width: 44px; height: 44px; opacity: 0.5; } .hero-frame-corner.tl { top: 10%; left: 5%; } .hero-frame-corner.br { bottom: 8%; right: 5%; } }
   .hero-scrim { position: absolute; inset: 0; pointer-events: none;
     background:
       linear-gradient(90deg, rgba(11,11,13,0.88) 0%, rgba(11,11,13,0.55) 46%, rgba(11,11,13,0.2) 100%),
@@ -1231,10 +1250,19 @@
 <main>
 <!-- CHAPTER I — SKYLINE HERO (real photo: Lower Manhattan daytime, slow zoom + ambient drift, no video file) -->
 <div class="hero" id="top">
-  <div class="hero-photo-drift">
-    <img id="heroPhoto" class="hero-photo-zoom" width="4272" height="2856" fetchpriority="high" decoding="async" src="assets/a58-255e1ed2a1.jpg" alt="Lower Manhattan skyline and harbor at daytime, One World Trade Center prominent" />
+  <div class="hero-plane hero-plane--far" data-plx="0.5">
+    <div class="hero-photo-drift">
+      <img id="heroPhoto" class="hero-photo-zoom" width="4272" height="2856" fetchpriority="high" decoding="async" src="assets/a58-255e1ed2a1.jpg" alt="Lower Manhattan skyline and harbor at daytime, One World Trade Center prominent" />
+    </div>
+  </div>
+  <div class="hero-plane hero-plane--near" data-plx="0.0" aria-hidden="true">
+    <img class="hero-cutout-img" width="2400" height="1604" decoding="async" src="assets/hero-skyline-cutout.webp" alt="" />
   </div>
   <div class="hero-scrim"></div>
+  <div class="hero-plane hero-plane--frame" data-plx="0.0" aria-hidden="true">
+    <span class="hero-frame-corner tl"></span>
+    <span class="hero-frame-corner br"></span>
+  </div>
   <div class="hero-content">
     <div class="kicker"><span class="foil">Matthew Payne Consulting</span></div>
     <h1 id="heroH1">High Net Worth &amp; Ultra High Net Worth Client &amp; Investor Growth</h1>
