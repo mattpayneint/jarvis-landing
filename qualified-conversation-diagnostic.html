@@ -280,8 +280,10 @@
   .doc-kicker { font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; font-weight: 600; color: #4A6690; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.2em; }
   .doc-title { font-family: Didot, 'Didot LT STD', Georgia, 'Times New Roman', serif; font-weight: normal; font-size: 24pt; line-height: 1.2; color: #1a1a1a; margin-bottom: 18px; }
   .doc-rule { width: 100%; height: 1px; background: #E2D9C8; margin-bottom: 22px; }
-  .report-body p { font-family: Georgia, 'Times New Roman', serif; font-size: 11.5pt; line-height: 1.75; color: #2b2b2b; margin: 0 0 15px; max-width: 6.3in; }
+  .report-body p { font-family: Georgia, 'Times New Roman', serif; font-size: 11.5pt; line-height: 1.75; color: #2b2b2b; margin: 0 0 20px; max-width: 6.3in; }
+  .report-body p:last-child { margin-bottom: 0; }
   .report-body p:first-of-type::first-letter { font-family: Didot, Georgia, serif; font-size: 2.5em; line-height: 0.7; float: left; padding: 5px 8px 0 0; color: #9A7B3F; }
+  .report-body strong { color: #9A7B3F; font-weight: 600; }
   .report-sign { margin-top: 26px; padding-top: 16px; border-top: 1px solid #E2D9C8; font-size: 11pt; color: #6f6a60; font-style: italic; font-family: Georgia, serif; }
   .doc-folio { margin-top: 32px; padding-top: 10px; border-top: 1px solid #E2D9C8; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-size: 7.5pt; letter-spacing: 0.16em; text-transform: uppercase; color: #9A7B3F; }
   @media (max-width: 560px) { .doc-page { padding: 0.4in 0.35in 0.5in; } .doc-title { font-size: 19pt; } .doc-watermark { font-size: 92pt; top: -0.16em; } }
@@ -607,10 +609,16 @@
         var reportText = (result.data && result.data.report) || "";
         var bodyEl = document.getElementById("report-body");
         bodyEl.innerHTML = "";
+        function escapeHtml(s) {
+          return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+        function mdInline(s) {
+          return s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>");
+        }
         reportText.split(/\n\s*\n/).forEach(function (para) {
           if (!para.trim()) return;
           var p = document.createElement("p");
-          p.textContent = para.trim();
+          p.innerHTML = mdInline(escapeHtml(para.trim()));
           bodyEl.appendChild(p);
         });
         document.getElementById("report-for").textContent = "Prepared for " + name;
