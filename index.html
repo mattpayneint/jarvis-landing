@@ -742,26 +742,43 @@
   .reveal.in .j-core { transform: scale(1); opacity: 1; }
   .j-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transform: translateZ(10px); }
   .ld-burst-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .liv-ring { position: absolute; border-radius: 50%; border: 1px solid var(--brass-soft); opacity: 0.85; }
-  .liv-ring.r1 { inset: 4%;  transform: rotateX(90deg); animation: livspinZ 46s linear infinite; }
-  .liv-ring.r2 { inset: 4%;  transform: rotateX(58deg) rotateY(0deg); border-color: var(--brass); animation: livspinZ 60s linear infinite reverse; }
-  .liv-ring.r3 { inset: 4%;  transform: rotateX(58deg) rotateY(60deg); animation: livspinZ 60s linear infinite reverse; }
-  .liv-ring.r4 { inset: 4%;  transform: rotateX(58deg) rotateY(120deg); animation: livspinZ 60s linear infinite reverse; }
+  /* depth hierarchy pass (2026-09-03, Matt: rings read "uniform weight/
+     brightness... more like a flat technical diagram than something with
+     real dimensionality"): the 4 rings previously shared one flat opacity
+     (0.85) and border-width (1px) regardless of their tilt/orientation, so
+     no ring read as nearer or farther than any other. Now tiered: r2 (the
+     widest, most equatorial-reading ellipse) is the bright "hero" orbit -
+     heavier stroke, hottest gold, a soft drop-shadow glow so its nearest
+     arc has real presence; r1/r3/r4 recede as supporting structure at
+     progressively lower opacity/weight, the way a real instrument's
+     background gimbal rings sit behind its primary bezel. --ring-op carries
+     each ring's target opacity through the existing assembly fade-in
+     (below) instead of the old flat "opacity:1" for every ring. */
+  .liv-ring { --ring-op: 0.85; position: absolute; border-radius: 50%; border: 1px solid var(--brass-soft); opacity: 0.85; }
+  .liv-ring.r1 { --ring-op: 0.3; inset: 4%; transform: rotateX(90deg); animation: livspinZ 46s linear infinite; border-width: 0.75px; }
+  .liv-ring.r2 { --ring-op: 0.94; inset: 4%; transform: rotateX(58deg) rotateY(0deg); border-color: var(--brass-hot, #E9CD90); border-width: 1.3px; filter: drop-shadow(0 0 3px rgba(233,205,144,0.45)); animation: livspinZ 60s linear infinite reverse; }
+  .liv-ring.r3 { --ring-op: 0.48; inset: 4%; transform: rotateX(58deg) rotateY(60deg); animation: livspinZ 60s linear infinite reverse; }
+  .liv-ring.r4 { --ring-op: 0.34; inset: 4%; transform: rotateX(58deg) rotateY(120deg); animation: livspinZ 60s linear infinite reverse; }
   @keyframes livspinZ { to { transform: rotateZ(360deg); } }
   .liv-track { position: absolute; inset: 14%; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.28); }
   .liv-node { position: absolute; inset: 14%; animation: livorbit 18s linear infinite; }
+  /* orbit-label polish: a small rotated tick (diamond) in a gold-foil
+     gradient instead of a flat-fill dot - reads as an instrument marker,
+     not a bullet point - plus a touch more letter-spacing and a faint
+     text-glow on the label itself so it feels engraved rather than plain. */
   .liv-node .dot {
-    position: absolute; top: 50%; left: 100%; width: 8px; height: 8px; margin: -4px 0 0 -4px;
-    border-radius: 50%; background: var(--brass-soft); box-shadow: 0 0 10px rgba(194,164,104,0.7);
+    position: absolute; top: 50%; left: 100%; width: 6.5px; height: 6.5px; margin: -3.25px 0 0 -3.25px;
+    border-radius: 2px; transform: rotate(45deg); background: linear-gradient(135deg, var(--brass-soft), #E9CD90);
+    box-shadow: 0 0 9px rgba(194,164,104,0.65), 0 0 3px rgba(233,205,144,0.5);
     animation: livdot 18s linear infinite;
   }
   .liv-node .lbl {
     position: absolute; top: 50%; left: 100%; margin-top: -9px; margin-left: 11px; transform-origin: -11px center;
-    font-family: ui-monospace, "SF Mono", monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--brass-hot, #E9CD90); white-space: nowrap; opacity: 0;
+    font-family: ui-monospace, "SF Mono", monospace; font-size: 9px; letter-spacing: 0.21em; text-transform: uppercase;
+    color: var(--brass-hot, #E9CD90); white-space: nowrap; opacity: 0; text-shadow: 0 0 6px rgba(233,205,144,0.3);
   }
   @keyframes livorbit { to { transform: rotate(360deg); } }
-  @keyframes livdot { 0%, 92%, 100% { background: var(--brass-soft); box-shadow: 0 0 10px rgba(194,164,104,0.7); } 4%, 8% { background: #E9CD90; box-shadow: 0 0 16px rgba(233,205,144,1); } }
+  @keyframes livdot { 0%, 92%, 100% { background: linear-gradient(135deg, var(--brass-soft), #E9CD90); box-shadow: 0 0 9px rgba(194,164,104,0.65), 0 0 3px rgba(233,205,144,0.5); } 4%, 8% { background: linear-gradient(135deg, #E9CD90, #FFF3D6); box-shadow: 0 0 18px rgba(233,205,144,1); } }
   @keyframes livlbl { 0%, 90%, 100% { opacity: 0; } 4%, 8% { opacity: 1; } }
   @keyframes livcounterspin { to { transform: rotate(-360deg); } }
   .liv-node.n1 { animation-delay: 0s; }   .liv-node.n1 .dot { animation-delay: 0s; }   .liv-node.n1 .lbl { animation: livlbl 18s linear infinite, livcounterspin 18s linear infinite; }
@@ -775,7 +792,8 @@
   .ld-housing .liv-ring, .ld-housing .liv-track, .ld-housing .liv-node {
     opacity: 0; transition: opacity 0.9s var(--ease);
   }
-  .ld-housing.assembled .liv-ring, .ld-housing.assembled .liv-track, .ld-housing.assembled .liv-node { opacity: 1; }
+  .ld-housing.assembled .liv-track, .ld-housing.assembled .liv-node { opacity: 1; }
+  .ld-housing.assembled .liv-ring { opacity: var(--ring-op); }
   .j-type { margin-top: 14px; min-height: 14px; text-align: center; font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brass-soft); opacity: 0.58; white-space: nowrap; pointer-events: none; }
   .j-type .j-caret { display: inline-block; width: 1px; height: 10px; margin-left: 3px; vertical-align: -1px; background: var(--brass-soft); animation: jcaret 1s steps(2, start) infinite; }
   @keyframes jcaret { to { opacity: 0; } }
@@ -2617,11 +2635,18 @@
     var ROUTES = [[0, 1], [1, 3], [3, 4], [4, 6], [7, 5]];
     /* real coastlines (lat, lon), simplified from Natural Earth 110m land
        data via Douglas-Peucker on the actual ordered rings - not hand-drawn
-       approximations. 38 landmasses: the continents, plus real islands
+       approximations. 44 landmasses: the continents, plus real islands
        (Japan/Indonesia/UK+Ireland/NZ as their actual separate islands, not
        a hull blob) and everything visually meaningful at globe-icon scale -
        Iceland, Sri Lanka, the Caribbean, Newfoundland, the Mediterranean
-       islands, Taiwan, Tasmania, New Guinea, Svalbard, Novaya Zemlya. */
+       islands, Taiwan, Tasmania, New Guinea, Svalbard, Novaya Zemlya, and
+       (added 2026-09-04, Matt: "make sure the globes have the islands...
+       Hawaiian Islands... Fiji") the Hawaiian chain (Hawai'i/Maui/Oahu/
+       Kaua'i) and Fiji (Viti Levu/Vanua Levu). New entries are APPENDED at
+       the end of the array only (idx 38-43) - never insert mid-array here,
+       it silently breaks the Eurasia/Antarctica/Greenland/Svalbard/Novaya
+       Zemlya best-vertex-gate special case a few hundred lines down, which
+       is hardcoded to literal indices 3/5/6/36/37. */
     var CONTINENTS = [
       /* North America */
       [[9, -79.1], [7.2, -80.9], [9.9, -85.7], [13.3, -87.5], [18.3, -103.5], [19.9, -105.5], [22.8, -106], [31.8, -114.8], [23.2, -109.4], [24.7, -112.2], [27.7, -115.1], [28.6, -114.2], [33, -117.3], [34.6, -120.6], [40.3, -124.4], [48.2, -124.7], [47.1, -122.6], [49, -122.8], [50.8, -127.4], [58.1, -134.1], [60.9, -147.1], [59.2, -151.7], [61.3, -150.6], [56, -158.4], [54.4, -164.8], [58.9, -157], [58.7, -162], [61.5, -166.1], [63.1, -164.6], [63.8, -160.8], [64.8, -160.8], [65.7, -168.1], [66.1, -161.7], [68.4, -166.8], [71.4, -156.6], [68.9, -136.5], [70.5, -128.1], [68.9, -115.2], [67.7, -113.5], [68, -104.3], [67.3, -96.1], [69.1, -94.2], [70.1, -96.5], [71.9, -95.2], [67.2, -87.3], [69.9, -85.5], [69.2, -81.3], [67.1, -81.4], [63.6, -90.7], [58.9, -94.7], [55.1, -82.3], [51.2, -79.9], [54.7, -79.8], [56.5, -76.5], [58.8, -78.5], [62.6, -77.4], [61.1, -69.6], [58.2, -67.7], [60.3, -64.6], [53.3, -55.8], [46.8, -71.1], [49.2, -65.1], [46.2, -64.5], [45.9, -59.8], [43.5, -65.4], [45.3, -64.4], [45.1, -67.1], [37.2, -75.9], [39.1, -76.4], [35.6, -75.7], [31.4, -81.3], [25.2, -80.4], [30.1, -84.1], [27.8, -97.1], [22.4, -97.9], [18.8, -95.9], [21.5, -87.1], [15.9, -88.9], [15.3, -83.4], [10.4, -83.4]],
@@ -2698,7 +2723,26 @@
       /* Svalbard */
       [[79.7, 18.3], [79, 21.5], [76.8, 17.1], [77.4, 13.8], [77.7, 14.7], [78.9, 11.2], [79.7, 10.4], [80, 13.2], [79.7, 15.1], [80.1, 17]],
       /* Novaya Zemlya */
-      [[70.7, 57.5], [70.8, 53.7], [72, 51.5], [75.1, 55.6], [75.6, 57.9], [76.8, 66.2], [76.5, 68.9], [74.3, 58.5], [72.4, 55.4], [71.5, 55.6]]
+      [[70.7, 57.5], [70.8, 53.7], [72, 51.5], [75.1, 55.6], [75.6, 57.9], [76.8, 66.2], [76.5, 68.9], [74.3, 58.5], [72.4, 55.4], [71.5, 55.6]],
+      /* Hawaii - Hawai'i (Big Island). APPENDED 2026-09-04 (idx 38) - see
+         note above CONTINENTS: appended at the END only, never inserted, so
+         the Eurasia/Antarctica/Greenland/Svalbard/Novaya Zemlya index-gate
+         fix (indices 3/5/6/36/37) stays untouched. */
+      [[19.74, -156.06], [20.25, -155.85], [20.17, -155.5], [19.81, -155.09], [19.5, -154.8], [19.36, -154.95], [19.1, -155.3], [18.91, -155.65], [19.15, -155.9], [19.43, -155.9]],
+      /* Hawaii - Maui (idx 39) */
+      [[20.94, -156.7], [20.97, -156.6], [20.9, -156.5], [20.85, -156.47], [20.8, -156.35], [20.92, -156.05], [20.75, -155.98], [20.6, -156], [20.58, -156.25], [20.63, -156.44], [20.7, -156.5], [20.75, -156.6], [20.8, -156.68]],
+      /* Hawaii - Oahu (idx 40) */
+      [[21.72, -158], [21.65, -157.95], [21.43, -157.65], [21.3, -157.85], [21.31, -158], [21.35, -158.13], [21.57, -158.25], [21.68, -158.28]],
+      /* Hawaii - Kauai (idx 41) */
+      [[22.24, -159.5], [22.21, -159.34], [22.15, -159.32], [21.95, -159.34], [21.87, -159.5], [21.9, -159.68], [22.04, -159.76], [22.16, -159.68]],
+      /* Fiji - Viti Levu (idx 42) */
+      [[-17.3, 178.2], [-17.35, 178.6], [-17.55, 178.75], [-18.05, 178.45], [-18.15, 178.3], [-18.32, 177.95], [-18.05, 177.55], [-17.75, 177.19], [-17.55, 177.35], [-17.3, 177.65], [-17.2, 177.95]],
+      /* Fiji - Vanua Levu (idx 43) - crosses the antimeridian near Udu Point,
+         same wrap technique as Eurasia above (raw signed lon jumps from
+         179.75 to -179.9; the real angular step between those two vertices
+         is small, ~0.35deg, so the ring stays geometrically continuous on
+         the sphere even though the numbers jump) */
+      [[-16.85, 178.08], [-16.55, 178.3], [-16.3, 178.75], [-16.15, 179.3], [-16.05, 179.75], [-16.05, -179.9], [-16.35, -179.95], [-16.5, 179.5], [-16.75, 179], [-16.95, 178.5], [-16.9, 178.15]]
     ];
     /* one constant rotation (yaw/pitch) for all three phases, exactly like
        the original single ball - only the surface crossfades between
@@ -2882,10 +2926,30 @@
         ctx.fillStyle = eog;
         ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
         for (var eci = 0; eci < continents.length; eci++) {
-          var epoly = continents[eci], epts = [], emaxD = 0, epv;
-          for (var evi = 0; evi < epoly.length; evi++) { epv = projPt(epoly[evi], ax, ay); epts.push(epv); if (epv.depth > emaxD) emaxD = epv.depth; }
-          if (emaxD > 0.58) continue;
-          var ela = phaseW[2] * (1 - emaxD / 0.58) * 0.85;
+          var epoly = continents[eci], epts = [], emaxD = 0, eminD = 1, epv;
+          for (var evi = 0; evi < epoly.length; evi++) { epv = projPt(epoly[evi], ax, ay); epts.push(epv); if (epv.depth > emaxD) emaxD = epv.depth; if (epv.depth < eminD) eminD = epv.depth; }
+          /* Antarctica (5) rings the pole and touches every line of longitude;
+             Eurasia (3) is so large its real angular span exceeds 180deg east
+             to west (Portugal to Kamchatka the short way, through the date
+             line) - both ALWAYS have at least one vertex on the far side no
+             matter which way the globe is turned, so gating on emaxD like
+             every other (smaller, longitude-localized) landmass silently
+             dropped them forever - they never once passed, verified by
+             sampling every yaw angle. Greenland (6), Svalbard (36) and Novaya
+             Zemlya (37) sit so far north that even at their single best yaw
+             angle the polar-ward tip of their own ring drags emaxD to the
+             edge of the 0.58 cutoff - not a hard fail like Eurasia/Antarctica,
+             but a stable, sampled-every-2deg-confirmed ceiling under ~0.22
+             alpha for the whole rotation, i.e. present in the data but never
+             actually readable. Gate/shade all five on their best-facing
+             vertex instead; the true ring still projects correctly (confirmed
+             visually - a normal, undistorted coastline silhouette, just
+             sometimes partly wrapped off-screen or foreshortened near the
+             limb for the polar islands), it's only the gate/alpha source that
+             was wrong, not the geometry. */
+          var egateD = (eci === 3 || eci === 5 || eci === 6 || eci === 36 || eci === 37) ? eminD : emaxD;
+          if (egateD > 0.58) continue;
+          var ela = phaseW[2] * (1 - egateD / 0.58) * 0.85;
           ctx.fillStyle = 'rgba(214,182,124,' + ela.toFixed(3) + ')';
           ctx.beginPath(); ctx.moveTo(epts[0].x, epts[0].y);
           for (var evj = 1; evj < epts.length; evj++) ctx.lineTo(epts[evj].x, epts[evj].y);
@@ -2897,6 +2961,53 @@
          nodes, and a few raised route arcs with a traveling pulse - the same
          "comet on a path" motion language used elsewhere on this page */
       if (phaseW[0] > 0.008) {
+        /* Matt (2026-09-03): "put the continents on it... it just looks a
+           little simple" - the wireframe phase was pure grid + rings + nodes,
+           nothing recognizable as Earth. Trace the same real coastline rings
+           the earth-phase fill uses (continents[], already projected in
+           build()) as a faint stroke-only pass, dimmer than the grid so it
+           reads as a secondary layer under it, not competing with it. Faded
+           per SEGMENT by depth exactly like the grid lines below (not the
+           earth-fill's whole-polygon worst-vertex gate) - a large landmass
+           that wraps toward the horizon just fades out gradually, segment by
+           segment, the same way a meridian line does, so nothing needs a
+           special case for Eurasia/Antarctica here the way the fill does. */
+        ctx.lineWidth = 0.65;
+        var cci, cpoly, cprev, cprevD, cvi, clen, cp, cq, csc, cxp, cyp, cd, cavgD, cal;
+        for (cci = 0; cci < continents.length; cci++) {
+          cpoly = continents[cci]; cprev = null; cprevD = 0; clen = cpoly.length;
+          for (cvi = 0; cvi <= clen; cvi++) {
+            cp = cpoly[cvi % clen];
+            cq = rot(cp, ax, ay); csc = F / (F + cq[2]); cxp = cx + cq[0] * csc; cyp = cy - cq[1] * csc;
+            cd = (cq[2] + R) / (2 * R);
+            if (cprev) {
+              cavgD = (cd + cprevD) / 2;
+              if (cavgD < 0.6) {
+                cal = (1 - cavgD / 0.6) * phaseW[0] * 0.55;
+                ctx.strokeStyle = 'rgba(' + G + ',' + Math.max(0, Math.min(1, cal)).toFixed(3) + ')';
+                ctx.beginPath(); ctx.moveTo(cprev[0], cprev[1]); ctx.lineTo(cxp, cyp); ctx.stroke();
+              }
+            }
+            cprev = [cxp, cyp]; cprevD = cd;
+          }
+        }
+        /* limb/rim light: a thin bright arc hugging the sphere's silhouette,
+           biased opposite the earth-phase's upper-left key light (lower-
+           right here) - the classic backlit-sphere-in-space cue. Walked as
+           short arc segments with a falloff curve instead of a single flat
+           stroke or a conic gradient (broad browser support concern for a
+           production page), so it reads as a soft crescent, not a hard ring. */
+        var RIM_N = 56, RIM_ANGLE = 0.86, RIM_SPREAD = 1.05, rs, ra0, ra1, ramid, rdiff, rfac, rAl;
+        ctx.lineWidth = 1.15;
+        for (rs = 0; rs < RIM_N; rs++) {
+          ra0 = (rs / RIM_N) * Math.PI * 2; ra1 = ((rs + 1) / RIM_N) * Math.PI * 2; ramid = (ra0 + ra1) / 2;
+          rdiff = Math.abs(((ramid - RIM_ANGLE + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+          rfac = Math.max(0, 1 - rdiff / RIM_SPREAD);
+          if (rfac <= 0.015) continue;
+          rAl = rfac * rfac * phaseW[0] * 0.75;
+          ctx.strokeStyle = 'rgba(' + GH + ',' + rAl.toFixed(3) + ')';
+          ctx.beginPath(); ctx.arc(cx, cy, R, ra0, ra1); ctx.stroke();
+        }
         ctx.lineWidth = 0.9;
         var gl, lpts, prev, prevDepth, pi2, q, scP, xp2, yp2, depth2;
         for (gl = 0; gl < gridLines.length; gl++) {
@@ -2986,7 +3097,7 @@
            alongside the shadowBlur above. */
         var cAy = Math.cos(ay), sAy = Math.sin(ay), cAx = Math.cos(ax), sAx = Math.sin(ax);
         for (var eci2 = 0; eci2 < continents.length; eci2++) {
-          var epoly2 = continents[eci2], emaxD2 = 0, elen2 = epoly2.length;
+          var epoly2 = continents[eci2], emaxD2 = 0, eminD2 = 1, elen2 = epoly2.length;
           for (var evi2 = 0; evi2 < elen2; evi2++) {
             var ep2 = epoly2[evi2];
             var ex1 = ep2[0] * cAy + ep2[2] * sAy, ez1 = -ep2[0] * sAy + ep2[2] * cAy;
@@ -2995,9 +3106,12 @@
             fillBufX[evi2] = cx + ex1 * esc2; fillBufY[evi2] = cy - ey1 * esc2;
             var edepth2 = (ez2 + R) / (2 * R);
             if (edepth2 > emaxD2) emaxD2 = edepth2;
+            if (edepth2 < eminD2) eminD2 = edepth2;
           }
-          if (emaxD2 > 0.58) continue;
-          var ela2 = phaseW[1] * (1 - emaxD2 / 0.58) * 0.14;
+          /* same Eurasia/Antarctica/Greenland/Svalbard/Novaya Zemlya worst-vertex exception as the earth-phase fill above */
+          var egateD2 = (eci2 === 3 || eci2 === 5 || eci2 === 6 || eci2 === 36 || eci2 === 37) ? eminD2 : emaxD2;
+          if (egateD2 > 0.58) continue;
+          var ela2 = phaseW[1] * (1 - egateD2 / 0.58) * 0.14;
           if (ela2 <= 0.002) continue;
           ctx.fillStyle = 'rgba(214,182,124,' + ela2.toFixed(3) + ')';
           ctx.beginPath(); ctx.moveTo(fillBufX[0], fillBufY[0]);
@@ -3097,6 +3211,28 @@
        this once the rings have materialized, so the core arrives with them */
     window.__jCoreStart = start;
     window.addEventListener('resize', function () { if (started && Math.abs(core.clientWidth - s) > 20) { started = false; last = 0; start(); } });
+    /* Matt: continents must read clearly the MOMENT this section comes back
+       into view, not whichever phase the loop happened to be on. The first
+       arrival already lands on earth (phase inits to PHASE_ORDER[0]=2 and
+       nothing advances it before start() runs), but a visitor who scrolls
+       away and back later re-enters mid-cycle - possibly into the wireframe
+       or dust phase - since the loop keeps running unattended. Snap straight
+       back to a fully-legible earth phase every time the section re-enters
+       the viewport after having left it, skipping the crossfade so it's
+       instant, not "a beat later". Only wired once the engine is actually
+       running (started) - the first-arrival path above already handles it. */
+    if ('IntersectionObserver' in window) {
+      var wasInView = false;
+      new IntersectionObserver(function (en) {
+        var v = en[0].isIntersecting;
+        if (v && !wasInView && started) {
+          orderIdx = 0; phase = PHASE_ORDER[0]; phaseT = 0;
+          phaseW[0] = 0; phaseW[1] = 0; phaseW[2] = 1;
+          setLine(phase);
+        }
+        wasInView = v;
+      }, { threshold: 0.2 }).observe(zone);
+    }
   })();
 </script>
 <script>
@@ -3373,7 +3509,23 @@
         /* Svalbard */
         [[79.7, 18.3], [79, 21.5], [76.8, 17.1], [77.4, 13.8], [77.7, 14.7], [78.9, 11.2], [79.7, 10.4], [80, 13.2], [79.7, 15.1], [80.1, 17]],
         /* Novaya Zemlya */
-        [[70.7, 57.5], [70.8, 53.7], [72, 51.5], [75.1, 55.6], [75.6, 57.9], [76.8, 66.2], [76.5, 68.9], [74.3, 58.5], [72.4, 55.4], [71.5, 55.6]]
+        [[70.7, 57.5], [70.8, 53.7], [72, 51.5], [75.1, 55.6], [75.6, 57.9], [76.8, 66.2], [76.5, 68.9], [74.3, 58.5], [72.4, 55.4], [71.5, 55.6]],
+        /* Hawaii - Hawai'i (Big Island). APPENDED 2026-09-04 (idx 38), same
+           lockstep set as CONTINENTS above - appended at the END only, never
+           inserted, so the index-gate fix (indices 3/5/6/36/37) stays intact. */
+        [[19.74, -156.06], [20.25, -155.85], [20.17, -155.5], [19.81, -155.09], [19.5, -154.8], [19.36, -154.95], [19.1, -155.3], [18.91, -155.65], [19.15, -155.9], [19.43, -155.9]],
+        /* Hawaii - Maui (idx 39) */
+        [[20.94, -156.7], [20.97, -156.6], [20.9, -156.5], [20.85, -156.47], [20.8, -156.35], [20.92, -156.05], [20.75, -155.98], [20.6, -156], [20.58, -156.25], [20.63, -156.44], [20.7, -156.5], [20.75, -156.6], [20.8, -156.68]],
+        /* Hawaii - Oahu (idx 40) */
+        [[21.72, -158], [21.65, -157.95], [21.43, -157.65], [21.3, -157.85], [21.31, -158], [21.35, -158.13], [21.57, -158.25], [21.68, -158.28]],
+        /* Hawaii - Kauai (idx 41) */
+        [[22.24, -159.5], [22.21, -159.34], [22.15, -159.32], [21.95, -159.34], [21.87, -159.5], [21.9, -159.68], [22.04, -159.76], [22.16, -159.68]],
+        /* Fiji - Viti Levu (idx 42) */
+        [[-17.3, 178.2], [-17.35, 178.6], [-17.55, 178.75], [-18.05, 178.45], [-18.15, 178.3], [-18.32, 177.95], [-18.05, 177.55], [-17.75, 177.19], [-17.55, 177.35], [-17.3, 177.65], [-17.2, 177.95]],
+        /* Fiji - Vanua Levu (idx 43) - crosses the antimeridian near Udu
+           Point, same wrap technique as Eurasia (small real angular step
+           between 179.75 and -179.9 despite the raw-number jump) */
+        [[-16.85, 178.08], [-16.55, 178.3], [-16.3, 178.75], [-16.15, 179.3], [-16.05, 179.75], [-16.05, -179.9], [-16.35, -179.95], [-16.5, 179.5], [-16.75, 179], [-16.95, 178.5], [-16.9, 178.15]]
       ];
       var bPHASES = [
         { name: 'network', dur: 7000 },
@@ -3478,10 +3630,19 @@
           bctx.fillStyle = beog;
           bctx.beginPath(); bctx.arc(bcx, bcy, bR, 0, Math.PI * 2); bctx.fill();
           for (var beci = 0; beci < bContinents.length; beci++) {
-            var bepoly = bContinents[beci], bepts = [], bemaxD = 0, bepv;
-            for (var bevi = 0; bevi < bepoly.length; bevi++) { bepv = bproj(bepoly[bevi], ax, ay); bepts.push(bepv); if (bepv.depth > bemaxD) bemaxD = bepv.depth; }
-            if (bemaxD > 0.58) continue;
-            var bela = bphaseW[2] * (1 - bemaxD / 0.58) * 0.85;
+            var bepoly = bContinents[beci], bepts = [], bemaxD = 0, beminD = 1, bepv;
+            for (var bevi = 0; bevi < bepoly.length; bevi++) { bepv = bproj(bepoly[bevi], ax, ay); bepts.push(bepv); if (bepv.depth > bemaxD) bemaxD = bepv.depth; if (bepv.depth < beminD) beminD = bepv.depth; }
+            /* same worst-vertex exception as the chapter core above: Eurasia
+               (3) and Antarctica (5) always have a vertex on the far side
+               (Eurasia's real span exceeds 180deg, Antarctica rings the pole)
+               so emaxD trips every time and they never once rendered;
+               Greenland (6)/Svalbard (36)/Novaya Zemlya (37) sit far enough
+               north that even their single best angle stayed under ~0.22
+               alpha all the way round - present, never actually legible.
+               Gate/shade all five on their best-facing vertex instead. */
+            var bgateD = (beci === 3 || beci === 5 || beci === 6 || beci === 36 || beci === 37) ? beminD : bemaxD;
+            if (bgateD > 0.58) continue;
+            var bela = bphaseW[2] * (1 - bgateD / 0.58) * 0.85;
             bctx.fillStyle = 'rgba(214,182,124,' + bela.toFixed(3) + ')';
             bctx.beginPath(); bctx.moveTo(bepts[0].x, bepts[0].y);
             for (var bevj = 1; bevj < bepts.length; bevj++) bctx.lineTo(bepts[bevj].x, bepts[bevj].y);
@@ -3489,6 +3650,40 @@
           }
         }
         if (bphaseW[0] > 0.008) {
+          /* same continent-outline + limb-light treatment as the chapter
+             core (see .j-core above for the full rationale) - lighter step
+             counts since this renders at icon scale, cost is trivial either
+             way at this point budget. */
+          bctx.lineWidth = 0.55;
+          var cci, cpoly, cprev, cprevD, cvi, clen, cp, cq, csc, cxp, cyp, cd, cavgD, cal;
+          for (cci = 0; cci < bContinents.length; cci++) {
+            cpoly = bContinents[cci]; cprev = null; cprevD = 0; clen = cpoly.length;
+            for (cvi = 0; cvi <= clen; cvi++) {
+              cp = cpoly[cvi % clen];
+              cq = brot(cp, ax, ay); csc = bF / (bF + cq[2]); cxp = bcx + cq[0] * csc; cyp = bcy - cq[1] * csc;
+              cd = (cq[2] + bR) / (2 * bR);
+              if (cprev) {
+                cavgD = (cd + cprevD) / 2;
+                if (cavgD < 0.6) {
+                  cal = (1 - cavgD / 0.6) * bphaseW[0] * 0.28;
+                  bctx.strokeStyle = 'rgba(' + GS + ',' + Math.max(0, Math.min(1, cal)).toFixed(3) + ')';
+                  bctx.beginPath(); bctx.moveTo(cprev[0], cprev[1]); bctx.lineTo(cxp, cyp); bctx.stroke();
+                }
+              }
+              cprev = [cxp, cyp]; cprevD = cd;
+            }
+          }
+          var RIM_N = 40, RIM_ANGLE = 0.86, RIM_SPREAD = 1.05, rs, ra0, ra1, ramid, rdiff, rfac, rAl;
+          bctx.lineWidth = 0.9;
+          for (rs = 0; rs < RIM_N; rs++) {
+            ra0 = (rs / RIM_N) * Math.PI * 2; ra1 = ((rs + 1) / RIM_N) * Math.PI * 2; ramid = (ra0 + ra1) / 2;
+            rdiff = Math.abs(((ramid - RIM_ANGLE + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+            rfac = Math.max(0, 1 - rdiff / RIM_SPREAD);
+            if (rfac <= 0.015) continue;
+            rAl = rfac * rfac * bphaseW[0] * 0.5;
+            bctx.strokeStyle = 'rgba(' + GH + ',' + rAl.toFixed(3) + ')';
+            bctx.beginPath(); bctx.arc(bcx, bcy, bR, ra0, ra1); bctx.stroke();
+          }
           bctx.lineWidth = 0.7;
           var gl, lpts, prev, prevD, pi2, q, sc, xp, yp, depth;
           for (gl = 0; gl < bGrid.length; gl++) {
@@ -3533,7 +3728,7 @@
           bctx.beginPath(); bctx.arc(bcx, bcy, bR, 0, Math.PI * 2); bctx.fill();
           var bcAy = Math.cos(ay), bsAy = Math.sin(ay), bcAx = Math.cos(ax), bsAx = Math.sin(ax);
           for (var beci2 = 0; beci2 < bContinents.length; beci2++) {
-            var bepoly2 = bContinents[beci2], bemaxD2 = 0, belen2 = bepoly2.length;
+            var bepoly2 = bContinents[beci2], bemaxD2 = 0, beminD2 = 1, belen2 = bepoly2.length;
             for (var bevi2 = 0; bevi2 < belen2; bevi2++) {
               var bep2 = bepoly2[bevi2];
               var bex1 = bep2[0] * bcAy + bep2[2] * bsAy, bez1 = -bep2[0] * bsAy + bep2[2] * bcAy;
@@ -3542,9 +3737,12 @@
               bFillBufX[bevi2] = bcx + bex1 * besc2; bFillBufY[bevi2] = bcy - bey1 * besc2;
               var bedepth2 = (bez2 + bR) / (2 * bR);
               if (bedepth2 > bemaxD2) bemaxD2 = bedepth2;
+              if (bedepth2 < beminD2) beminD2 = bedepth2;
             }
-            if (bemaxD2 > 0.58) continue;
-            var bela2 = bphaseW[1] * (1 - bemaxD2 / 0.58) * 0.14;
+            /* same Eurasia/Antarctica/Greenland/Svalbard/Novaya Zemlya worst-vertex exception as the earth-phase fill above */
+            var bgateD2 = (beci2 === 3 || beci2 === 5 || beci2 === 6 || beci2 === 36 || beci2 === 37) ? beminD2 : bemaxD2;
+            if (bgateD2 > 0.58) continue;
+            var bela2 = bphaseW[1] * (1 - bgateD2 / 0.58) * 0.14;
             if (bela2 <= 0.002) continue;
             bctx.fillStyle = 'rgba(214,182,124,' + bela2.toFixed(3) + ')';
             bctx.beginPath(); bctx.moveTo(bFillBufX[0], bFillBufY[0]);
@@ -3608,7 +3806,12 @@
       badge.addEventListener('mouseleave', function () { bm.tx = 0; bm.ty = 0; bm.in = false; });
       if (!MOB) badge.addEventListener('mousemove', function (e) { var r = jbCore.getBoundingClientRect(); var dx = (e.clientX - (r.left + r.width / 2)) / r.width, dy = (e.clientY - (r.top + r.height / 2)) / r.height; dx = Math.max(-1.2, Math.min(1.2, dx)); dy = Math.max(-1.2, Math.min(1.2, dy)); bm.tx = dx * 1.1; bm.ty = dy * 1.1; bm.in = true; });
       window.addEventListener('resize', function () { if (bbuilt && Math.abs(jbCore.clientWidth - bs) > 4) { bstart(); } });
-      if ('IntersectionObserver' in window) { new IntersectionObserver(function (en) { var v = en[0].isIntersecting; if (v && !brun) { brun = true; blast = 0; requestAnimationFrame(bframe); } else if (!v) brun = false; }).observe(badge); }
+      /* same "snap back to earth on re-entry" fix as the chapter core above -
+         this badge already pauses (brun=false) while scrolled out of view,
+         but resumed exactly where the cycle left off; a visitor who scrolls
+         away mid network/dust phase and back later shouldn't have to wait
+         out the rest of that phase to see continents again. */
+      if ('IntersectionObserver' in window) { new IntersectionObserver(function (en) { var v = en[0].isIntersecting; if (v && !brun) { brun = true; blast = 0; borderIdx = 0; bphase = BPHASE_ORDER[0]; bphaseT = 0; bphaseW[0] = 0; bphaseW[1] = 0; bphaseW[2] = 1; requestAnimationFrame(bframe); } else if (!v) brun = false; }).observe(badge); }
     }
     /* Signature motion: objects assemble from a scattered gold constellation, then crossfade into the real thing.
        Numbers everywhere + the scheduler cards. One mechanic, used consistently. */
