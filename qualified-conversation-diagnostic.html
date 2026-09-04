@@ -204,16 +204,25 @@
   #other-name.open { display: block; }
 
   .submit-row { display: flex; align-items: center; gap: 18px; margin-top: 36px; }
-  button.primary {
+  button.primary, a.primary {
     font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 13.5px; letter-spacing: 0.1em; text-transform: uppercase;
     background: var(--brass); color: #FFFFFF; border: 1px solid var(--brass);
     padding: 15px 30px; border-radius: 2px; cursor: pointer;
     transition: background 0.2s ease, transform 0.15s ease;
   }
-  button.primary:hover:not(:disabled) { background: var(--brass-bright); border-color: var(--brass-bright); transform: translateY(-1px); }
+  a.primary { display: inline-block; text-decoration: none; }
+  button.primary:hover:not(:disabled), a.primary:hover { background: var(--brass-bright); border-color: var(--brass-bright); transform: translateY(-1px); }
   button.primary:disabled { opacity: 0.55; cursor: default; transform: none; }
   .status { font-size: 13px; color: var(--ink-faint); font-family: 'Avenir Next', sans-serif; }
   .status.err { color: var(--red); }
+
+  /* Post-report CTA — the diagnostic's own answer to "now what": a call booking button
+     for verticals with a live Calendly link, a disclaimer for capital-raising verticals
+     (VC/Syndicator), and a personal-follow-up note for verticals still pilot-stage. */
+  #report-cta { display: none; margin-top: 34px; padding-top: 26px; border-top: 1px solid #E2D9C8; }
+  #report-cta.show { display: block; }
+  #report-cta .cta-disclaimer { font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 1.7; color: #5b5750; max-width: 6.3in; margin: 0 0 18px; }
+  #report-cta .cta-followup { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 13.5px; color: #5b5750; }
 
   .errors { display: none; border-left: 2px solid var(--red); background: var(--bg-elevated); padding: 12px 16px; margin-bottom: 20px; font-size: 13.5px; color: var(--red); }
   .errors.show { display: block; }
@@ -299,7 +308,7 @@
       <p><strong style="color:var(--ink); font-weight:500;">A qualified conversation is all three of the following:</strong></p>
       <ol>
         <li>A live, direct exchange — a call, a meeting, or a substantive back-and-forth. Not a like, a download, or a newsletter open.</li>
-        <li>With someone who fits your target profile on the facts — asset level, check size, or matter value. Not someone who might someday.</li>
+        <li>With someone who fits your target profile on the facts — asset level, check size, matter value, deal size, or price point. Not someone who might someday.</li>
         <li>Where new business was plausibly on the table, and they knew what you do.</li>
       </ol>
       <p class="not-line"><strong>Not counted:</strong> existing client service, conversations with peers, or time with referral sources themselves. Those matter — they're just not this number.</p>
@@ -329,6 +338,8 @@
           <option value="Advisor">Financial Advisor</option>
           <option value="VC/Fund">VC / Fund Principal</option>
           <option value="Attorney">Attorney</option>
+          <option value="Syndicator">Real Estate Syndicator</option>
+          <option value="Home Builder">Home Builder</option>
         </select>
       </div>
     </section>
@@ -397,6 +408,7 @@
       <div class="doc-rule"></div>
       <div class="report-body" id="report-body"></div>
       <p class="report-sign">&mdash; Matt</p>
+      <div id="report-cta"></div>
       <div class="doc-folio">
         <span>Qualified Conversation Diagnostic</span>
         <span>Matthew Payne Consulting &middot; matthewpayneconsulting.com</span>
@@ -431,6 +443,30 @@
     { key: "capacity", label: "Capacity", q: "Could it 3x without breaking your time or the relationship?" }
   ];
   var WEBHOOK = "https://mattpayneint.app.n8n.cloud/webhook/qualified-conversation-diagnostic";
+
+  var CALENDLY_LINKS = {
+    "Advisor": "https://calendly.com/matthewpayneconsulting/advisor-strategy-call",
+    "VC/Fund": "https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call",
+    "Attorney": "https://calendly.com/matthewpayneconsulting/attorney-strategy-call"
+  };
+  var CAPITAL_RAISE_DISCLAIMER = "Before you grab a time, just to be clear. I'm not a placement agent, I can't make introductions to investors myself, I'm not licensed for that and it would be illegal on my end. What I actually do is help you create a new network of high net worth individuals and family offices. It's peer to peer, so you keep a high degree of exclusivity and scarcity. Bottom line, they want to meet and speak with you.";
+  var CAPITAL_RAISE_TYPES = { "VC/Fund": true, "Syndicator": true };
+
+  function renderCta(practiceType) {
+    var ctaEl = document.getElementById("report-cta");
+    var html = "";
+    if (CAPITAL_RAISE_TYPES[practiceType]) {
+      html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
+    }
+    var link = CALENDLY_LINKS[practiceType];
+    if (link) {
+      html += '<a class="primary" href="' + link + '" target="_blank" rel="noopener">Book Your Call</a>';
+    } else {
+      html += '<p class="cta-followup">I read every one of these myself. I\'ll follow up by email to find a time that works.</p>';
+    }
+    ctaEl.innerHTML = html;
+    ctaEl.classList.add("show");
+  }
 
   var sourcesEl = document.getElementById("sources");
   var otherNameEl = document.getElementById("other-name");
@@ -579,6 +615,7 @@
         });
         document.getElementById("report-for").textContent = "Prepared for " + name;
         document.getElementById("doc-watermark").textContent = String(Number(qcRaw));
+        renderCta(practiceType);
         reportSection.classList.add("show");
         reportSection.scrollIntoView({ behavior: "smooth", block: "start" });
       })
