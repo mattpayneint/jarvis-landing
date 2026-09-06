@@ -1334,7 +1334,7 @@
 <!-- CHAPTER II — CAPITAL over Chicago dusk, parallax + slow zoom -->
 <section class="cine capital" id="capital">
   <div class="bg zoom" data-plx="0.19">
-    <video id="capitalVid" autoplay muted loop playsinline poster="assets/a55-1e025406e4.jpg">
+    <video id="capitalVid" muted loop playsinline preload="none" poster="assets/a55-1e025406e4.jpg">
       <source src="assets/a56-f304b2f8c3.mp4" type="video/mp4" media="(max-width: 860px)" />
       <source src="assets/a54-6e00433020.mp4" type="video/mp4" />
     </video>
@@ -1686,7 +1686,7 @@
 
 <section class="jarvis" id="jarvis">
   <div class="j-bg-clip">
-    <video id="jarvisVid" data-plx="0.1" autoplay muted loop playsinline></video>
+    <video id="jarvisVid" data-plx="0.1" autoplay muted loop playsinline preload="none" data-src="assets/a02-9b1e02cfec.mp4"></video>
     <div class="j-scrim"></div>
   </div>
   <div class="wrap" style="position: relative; z-index: 2;">
@@ -1834,7 +1834,7 @@
 
 <!-- AMBIENT CINEMA BAND (footage reused from hero at runtime) -->
 <div class="cineband">
-  <video id="bandVid" data-plx="0.08" autoplay muted loop playsinline>
+  <video id="bandVid" data-plx="0.08" muted loop playsinline preload="none">
     <source src="assets/a02-9b1e02cfec.mp4" type="video/mp4" />
   </video>
   <div class="scrim"></div>
@@ -1861,7 +1861,7 @@
 <section class="light deep" id="coaching-method">
   <div class="wrap">
     <div class="coach-hero" id="coachHero">
-      <video class="coach-bg" id="coachMethodVid" autoplay muted loop playsinline poster="assets/a53-b4b8ee8719.jpg">
+      <video class="coach-bg" id="coachMethodVid" muted loop playsinline preload="none" poster="assets/a53-b4b8ee8719.jpg">
         <source src="assets/a52-7e2831dabd.mp4" type="video/mp4" />
       </video>
       <img width="1400" height="1400" class="coach-bg fallback" src="assets/a53-b4b8ee8719.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
@@ -2250,9 +2250,11 @@
     /* Band video now carries its own static source (no longer piggybacking on the hero, which is a photo now). */
     var band = document.getElementById('bandVid');
     if (band && reduce) { band.pause(); }
-    /* Jarvis section keeps the cyan network video regardless of what the hero uses - locked independently per Matt's call. */
+    /* Jarvis section keeps the cyan network video regardless of what the hero uses - locked independently per Matt's call.
+       Src is assigned lazily by the intersection observer below (preload="none"), not here, so it doesn't
+       compete with the hero for bandwidth on page load. */
     var jv = document.getElementById('jarvisVid');
-    if (jv) { jv.src = 'assets/a02-9b1e02cfec.mp4'; if (reduce) jv.pause(); }
+    if (jv && reduce) { jv.pause(); }
     /* Capital background clip is already paced for a slow, elegant loop - no rate override needed. */
 
     /* FS Oahu-style card carousel: arrows, drag, dots, gentle auto-advance */
@@ -2578,10 +2580,11 @@
       var vio = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
           if (e.isIntersecting) {
+            if (e.target.dataset.src && !e.target.currentSrc) { e.target.src = e.target.dataset.src; }
             if (e.target.paused && !e.target.dataset.userPaused) { e.target.play().catch(function () {}); }
           } else if (!e.target.paused) { e.target.pause(); }
         });
-      }, { threshold: 0.08 });
+      }, { threshold: 0.08, rootMargin: '600px 0px 600px 0px' });
       document.querySelectorAll('video').forEach(function (vd) { vio.observe(vd); });
       /* Glide-track children sit off-screen sideways; reveal them when their track arrives */
       var tio = new IntersectionObserver(function (es) {
