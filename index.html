@@ -1155,7 +1155,14 @@
     .strat-visual svg { overflow: hidden; }
     .hero-actions { flex-wrap: wrap; gap: 18px; }
     .hero-content { padding-left: 24px; padding-right: 24px; }
-    .j-core { width: min(340px, 86vw); }
+    /* Fixed 2026-09-06: this used to force width: min(340px, 86vw) on .j-core,
+       but .j-core's own base rule already sizes it via inset:15% of its square
+       .ld-housing parent (which is itself width: min(450px, 84vw) with
+       aspect-ratio:1). Adding an independent width here overrides the
+       left/right computed from inset while top/bottom (height) stayed
+       inset-derived, so the box stopped being square - the globe rendered as
+       a squashed oval on phones. Removing the override lets .j-core stay
+       square and correctly contained inside its housing at every width. */
     .j-type { white-space: normal; letter-spacing: 0.14em; padding: 0 10px; line-height: 1.5; }
     .m-track .m-card { flex-basis: min(280px, 76vw); }
     .stage-frame::before { inset: 14px -12px -14px 14px; }
