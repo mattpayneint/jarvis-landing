@@ -2941,7 +2941,15 @@
       for (j = 0; j < 3; j++) phaseW[j] += (((phase === j) ? 1 : 0) - phaseW[j]) * 0.035;
       ry += BALL_YAW * hotM * dt;
       rx += (BALL_PITCH - rx) * 0.04;
-      var ax = rx + m.y * 0.28, ay = ry + m.x * 0.36;
+      /* Matt, 2026-09-07: mouse position no longer feeds the globe's own
+         orientation - a fast cursor swipe could swing ax/ay far enough that
+         the sphere read as tumbling/reoriented ("north pole becomes south
+         pole"). The globe now only ever shows its own fixed base pitch and
+         the one continuous ambient yaw spin (still sped up on hover via
+         hotM, that part is unchanged) - never tilts toward the cursor. The
+         per-particle repel shimmer (below) and the cursor-follow glow
+         (--gx/--gy) are untouched; only this axis coupling was removed. */
+      var ax = rx, ay = ry;
       ctx.clearRect(0, 0, s, s);
       var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.6);
       cg.addColorStop(0, 'rgba(' + G + ',' + (0.2 + 0.08 * Math.sin(now / 900)) + ')'); cg.addColorStop(1, 'rgba(' + G + ',0)');
@@ -3672,7 +3680,9 @@
         for (j = 0; j < 3; j++) bphaseW[j] += (((bphase === j) ? 1 : 0) - bphaseW[j]) * 0.035;
         bry += BALL_YAW * hotM * dt;
         brx += (BALL_PITCH - brx) * 0.04;
-        var ax = brx + bm.y * 0.35, ay = bry + bm.x * 0.45;
+        /* kept in lockstep with the chapter core above: mouse position no
+           longer tilts this globe's orientation either, same reasoning. */
+        var ax = brx, ay = bry;
         bctx.clearRect(0, 0, bs, bs);
         bctx.globalCompositeOperation = 'lighter';
         if (bphaseW[2] > 0.008) {
