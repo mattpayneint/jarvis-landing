@@ -417,7 +417,16 @@
   .scroll-cue { position: absolute; bottom: 40px; left: 46px; z-index: 4; font-size: 10px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(242,237,225,0.6); display: flex; align-items: center; gap: 14px; }
   .scroll-cue::after { content: ""; width: 1px; height: 52px; background: linear-gradient(var(--brass-soft), transparent); animation: cuepulse 2.6s var(--ease) infinite; transform-origin: top; }
   @keyframes cuepulse { 0%, 100% { transform: scaleY(0.55); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
-  @media (max-width: 860px) { .hero-content { justify-content: flex-start; padding-top: 128px; padding-bottom: 40px; } .hero .kicker { margin-bottom: 26px; } .hero .sub { margin-top: 18px; } .hero-actions { margin-top: 24px; } .hero-jbadge { margin-top: 20px; gap: 16px; } .jb-core { width: 64px; height: 64px; flex-basis: 64px; } .hero-jbadge .jb-sub { font-size: 13px; } .hero-note { display: none; } .scroll-cue { bottom: 44px; } }
+  /* Mobile hero: `height:100vh` on a phone-width viewport was clipping the last
+     row of content (the stats line) whenever the stacked kicker/h1/sub/actions/
+     badge/stats content ran taller than one screen — up to 278px cut off on an
+     iPhone SE, 160px on an iPhone 13. Content height never changes here (every
+     font-size/margin below is untouched), only the *container* stops hard-
+     capping at exactly one screen: `min-height: 100vh` still guarantees the
+     full-bleed, fills-the-screen hero look on any phone where content is
+     shorter than the viewport, but lets the box grow past 100vh on short/narrow
+     phones instead of silently cutting content off. */
+  @media (max-width: 860px) { .hero { height: auto; min-height: 100vh; } .hero-content { justify-content: flex-start; padding-top: 128px; padding-bottom: 40px; } .hero .kicker { margin-bottom: 26px; } .hero .sub { margin-top: 18px; } .hero-actions { margin-top: 24px; } .hero-jbadge { margin-top: 20px; gap: 16px; } .jb-core { width: 64px; height: 64px; flex-basis: 64px; } .hero-jbadge .jb-sub { font-size: 13px; } .hero-note { display: none; } .scroll-cue { bottom: 44px; } }
   /* Short desktop windows: the hero's core copy (kicker/h1/sub/actions/badge) always keeps full,
      consistent type sizing - it never shrinks. The stats row shrinks instead on short windows,
      but always stays visible. */
