@@ -2575,16 +2575,29 @@
       var v = document.querySelector('.strat-visual');
       if (v) v.classList.add('done');
     }
-    /* Videos: re-play whenever they come into view (mobile browsers pause offscreen video) */
+    /* Videos: re-play whenever they come into view (mobile browsers pause offscreen video).
+       rootMargin kept modest (not the old 600px) - the Capital chapter sits with zero gap
+       below the hero fold, so a large margin was firing this at scroll position 0, before the
+       user ever scrolled, re-creating the exact bandwidth-contention problem the deferred
+       loading was meant to fix. A failed/interrupted play() is retried once instead of being
+       silently swallowed, so a transient stall doesn't leave the video stuck on its poster. */
     if ('IntersectionObserver' in window) {
+      var tryPlay = function (vd, retried) {
+        var p = vd.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(function () {
+            if (!retried) { setTimeout(function () { if (!vd.dataset.userPaused) tryPlay(vd, true); }, 600); }
+          });
+        }
+      };
       var vio = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
           if (e.isIntersecting) {
             if (e.target.dataset.src && !e.target.currentSrc) { e.target.src = e.target.dataset.src; }
-            if (e.target.paused && !e.target.dataset.userPaused) { e.target.play().catch(function () {}); }
+            if (e.target.paused && !e.target.dataset.userPaused) { tryPlay(e.target, false); }
           } else if (!e.target.paused) { e.target.pause(); }
         });
-      }, { threshold: 0.08, rootMargin: '600px 0px 600px 0px' });
+      }, { threshold: 0.08, rootMargin: '0px' });
       document.querySelectorAll('video').forEach(function (vd) { vio.observe(vd); });
       /* Glide-track children sit off-screen sideways; reveal them when their track arrives */
       var tio = new IntersectionObserver(function (es) {
