@@ -2599,6 +2599,15 @@
           });
         }
       };
+      /* threshold kept low (not the 0.08 this used to be) - jarvisVid is a full-SECTION
+         background (height spans the whole "Meet Jarvis" chapter, ~4800px on a typical
+         layout) rather than a fixed-height band like the other three videos. On a phone
+         in landscape (viewport height ~340px), the visible AREA fraction of that oversized
+         box tops out around 7% - just under the old 0.08 threshold - so it geometrically
+         could never satisfy "isIntersecting" and the video sat stuck on its poster forever,
+         even scrolled directly into the middle of it. rootMargin stays 0px (unchanged) so
+         this still only fires once something is genuinely on screen - a low threshold on a
+         0px-margin root just means "as soon as any sliver is visible", not "before scrolling". */
       var vio = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
           if (e.isIntersecting) {
@@ -2606,7 +2615,7 @@
             if (e.target.paused && !e.target.dataset.userPaused) { tryPlay(e.target, false); }
           } else if (!e.target.paused) { e.target.pause(); }
         });
-      }, { threshold: 0.08, rootMargin: '0px' });
+      }, { threshold: 0.01, rootMargin: '0px' });
       document.querySelectorAll('video').forEach(function (vd) { vio.observe(vd); });
       /* Glide-track children sit off-screen sideways; reveal them when their track arrives */
       var tio = new IntersectionObserver(function (es) {
