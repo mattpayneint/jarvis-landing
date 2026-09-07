@@ -2932,7 +2932,7 @@
       for (j = 0; j < 3; j++) phaseW[j] += (((phase === j) ? 1 : 0) - phaseW[j]) * 0.035;
       ry += BALL_YAW * hotM * dt;
       rx += (BALL_PITCH - rx) * 0.04;
-      var ax = rx + m.y * 0.35, ay = ry + m.x * 0.45;
+      var ax = rx + m.y * 0.28, ay = ry + m.x * 0.36;
       ctx.clearRect(0, 0, s, s);
       var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.6);
       cg.addColorStop(0, 'rgba(' + G + ',' + (0.2 + 0.08 * Math.sin(now / 900)) + ')'); cg.addColorStop(1, 'rgba(' + G + ',0)');
@@ -3176,8 +3176,20 @@
           px[i] += (sx[i] - px[i]) * k[i]; py[i] += (sy[i] - py[i]) * k[i]; pz[i] += (sz[i] - pz[i]) * k[i];
           k[i] += (k0[i] - k[i]) * 0.05;
           var q2 = rot([px[i], py[i], pz[i]], ax, ay); var sc2 = F / (F + q2[2]); var xp3 = cx + q2[0] * sc2, yp3 = cy - q2[1] * sc2;
-          if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 6; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
-          ox[i] *= 0.88; oy[i] *= 0.88; xp3 += ox[i]; yp3 += oy[i];
+          if (m.in) { var dx = xp3 - m.px, dy = yp3 - m.py, d = dx * dx + dy * dy; if (d < 2600) { var f = (1 - Math.sqrt(d) / 51) * 3; var sq = Math.sqrt(d + 1); ox[i] += dx / sq * f; oy[i] += dy / sq * f; } }
+          ox[i] *= 0.88; oy[i] *= 0.88;
+          /* Hard cap on the accumulated nudge itself (not just the per-frame force):
+             a particle that lingers under the cursor for many frames was summing this
+             uncapped every frame (geometric series toward ~50px steady-state at the old
+             force of 6), which tore visible chunks of coastline away from the rest of
+             the globe under sustained hover/rubbing. Clamping the vector length keeps
+             the "particles nudge from the cursor" charm as a small surface shimmer that
+             can never pull a particle far enough to break the sphere's read as a rigid
+             shape - the globe's actual rotation/axis is untouched by this, only this
+             local per-particle offset. */
+          var omag = Math.sqrt(ox[i] * ox[i] + oy[i] * oy[i]);
+          if (omag > 7) { var oscale = 7 / omag; ox[i] *= oscale; oy[i] *= oscale; }
+          xp3 += ox[i]; yp3 += oy[i];
           var depth3 = (q2[2] + R) / (2 * R), al4;
           if (!revealGate) {
             al4 = (0.18 + 0.72 * (1 - depth3)) * phaseW[1];
