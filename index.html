@@ -250,6 +250,11 @@
   .nav-social a.soon:hover { color: rgba(242,237,225,0.7); transform: none; }
   .nav-social svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   @media (max-width: 900px) { .nav-social { display: none; } }
+  /* The standalone top-nav icons collapse away with the rest of .nav-links at <=900px (by design,
+     the hamburger takes over there) — but the full-screen drawer's own copy of .nav-social should
+     always be able to render (its visibility is already gated by .mobile-menu/.mobile-menu.open),
+     so give it back the flex display the plain rule above just took away. */
+  .mobile-menu .nav-social { display: flex; }
   .nav-links .cta { border: 1px solid rgba(242,237,225,0.55); padding: 12px 24px; transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease); }
   .nav-links .cta:hover { background: var(--cream); color: var(--noir); border-color: var(--cream); }
   .nav-drop { position: relative; display: flex; }
