@@ -554,6 +554,18 @@ h1 {
   color: var(--ink);
   font-weight: 500;
 }
+.proof-disclaimer {
+  margin-top: 28px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 300;
+  text-align: center;
+  color: var(--ink-soft);
+  opacity: 0.72;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+}
 
 /* Secondary CTA */
 .cta-final {
