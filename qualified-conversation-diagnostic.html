@@ -449,10 +449,54 @@
   var CALENDLY_LINKS = {
     "Advisor": "https://calendly.com/matthewpayneconsulting/advisor-strategy-call",
     "VC/Fund": "https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call",
-    "Attorney": "https://calendly.com/matthewpayneconsulting/attorney-strategy-call"
+    "Attorney": "https://calendly.com/matthewpayneconsulting/attorney-strategy-call",
+    "Syndicator": "https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call"
   };
   var CAPITAL_RAISE_DISCLAIMER = "Before you grab a time, just to be clear. I'm not a placement agent, I can't make introductions to investors myself, I'm not licensed for that and it would be illegal on my end. What I actually do is help you create a new network of high net worth individuals and family offices. It's peer to peer, so you keep a high degree of exclusivity and scarcity. Bottom line, they want to meet and speak with you.";
   var CAPITAL_RAISE_TYPES = { "VC/Fund": true, "Syndicator": true };
+
+  // Early opt-in capture (nurture engine Track 1 entry point): fires the moment someone
+  // has entered name + email + which vertical describes them (the full "You" section, 01),
+  // before they finish the rest of the form. This page is a single scrolling form rather
+  // than a click-through wizard, so "moves to the next step" is read as "completes section 01",
+  // fired on blur/change of those three fields, once per pageview, never blocking or
+  // interfering with the real submit flow below. video_source/cta_position come from URL
+  // query params (?src=<video_id>&cta=mid|end) on the link that brought them here; both
+  // default to "unknown" when absent so this stays fully backward compatible with existing
+  // traffic that has no params.
+  var OPTIN_WEBHOOK = "https://mattpayneint.app.n8n.cloud/webhook/qualified-conversation-diagnostic-optin";
+  var optinParams = new URLSearchParams(window.location.search);
+  var optinVideoSource = optinParams.get("src") || "unknown";
+  var optinCtaPosition = optinParams.get("cta") || "unknown";
+  var optinFired = false;
+
+  function maybeFireOptin() {
+    if (optinFired) return;
+    var nameEl = document.getElementById("name");
+    var emailEl = document.getElementById("email");
+    var practiceTypeEl = document.getElementById("practice_type");
+    if (!nameEl || !emailEl || !practiceTypeEl) return;
+    var optinName = nameEl.value.trim();
+    var optinEmail = emailEl.value.trim();
+    var optinPracticeType = practiceTypeEl.value;
+    if (!optinName || !optinEmail || optinEmail.indexOf("@") === -1 || !optinPracticeType) return;
+    optinFired = true;
+    fetch(OPTIN_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: optinName,
+        email: optinEmail,
+        practice_type: optinPracticeType,
+        video_source: optinVideoSource,
+        cta_position: optinCtaPosition
+      })
+    }).catch(function () {});
+  }
+
+  document.getElementById("name").addEventListener("blur", maybeFireOptin);
+  document.getElementById("email").addEventListener("blur", maybeFireOptin);
+  document.getElementById("practice_type").addEventListener("change", maybeFireOptin);
 
   function renderCta(practiceType) {
     var ctaEl = document.getElementById("report-cta");
