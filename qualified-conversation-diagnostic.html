@@ -221,7 +221,9 @@
      (VC/Syndicator), and a personal-follow-up note for verticals still pilot-stage. */
   #report-cta { display: none; margin-top: 34px; padding-top: 26px; border-top: 1px solid #E2D9C8; }
   #report-cta.show { display: block; }
-  #report-cta .cta-disclaimer { font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 1.7; color: #5b5750; max-width: 6.3in; margin: 0 0 18px; }
+  #report-cta .cta-kicker { font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; font-weight: 600; color: #4A6690; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.2em; }
+  #report-cta .cta-disclaimer, #report-cta .cta-confirm, #report-cta .cta-invite { font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 1.7; color: #5b5750; max-width: 6.3in; margin: 0 0 18px; }
+  #report-cta .cta-invite { color: #2b2b2b; }
   #report-cta .cta-followup { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 13.5px; color: #5b5750; }
 
   .errors { display: none; border-left: 2px solid var(--red); background: var(--bg-elevated); padding: 12px 16px; margin-bottom: 20px; font-size: 13.5px; color: var(--red); }
@@ -498,15 +500,22 @@
   document.getElementById("email").addEventListener("blur", maybeFireOptin);
   document.getElementById("practice_type").addEventListener("change", maybeFireOptin);
 
+  // Matt's framing (2026-09-10): this block is the soft, low-pressure moment right after
+  // the report itself, not a hard sell or a gate. Order matters: confirm the email is on
+  // its way first, then make the call an easy, no-pressure add-on, never "get more calls"
+  // energy (see feedback_hnw_quality_over_volume_positioning).
   function renderCta(practiceType) {
     var ctaEl = document.getElementById("report-cta");
     var html = "";
-    if (CAPITAL_RAISE_TYPES[practiceType]) {
-      html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
-    }
+    html += '<div class="cta-kicker">One More Thing</div>';
+    html += '<p class="cta-confirm">Your full diagnostic is also headed to your inbox right now.</p>';
     var link = CALENDLY_LINKS[practiceType];
     if (link) {
-      html += '<a class="primary" href="' + link + '" target="_blank" rel="noopener">Book Your Call</a>';
+      html += '<p class="cta-invite">If it\'d help to talk through any of this, I\'d love to hop on a quick call. Totally up to you, no pressure either way.</p>';
+      if (CAPITAL_RAISE_TYPES[practiceType]) {
+        html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
+      }
+      html += '<a class="primary" href="' + link + '" target="_blank" rel="noopener">Schedule a Call</a>';
     } else {
       html += '<p class="cta-followup">I read every one of these myself. I\'ll follow up by email to find a time that works.</p>';
     }
