@@ -225,6 +225,7 @@
   #report-cta .cta-disclaimer, #report-cta .cta-confirm, #report-cta .cta-invite { font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 1.7; color: #5b5750; max-width: 6.3in; margin: 0 0 18px; }
   #report-cta .cta-invite { color: #2b2b2b; }
   #report-cta .cta-followup { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 13.5px; color: #5b5750; }
+  #report-cta .cta-redirect-note { font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-size: 11.5px; color: var(--ink-faint); margin: 12px 0 0; }
 
   .errors { display: none; border-left: 2px solid var(--red); background: var(--bg-elevated); padding: 12px 16px; margin-bottom: 20px; font-size: 13.5px; color: var(--red); }
   .errors.show { display: block; }
@@ -500,27 +501,80 @@
   document.getElementById("email").addEventListener("blur", maybeFireOptin);
   document.getElementById("practice_type").addEventListener("change", maybeFireOptin);
 
+  // Meta CAPI matching (added 2026-09-11): Meta Pixel drops _fbc (click ID, present only
+  // when the visitor arrived via an ad click) and _fbp (browser ID, present on any Pixel
+  // pageview) as first-party cookies. Carrying those through to the Calendly URL as UTM
+  // params means the eventual booking (via the n8n "Calendly -> Meta Conversions API"
+  // workflow, currently built but inactive) can be matched server-side back to the ad
+  // click that produced it. Calendly officially supports utm_source/medium/campaign/
+  // content/term as pass-through query params: they don't affect the booking flow UI,
+  // they just ride along into the webhook payload's "tracking" object. utm_content/
+  // utm_term are otherwise unused by this page, so fbc/fbp go there.
+  function readCookie(name) {
+    var match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function buildCalendlyUrl(link) {
+    var fbc = readCookie("_fbc");
+    var fbp = readCookie("_fbp");
+    var params = [];
+    if (fbc) params.push("utm_content=" + encodeURIComponent(fbc));
+    if (fbp) params.push("utm_term=" + encodeURIComponent(fbp));
+    if (!params.length) return link;
+    var sep = link.indexOf("?") === -1 ? "?" : "&";
+    return link + sep + params.join("&");
+  }
+
   // Matt's framing (2026-09-10): this block is the soft, low-pressure moment right after
   // the report itself, not a hard sell or a gate. Order matters: confirm the email is on
   // its way first, then make the call an easy, no-pressure add-on, never "get more calls"
   // energy (see feedback_hnw_quality_over_volume_positioning).
+  //
+  // Auto-redirect (added 2026-09-11, revised same day per Matt's explicit corrections):
+  // the PRIMARY redirect now fires at form-submit time, decoupled from report generation
+  // entirely (see the submit handler below) -- the instant someone answers the last
+  // question, not gated on the report finishing or on any score/qualification (completing
+  // the diagnostic IS the qualification). This renderCta-level redirect is now a second
+  // safety net only, for the case where this function still runs (report resolved and the
+  // user is somehow still on this page, e.g. the submit-time redirect got blocked): it
+  // re-attempts the same navigation immediately (no artificial delay) the moment the
+  // report/CTA renders. The "Schedule a Call" button stays as the manual fallback either
+  // way (skip-ahead, or safety net if both auto-redirects are blocked by an ad blocker /
+  // JS error) -- clicking it cancels this pending timer so the visitor doesn't end up with
+  // two tabs both pointed at Calendly.
   function renderCta(practiceType) {
     var ctaEl = document.getElementById("report-cta");
     var html = "";
     html += '<div class="cta-kicker">One More Thing</div>';
     html += '<p class="cta-confirm">Your full diagnostic is also headed to your inbox right now.</p>';
     var link = CALENDLY_LINKS[practiceType];
+    var redirectUrl = null;
     if (link) {
+      redirectUrl = buildCalendlyUrl(link);
       html += '<p class="cta-invite">If it\'d help to talk through any of this, I\'d love to hop on a quick call. No pressure either way.</p>';
       if (CAPITAL_RAISE_TYPES[practiceType]) {
         html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
       }
-      html += '<a class="primary" href="' + link + '" target="_blank" rel="noopener">Schedule a Call</a>';
+      html += '<a class="primary" id="cta-schedule-link" href="' + redirectUrl + '" target="_blank" rel="noopener">Schedule a Call</a>';
+      html += '<p class="cta-redirect-note">Taking you there now to grab a time. Click above if this doesn\'t happen automatically.</p>';
     } else {
       html += '<p class="cta-followup">I read every one of these myself. I\'ll follow up by email to find a time that works.</p>';
     }
     ctaEl.innerHTML = html;
     ctaEl.classList.add("show");
+
+    if (redirectUrl) {
+      var redirectTimer = window.setTimeout(function () {
+        window.location.href = redirectUrl;
+      }, 0);
+      var scheduleLinkEl = document.getElementById("cta-schedule-link");
+      if (scheduleLinkEl) {
+        scheduleLinkEl.addEventListener("click", function () {
+          window.clearTimeout(redirectTimer);
+        });
+      }
+    }
   }
 
   var sourcesEl = document.getElementById("sources");
@@ -642,11 +696,32 @@
     form.style.display = "none";
     processing.classList.add("show");
 
-    fetch(WEBHOOK, {
+    // Redirect timing (added 2026-09-11, Matt's explicit correction): the calendar
+    // navigation fires on submit itself -- the moment someone answers the last question
+    // -- not gated on report generation finishing. Completing the diagnostic IS the
+    // qualification (no score/tier gate here, every vertical with a live Calendly link
+    // gets sent, full stop). The fetch below still runs in parallel so the report still
+    // generates and gets emailed server-side regardless of whether this tab is still
+    // around to see the response. If a vertical has no Calendly link yet (Home Builder,
+    // still pilot-stage) there's nowhere to send them, so that path falls through to the
+    // normal on-page report + fallback-text render further down once the fetch resolves.
+    var ctaLink = CALENDLY_LINKS[practiceType];
+    var ctaRedirectUrl = ctaLink ? buildCalendlyUrl(ctaLink) : null;
+
+    var reportPromise = fetch(WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
-    })
+    });
+
+    // Fire the redirect right here, immediately after the request is handed to the
+    // browser's network stack, not after anything about it resolves. This is the "as
+    // soon as they answer the last question" moment.
+    if (ctaRedirectUrl) {
+      window.location.href = ctaRedirectUrl;
+    }
+
+    reportPromise
       .then(function (res) {
         return res.json().then(function (data) { return { ok: res.ok, data: data }; });
       })
