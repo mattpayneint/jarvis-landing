@@ -708,10 +708,17 @@
     var ctaLink = CALENDLY_LINKS[practiceType];
     var ctaRedirectUrl = ctaLink ? buildCalendlyUrl(ctaLink) : null;
 
+    // keepalive: true matters a lot more now that we navigate away almost immediately --
+    // without it, a browser can abort a plain in-flight fetch when the tab unloads for
+    // navigation, which would silently kill report generation/email delivery. keepalive
+    // is the standard mechanism (same one analytics beacons use) for "let this request
+    // finish even if the page is gone"; payload here is a small JSON body, well under
+    // the ~64KB keepalive limit.
     var reportPromise = fetch(WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      keepalive: true
     });
 
     // Fire the redirect right here, immediately after the request is handed to the
