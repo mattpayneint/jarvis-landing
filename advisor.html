@@ -32,6 +32,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', 'PIXEL_ID');
 fbq('track', 'PageView');
 </script>
+<script src="assets/fbc-fbp.js"></script>
 </head>
 <body class="video-page">
 
@@ -64,7 +65,7 @@ fbq('track', 'PageView');
   </ul>
 
   <div class="cta-row reveal">
-    <a class="btn-gold" href="https://calendly.com/matthewpayneconsulting/advisor-strategy-call" onclick="typeof fbq==='function'&&fbq('track','Schedule');">Schedule A Call</a>
+    <a class="btn-gold" href="https://calendly.com/matthewpayneconsulting/advisor-strategy-call" onclick="typeof fbq==='function'&&fbq('track','Schedule',{},{eventID:this.dataset.mpcEventId});">Schedule A Call</a>
     <div class="cta-note">20 minutes. No pitch, just a real conversation.</div>
   </div>
 
@@ -87,7 +88,7 @@ fbq('track', 'PageView');
 
   <section class="cta-final reveal">
     <p>Watch the video above, then grab time on my calendar. I read every one of these myself.</p>
-    <a class="btn-gold" href="https://calendly.com/matthewpayneconsulting/advisor-strategy-call" onclick="typeof fbq==='function'&&fbq('track','Schedule');">Schedule A Call</a>
+    <a class="btn-gold" href="https://calendly.com/matthewpayneconsulting/advisor-strategy-call" onclick="typeof fbq==='function'&&fbq('track','Schedule',{},{eventID:this.dataset.mpcEventId});">Schedule A Call</a>
   </section>
 
 </main>

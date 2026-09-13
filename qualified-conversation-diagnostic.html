@@ -294,6 +294,24 @@
   footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--hairline); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
   footer p { font-size: 12px; color: var(--ink-faint); margin: 0; max-width: 46ch; line-height: 1.6; }
 </style>
+
+<!-- Meta Pixel base code — PIXEL_ID placeholder, fill in once the ad account exists.
+     Added 2026-09-13: this page is the actual cold-ad landing surface per the 2026-09-09
+     funnel restructure (ad -> diagnostic -> nurture -> VSL -> book), so it's the page that
+     most needs _fbc/_fbp to exist -- previously had no Pixel presence at all. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<script src="assets/fbc-fbp.js"></script>
 </head>
 <body>
 
@@ -457,6 +475,12 @@
   };
   var CAPITAL_RAISE_DISCLAIMER = "Before you grab a time, just to be clear. I'm not a placement agent, I can't make introductions to investors myself, I'm not licensed for that and it would be illegal on my end. What I actually do is help you create a new network of high net worth individuals and family offices. It's peer to peer, so you keep a high degree of exclusivity and scarcity. Bottom line, they want to meet and speak with you.";
   var CAPITAL_RAISE_TYPES = { "VC/Fund": true, "Syndicator": true };
+  // Set once, at whichever point (submit-time redirect or the renderCta safety net) first
+  // builds a Calendly link -- reused by both so a single booking attempt carries one
+  // eventID all the way through (client Pixel Schedule event -> Calendly utm_campaign ->
+  // n8n CAPI event_id), which is what lets Meta dedup the browser and server events
+  // instead of double-counting the same booking.
+  var mpcBookingEventId = null;
 
   // Early opt-in capture (nurture engine Track 1 entry point): fires the moment someone
   // has entered name + email + which vertical describes them (the full "You" section, 01),
@@ -510,20 +534,11 @@
   // content/term as pass-through query params: they don't affect the booking flow UI,
   // they just ride along into the webhook payload's "tracking" object. utm_content/
   // utm_term are otherwise unused by this page, so fbc/fbp go there.
-  function readCookie(name) {
-    var match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
-    return match ? decodeURIComponent(match[1]) : null;
-  }
-
-  function buildCalendlyUrl(link) {
-    var fbc = readCookie("_fbc");
-    var fbp = readCookie("_fbp");
-    var params = [];
-    if (fbc) params.push("utm_content=" + encodeURIComponent(fbc));
-    if (fbp) params.push("utm_term=" + encodeURIComponent(fbp));
-    if (!params.length) return link;
-    var sep = link.indexOf("?") === -1 ? "?" : "&";
-    return link + sep + params.join("&");
+  // fbc/fbp cookie capture + the utm_content/utm_term/utm_campaign passthrough convention
+  // now lives in assets/fbc-fbp.js (shared across every funnel page); this just delegates.
+  function buildCalendlyUrl(link, eventId) {
+    if (typeof window.mpcMetaParams !== "function") return link;
+    return window.mpcMetaParams(link, eventId);
   }
 
   // Matt's framing (2026-09-10): this block is the soft, low-pressure moment right after
@@ -551,7 +566,9 @@
     var link = CALENDLY_LINKS[practiceType];
     var redirectUrl = null;
     if (link) {
-      redirectUrl = buildCalendlyUrl(link);
+      if (!mpcBookingEventId && typeof window.mpcNewEventId === "function") mpcBookingEventId = window.mpcNewEventId();
+      redirectUrl = buildCalendlyUrl(link, mpcBookingEventId);
+      if (typeof fbq === "function") fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
       html += '<p class="cta-invite">If it\'d help to talk through any of this, I\'d love to hop on a quick call. No pressure either way.</p>';
       if (CAPITAL_RAISE_TYPES[practiceType]) {
         html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
@@ -696,6 +713,13 @@
     form.style.display = "none";
     processing.classList.add("show");
 
+    // Diagnostic Completion (added 2026-09-13): this is the exact optimization event named
+    // in ADS-STRATEGY.md Section 9a as the Stage 2 (Traffic -> Conversions) graduation
+    // trigger -- didn't exist at all before this, so there was nothing for Meta to ever
+    // optimize toward or for Sema to count against the 50/week threshold. Fires on every
+    // valid completion regardless of vertical/Calendly availability.
+    if (typeof fbq === "function") fbq("track", "CompleteRegistration", { content_name: "Qualified Conversation Diagnostic", practice_type: practiceType });
+
     // Redirect timing (added 2026-09-11, Matt's explicit correction): the calendar
     // navigation fires on submit itself -- the moment someone answers the last question
     // -- not gated on report generation finishing. Completing the diagnostic IS the
@@ -706,7 +730,12 @@
     // still pilot-stage) there's nowhere to send them, so that path falls through to the
     // normal on-page report + fallback-text render further down once the fetch resolves.
     var ctaLink = CALENDLY_LINKS[practiceType];
-    var ctaRedirectUrl = ctaLink ? buildCalendlyUrl(ctaLink) : null;
+    var ctaRedirectUrl = null;
+    if (ctaLink) {
+      if (!mpcBookingEventId && typeof window.mpcNewEventId === "function") mpcBookingEventId = window.mpcNewEventId();
+      ctaRedirectUrl = buildCalendlyUrl(ctaLink, mpcBookingEventId);
+      if (typeof fbq === "function") fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
+    }
 
     // keepalive: true matters a lot more now that we navigate away almost immediately --
     // without it, a browser can abort a plain in-flight fetch when the tab unloads for
