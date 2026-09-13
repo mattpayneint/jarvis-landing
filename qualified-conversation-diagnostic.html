@@ -226,6 +226,12 @@
   #report-cta .cta-invite { color: #2b2b2b; }
   #report-cta .cta-followup { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 13.5px; color: #5b5750; }
   #report-cta .cta-redirect-note { font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-size: 11.5px; color: var(--ink-faint); margin: 12px 0 0; }
+  #booking-embed-wrap { display: none; max-width: 6.3in; margin: 8px auto 34px; }
+  #booking-embed-wrap.show { display: block; }
+  #booking-embed-wrap .cta-kicker { font-family: 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; font-weight: 600; color: #4A6690; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.2em; }
+  #booking-embed-wrap .cta-invite { font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 1.7; color: #2b2b2b; margin: 0 0 14px; }
+  #booking-embed-wrap .cta-disclaimer { font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 1.7; color: #5b5750; margin: 0 0 18px; }
+  .calendly-inline-widget { min-width: 280px; height: 700px; }
 
   .errors { display: none; border-left: 2px solid var(--red); background: var(--bg-elevated); padding: 12px 16px; margin-bottom: 20px; font-size: 13.5px; color: var(--red); }
   .errors.show { display: block; }
@@ -312,6 +318,8 @@ fbq('init', '1604378769784336');
 fbq('track', 'PageView');
 </script>
 <script src="assets/fbc-fbp.js"></script>
+<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+<script src="https://assets.calendly.com/assets/external/widget.js"></script>
 </head>
 <body>
 
@@ -419,6 +427,15 @@ fbq('track', 'PageView');
     <div class="bar"><span></span></div>
     <p>Reading your answers, writing your diagnostic&hellip;</p>
   </div>
+
+  <!-- Inline Calendly embed (added 2026-09-13, replaces a window.location.href redirect to
+       calendly.com). Sema's own playbook flags an inline embed as a hard requirement, not a
+       nice-to-have: a link-out breaks pixel tracking at the exact step that matters (booking)
+       and makes it impossible to later build a "landing-page-visitor-who-didn't-book"
+       retargeting audience, since that visit never technically left this domain to know
+       whether it converted. Rendered immediately on submit (see renderBookingEmbed below),
+       same timing the old redirect used -- not gated on the report finishing. -->
+  <div id="booking-embed-wrap"></div>
 
   <section id="report-section">
     <div class="doc-page">
@@ -558,40 +575,49 @@ fbq('track', 'PageView');
   // way (skip-ahead, or safety net if both auto-redirects are blocked by an ad blocker /
   // JS error) -- clicking it cancels this pending timer so the visitor doesn't end up with
   // two tabs both pointed at Calendly.
+  // Inline Calendly embed (added 2026-09-13, replaces the old redirect-away approach).
+  // Sema's playbook: an inline embed is a hard requirement, not a nice-to-have -- a link-out
+  // breaks pixel tracking at the exact step that matters and makes the "visited but didn't
+  // book" retargeting audience impossible to build. Idempotent: safe to call more than once
+  // (submit-time primary call + renderCta's safety-net call after the report resolves) --
+  // only actually renders/inits the widget once.
+  function renderBookingEmbed(practiceType) {
+    var wrap = document.getElementById("booking-embed-wrap");
+    if (!wrap || wrap.classList.contains("show")) return;
+    var link = CALENDLY_LINKS[practiceType];
+    if (!link) return;
+    if (!mpcBookingEventId && typeof window.mpcNewEventId === "function") mpcBookingEventId = window.mpcNewEventId();
+    var embedUrl = buildCalendlyUrl(link, mpcBookingEventId);
+    if (typeof fbq === "function") fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
+    var html = '<div class="cta-kicker">One More Thing</div>';
+    html += '<p class="cta-invite">If it\'d help to talk through any of this, I\'d love to hop on a quick call. No pressure either way. Grab a time right here.</p>';
+    if (CAPITAL_RAISE_TYPES[practiceType]) {
+      html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
+    }
+    html += '<div id="calendly-widget-target" class="calendly-inline-widget"></div>';
+    wrap.innerHTML = html;
+    wrap.classList.add("show");
+    if (window.Calendly && typeof window.Calendly.initInlineWidget === "function") {
+      window.Calendly.initInlineWidget({
+        url: embedUrl,
+        parentElement: document.getElementById("calendly-widget-target")
+      });
+    }
+  }
+
   function renderCta(practiceType) {
     var ctaEl = document.getElementById("report-cta");
     var html = "";
     html += '<div class="cta-kicker">One More Thing</div>';
     html += '<p class="cta-confirm">Your full diagnostic is also headed to your inbox right now.</p>';
-    var link = CALENDLY_LINKS[practiceType];
-    var redirectUrl = null;
-    if (link) {
-      if (!mpcBookingEventId && typeof window.mpcNewEventId === "function") mpcBookingEventId = window.mpcNewEventId();
-      redirectUrl = buildCalendlyUrl(link, mpcBookingEventId);
-      if (typeof fbq === "function") fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
-      html += '<p class="cta-invite">If it\'d help to talk through any of this, I\'d love to hop on a quick call. No pressure either way.</p>';
-      if (CAPITAL_RAISE_TYPES[practiceType]) {
-        html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
-      }
-      html += '<a class="primary" id="cta-schedule-link" href="' + redirectUrl + '" target="_blank" rel="noopener">Schedule a Call</a>';
-      html += '<p class="cta-redirect-note">Taking you there now to grab a time. Click above if this doesn\'t happen automatically.</p>';
-    } else {
+    if (!CALENDLY_LINKS[practiceType]) {
       html += '<p class="cta-followup">I read every one of these myself. I\'ll follow up by email to find a time that works.</p>';
     }
     ctaEl.innerHTML = html;
     ctaEl.classList.add("show");
-
-    if (redirectUrl) {
-      var redirectTimer = window.setTimeout(function () {
-        window.location.href = redirectUrl;
-      }, 0);
-      var scheduleLinkEl = document.getElementById("cta-schedule-link");
-      if (scheduleLinkEl) {
-        scheduleLinkEl.addEventListener("click", function () {
-          window.clearTimeout(redirectTimer);
-        });
-      }
-    }
+    // Safety net only -- the real render already happened at submit time via
+    // renderBookingEmbed below. This call is a no-op if it's already showing.
+    renderBookingEmbed(practiceType);
   }
 
   var sourcesEl = document.getElementById("sources");
@@ -729,13 +755,7 @@ fbq('track', 'PageView');
     // around to see the response. If a vertical has no Calendly link yet (Home Builder,
     // still pilot-stage) there's nowhere to send them, so that path falls through to the
     // normal on-page report + fallback-text render further down once the fetch resolves.
-    var ctaLink = CALENDLY_LINKS[practiceType];
-    var ctaRedirectUrl = null;
-    if (ctaLink) {
-      if (!mpcBookingEventId && typeof window.mpcNewEventId === "function") mpcBookingEventId = window.mpcNewEventId();
-      ctaRedirectUrl = buildCalendlyUrl(ctaLink, mpcBookingEventId);
-      if (typeof fbq === "function") fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
-    }
+    renderBookingEmbed(practiceType);
 
     // keepalive: true matters a lot more now that we navigate away almost immediately --
     // without it, a browser can abort a plain in-flight fetch when the tab unloads for
@@ -749,13 +769,6 @@ fbq('track', 'PageView');
       body: JSON.stringify(payload),
       keepalive: true
     });
-
-    // Fire the redirect right here, immediately after the request is handed to the
-    // browser's network stack, not after anything about it resolves. This is the "as
-    // soon as they answer the last question" moment.
-    if (ctaRedirectUrl) {
-      window.location.href = ctaRedirectUrl;
-    }
 
     reportPromise
       .then(function (res) {
