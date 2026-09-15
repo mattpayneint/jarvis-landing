@@ -507,11 +507,15 @@ fbq('track', 'PageView');
   // interfering with the real submit flow below. video_source/cta_position come from URL
   // query params (?src=<video_id>&cta=mid|end) on the link that brought them here; both
   // default to "unknown" when absent so this stays fully backward compatible with existing
-  // traffic that has no params.
+  // traffic that has no params. adid (added for Meta ad attribution join, 2026-09-15) reads
+  // Meta's dynamic destination-URL param ?adid={{ad.id}} the same way -- once real Meta ads
+  // launch, each ad's destination URL will append this param so a click can be traced all
+  // the way to a Keap contact record, not just to a booked Calendly call.
   var OPTIN_WEBHOOK = "https://mattpayneint.app.n8n.cloud/webhook/qualified-conversation-diagnostic-optin";
   var optinParams = new URLSearchParams(window.location.search);
   var optinVideoSource = optinParams.get("src") || "unknown";
   var optinCtaPosition = optinParams.get("cta") || "unknown";
+  var optinAdId = optinParams.get("adid") || "unknown";
   var optinFired = false;
 
   function maybeFireOptin() {
@@ -533,7 +537,8 @@ fbq('track', 'PageView');
         email: optinEmail,
         practice_type: optinPracticeType,
         video_source: optinVideoSource,
-        cta_position: optinCtaPosition
+        cta_position: optinCtaPosition,
+        meta_ad_id: optinAdId
       })
     }).catch(function () {});
   }
@@ -725,6 +730,13 @@ fbq('track', 'PageView');
 
     if (problems.length) { showErrors(problems); return; }
 
+    // video_source/cta_position/meta_ad_id (added 2026-09-15): read once from the URL at
+    // page load (see optinVideoSource/optinCtaPosition/optinAdId above) and carried through
+    // here too, not just the early opt-in POST. Without this, completing the full form
+    // silently reset video_source/cta_position back to "unknown" server-side (the backend
+    // defaults missing fields to "unknown" and this payload never sent them), overwriting
+    // whatever the early opt-in had already captured -- would have broken meta_ad_id
+    // attribution the same way the moment anyone actually finished the diagnostic.
     var payload = {
       name: name,
       email: email,
@@ -732,7 +744,10 @@ fbq('track', 'PageView');
       qualified_conversations_30d: Number(qcRaw),
       sources: sources,
       best_client_source: bestClients,
-      biggest_obstacle: obstacle
+      biggest_obstacle: obstacle,
+      video_source: optinVideoSource,
+      cta_position: optinCtaPosition,
+      meta_ad_id: optinAdId
     };
 
     submitBtn.disabled = true;
