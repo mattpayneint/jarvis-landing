@@ -34,14 +34,25 @@
   // exists on Calendly, so these three otherwise-unused-here UTM slots carry them to the
   // n8n "Calendly -> Meta Conversions API" workflow. Real utm_source/utm_medium from an
   // ad's own destination URL are left alone so genuine ad-campaign attribution isn't
-  // clobbered.
+  // clobbered -- confirmed 2026-09-15 no Calendly link in this repo hardcodes either
+  // today, so utm_source is genuinely free; if that ever changes, this needs revisiting.
+  //
+  // meta_ad_id passthrough (added 2026-09-15): once real Meta ads exist, each ad's
+  // destination URL to a funnel page will carry Meta's dynamic ?adid={{ad.id}} param.
+  // Read straight off the CURRENT page's own URL (not a cookie -- adid doesn't need to
+  // survive navigation the way fbc/fbp do, it's already fixed for this pageview) and
+  // carried onto the outgoing Calendly link as utm_source, the matching free slot the
+  // "Calendly -> Meta Conversions API" workflow (EW0KbURGz4BpR5wD) already reads back
+  // out of tracking.utm_source into the CAPI event's custom_data.ad_id.
   window.mpcMetaParams = function (link, eventId) {
     var fbc = readCookie('_fbc');
     var fbp = readCookie('_fbp');
+    var adId = getParam('adid');
     var params = [];
     if (fbc) params.push('utm_content=' + encodeURIComponent(fbc));
     if (fbp) params.push('utm_term=' + encodeURIComponent(fbp));
     if (eventId) params.push('utm_campaign=' + encodeURIComponent(eventId));
+    if (adId) params.push('utm_source=' + encodeURIComponent(adId));
     if (!params.length) return link;
     var sep = link.indexOf('?') === -1 ? '?' : '&';
     return link + sep + params.join('&');
