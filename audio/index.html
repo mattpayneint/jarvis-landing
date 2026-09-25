@@ -149,6 +149,78 @@
     .sec-rule { transform: none; transition: none; }
   }
 
+  /* ===== LISTEN: sample player (2026-09-24) ===== */
+  .listen { position: relative; background: var(--noir-2); border-top: 1px solid var(--hairline-dark); padding: 120px 0 130px; overflow: clip; }
+  .listen::before { content: ""; position: absolute; inset: -20% -10% auto auto; width: 60vw; height: 60vw; max-width: 820px; max-height: 820px; background: radial-gradient(closest-side, rgba(194,164,104,0.13), rgba(194,164,104,0) 70%); pointer-events: none; }
+  .listen .wrap { position: relative; }
+  .ls-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
+  .ls-intro h2 { font-size: clamp(2rem, 4vw, 3.1rem); color: var(--cream); max-width: 14ch; }
+  .ls-intro h2 em { font-style: italic; color: var(--brass-soft); }
+  .ls-intro p { color: var(--cream-soft); max-width: 40ch; margin-top: 22px; }
+  .ls-intro .ls-hint { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--brass-soft); margin-top: 30px; opacity: 0.8; }
+  /* the deck: now-playing card + track list */
+  .ls-deck { background: linear-gradient(160deg, #1B1A17 0%, #111113 60%); border: 1px solid rgba(194,164,104,0.22); border-radius: 22px; padding: 30px; box-shadow: 0 40px 90px -40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(242,237,225,0.05); }
+  .ls-now { display: grid; grid-template-columns: 96px minmax(0,1fr); gap: 22px; align-items: center; }
+  .ls-art { width: 96px; height: 96px; border-radius: 14px; background: radial-gradient(circle at 30% 25%, #3A3122, #16140F 70%); border: 1px solid rgba(194,164,104,0.35); display: grid; place-items: center; position: relative; overflow: hidden; }
+  .ls-art span { font-family: var(--serif); font-size: 34px; color: var(--brass-soft); letter-spacing: 0.02em; }
+  .ls-art::after { content: ""; position: absolute; inset: 8px; border-radius: 50%; border: 1px dashed rgba(194,164,104,0.3); }
+  .listen.playing .ls-art::after { animation: lsspin 18s linear infinite; }
+  @keyframes lsspin { to { transform: rotate(360deg); } }
+  .ls-meta .k { font-size: 11px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass-soft); }
+  .ls-meta .t { font-family: var(--serif); font-size: clamp(1.35rem, 2.2vw, 1.7rem); color: var(--cream); line-height: 1.2; margin-top: 6px; }
+  .ls-meta .s { font-size: 14px; color: var(--cream-soft); margin-top: 4px; }
+  .ls-ctrl { display: flex; align-items: center; justify-content: center; gap: 26px; margin: 28px 0 14px; }
+  .ls-btn { appearance: none; border: 0; background: none; color: var(--cream); cursor: pointer; padding: 0; display: grid; place-items: center; -webkit-tap-highlight-color: transparent; }
+  .ls-skip { width: 48px; height: 48px; border-radius: 50%; color: var(--cream-soft); transition: color 0.3s, background 0.3s; position: relative; }
+  .ls-skip:hover { color: var(--cream); background: rgba(242,237,225,0.06); }
+  .ls-skip svg { width: 26px; height: 26px; }
+  .ls-skip b { position: absolute; font-size: 9px; font-weight: 700; top: 50%; left: 50%; transform: translate(-50%, -38%); letter-spacing: 0; }
+  .ls-play { width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(145deg, #E9CD90, #9A7B3F); color: #16130D; box-shadow: 0 14px 34px -10px rgba(194,164,104,0.55), inset 0 1px 0 rgba(255,255,255,0.35); transition: transform 0.25s var(--ease); }
+  .ls-play:active { transform: scale(0.95); }
+  .ls-play svg { width: 30px; height: 30px; }
+  .ls-play .i-pause, .listen.playing .ls-play .i-play { display: none; }
+  .listen.playing .ls-play .i-pause { display: block; }
+  .ls-bar { display: grid; grid-template-columns: 44px minmax(0,1fr) 44px; gap: 12px; align-items: center; font-size: 12px; color: var(--cream-soft); font-variant-numeric: tabular-nums; }
+  .ls-bar span:last-child { text-align: right; }
+  .ls-seek { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; background: transparent; cursor: pointer; margin: 0; --p: 0%; }
+  .ls-seek::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--brass-soft) var(--p), rgba(242,237,225,0.14) var(--p)); }
+  .ls-seek::-moz-range-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--brass-soft) var(--p), rgba(242,237,225,0.14) var(--p)); }
+  .ls-seek::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--cream); margin-top: -6px; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+  .ls-seek::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--cream); }
+  .ls-list { list-style: none; margin: 26px 0 0; padding: 0; border-top: 1px solid var(--hairline-dark); }
+  .ls-trk { border-bottom: 1px solid var(--hairline-dark); }
+  .ls-trk button { appearance: none; -webkit-appearance: none; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; width: 100%; min-height: 64px; display: grid; grid-template-columns: 34px minmax(0,1fr) auto; gap: 14px; align-items: center; text-align: left; padding: 12px 8px; border-radius: 10px; color: var(--cream); font: inherit; transition: background 0.3s; }
+  .ls-trk button:hover { background: rgba(242,237,225,0.04); }
+  .ls-trk .n { font-family: var(--serif); font-size: 17px; color: var(--brass-soft); text-align: center; }
+  .ls-trk .tt { display: block; font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .ls-trk .ts { display: block; font-size: 13px; color: var(--cream-soft); line-height: 1.4; margin-top: 2px; }
+  .ls-trk .d { font-size: 12px; color: var(--cream-soft); font-variant-numeric: tabular-nums; }
+  .ls-trk.on button { background: rgba(194,164,104,0.09); }
+  .ls-trk.on .tt { color: #E9CD90; }
+  .ls-eq { display: none; gap: 2px; height: 14px; align-items: flex-end; justify-content: center; }
+  .ls-eq i { width: 3px; background: var(--brass-soft); border-radius: 1px; animation: lseq 0.9s ease-in-out infinite alternate; }
+  .ls-eq i:nth-child(2) { animation-delay: -0.3s; } .ls-eq i:nth-child(3) { animation-delay: -0.6s; }
+  @keyframes lseq { from { height: 3px; } to { height: 14px; } }
+  .listen.playing .ls-trk.on .ls-eq { display: flex; }
+  .listen.playing .ls-trk.on .n { display: none; }
+  /* mini player: appears once playback starts and the deck scrolls out of view */
+  .ls-mini { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 60; max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: 52px minmax(0,1fr) 44px; gap: 12px; align-items: center; padding: 10px 12px 10px 10px; border-radius: 18px; background: rgba(20,20,22,0.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(194,164,104,0.3); box-shadow: 0 20px 50px -12px rgba(0,0,0,0.7); transform: translateY(140%); transition: transform 0.45s var(--ease); }
+  .ls-mini.show { transform: none; }
+  .ls-mini .ls-play { width: 52px; height: 52px; }
+  .ls-mini .ls-play svg { width: 22px; height: 22px; }
+  .ls-mini .mt { font-size: 14px; font-weight: 600; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ls-mini .mp { height: 3px; border-radius: 3px; background: rgba(242,237,225,0.14); margin-top: 8px; overflow: hidden; }
+  .ls-mini .mp i { display: block; height: 100%; width: 0; background: var(--brass-soft); }
+  .ls-mini .ls-x { width: 44px; height: 44px; color: var(--cream-soft); }
+  .ls-mini .ls-x svg { width: 18px; height: 18px; }
+  @media (max-width: 900px) {
+    .listen { padding: 90px 0 100px; }
+    .ls-grid { grid-template-columns: 1fr; gap: 40px; }
+    .ls-deck { padding: 22px 16px; border-radius: 18px; }
+    .ls-now { grid-template-columns: 76px minmax(0,1fr); gap: 16px; }
+    .ls-art { width: 76px; height: 76px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .listen.playing .ls-art::after, .ls-eq i { animation: none; } .ls-eq i { height: 10px; } }
 </style>
 </head>
 <body>
@@ -185,11 +257,44 @@
           </form>
           <p class="om-note">Ten volumes. I'll start you with Section One, The Power of Your Unconscious Mind. When you're ready for the rest, just ask.</p>
         </div>
-        <a class="om-cue reveal" href="#library"><span>The Complete Listing</span><span class="dn">&darr;</span></a>
+        <a class="om-cue reveal" href="#listen"><span>Listen To A Sample</span><span class="dn">&darr;</span></a>
       </div>
     </div>
   </div>
 </section>
+
+<!-- LISTEN: sample player -->
+<section class="listen" id="listen" aria-label="Listen to samples from the program">
+  <div class="wrap">
+    <div class="ls-grid">
+      <div class="ls-intro">
+        <div class="eyebrow reveal">Listen</div>
+        <h2 class="reveal">Hear it <em>before</em> you start.</h2>
+        <p class="reveal">One short moment from each of the six sections, straight from the program. Tap any track. Put your headphones in if you can.</p>
+        <p class="ls-hint reveal">Six samples &middot; about eleven minutes</p>
+      </div>
+      <div class="ls-deck reveal">
+        <div class="ls-now">
+          <div class="ls-art" aria-hidden="true"><span id="lsArtN">I</span></div>
+          <div class="ls-meta"><div class="k" id="lsKick">Section I</div><div class="t" id="lsTitle"></div><div class="s" id="lsSec"></div></div>
+        </div>
+        <div class="ls-ctrl">
+          <button class="ls-btn ls-skip" id="lsBack" type="button" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 3.5v3.8h3.8"/></svg><b>15</b></button>
+          <button class="ls-btn ls-play" id="lsPlay" type="button" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></svg></button>
+          <button class="ls-btn ls-skip" id="lsFwd" type="button" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 3.5v3.8h-3.8"/></svg><b>15</b></button>
+        </div>
+        <div class="ls-bar"><span id="lsCur">0:00</span><input class="ls-seek" id="lsSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek"><span id="lsDur">0:00</span></div>
+        <ol class="ls-list" id="lsList"><li class="ls-trk"><button type="button"><span class="n">I</span><span class="ls-eq" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="tt">Change Who You Think You Are</span><span class="ts">Why lasting change comes from your self-concept, not new information or behaviors.</span></span><span class="d">1:49</span></button></li><li class="ls-trk"><button type="button"><span class="n">II</span><span class="ls-eq" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="tt">The Wrong Map</span><span class="ts">A trip to New York with a map of Chicago, and what it reveals.</span></span><span class="d">1:54</span></button></li><li class="ls-trk"><button type="button"><span class="n">III</span><span class="ls-eq" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="tt">What Worry Really Is</span><span class="ts">How worry works, and how the same mental skill can work in your favor.</span></span><span class="d">1:39</span></button></li><li class="ls-trk"><button type="button"><span class="n">IV</span><span class="ls-eq" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="tt">Motivated or Inspired?</span><span class="ts">The difference between motivation that fades and inspiration that lasts.</span></span><span class="d">1:45</span></button></li><li class="ls-trk"><button type="button"><span class="n">V</span><span class="ls-eq" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="tt">Time Is the Capital</span><span class="ts">Why high performers manage themselves instead of time, and why priorities come first.</span></span><span class="d">1:56</span></button></li><li class="ls-trk"><button type="button"><span class="n">VI</span><span class="ls-eq" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="tt">The Anchors You Already Have</span><span class="ts">How songs, smells, and sirens already trigger your emotional states on cue.</span></span><span class="d">1:30</span></button></li></ol>
+      </div>
+    </div>
+  </div>
+  <audio id="lsAudio" preload="none" playsinline></audio>
+</section>
+<div class="ls-mini" id="lsMini" aria-hidden="true">
+  <button class="ls-btn ls-play" id="lsMiniPlay" type="button" aria-label="Play" tabindex="-1"><svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></svg></button>
+  <div><div class="mt" id="lsMiniT"></div><div class="mp"><i id="lsMiniP"></i></div></div>
+  <button class="ls-btn ls-x" id="lsMiniX" type="button" aria-label="Close player" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
 
 <!-- THE LIBRARY — all 95 tracks -->
 <section class="lib" id="library">
@@ -506,6 +611,66 @@
           });
       });
     });
+  })();
+</script>
+<script>
+  /* Sample player (2026-09-24). One <audio>, preload=none: nothing downloads until a tap. */
+  (function () {
+    var list = document.getElementById('lsList'); if (!list) return;
+    var DATA = /*LS_DATA*/[{"n": 1, "section": "The Power of Your Unconscious Mind", "sectionNum": "I", "title": "Change Who You Think You Are", "teaser": "Why lasting change comes from your self-concept, not new information or behaviors.", "duration": "1:49", "file": "audio/samples/sample-1.mp3"}, {"n": 2, "section": "How Our Mentality Shapes Our Reality", "sectionNum": "II", "title": "The Wrong Map", "teaser": "A trip to New York with a map of Chicago, and what it reveals.", "duration": "1:54", "file": "audio/samples/sample-2.mp3"}, {"n": 3, "section": "Mastering The Forces That Shape Our Experiences", "sectionNum": "III", "title": "What Worry Really Is", "teaser": "How worry works, and how the same mental skill can work in your favor.", "duration": "1:39", "file": "audio/samples/sample-3.mp3"}, {"n": 4, "section": "Overcoming Procrastination", "sectionNum": "IV", "title": "Motivated or Inspired?", "teaser": "The difference between motivation that fades and inspiration that lasts.", "duration": "1:45", "file": "audio/samples/sample-4.mp3"}, {"n": 5, "section": "High Performance Living", "sectionNum": "V", "title": "Time Is the Capital", "teaser": "Why high performers manage themselves instead of time, and why priorities come first.", "duration": "1:56", "file": "audio/samples/sample-5.mp3"}, {"n": 6, "section": "Cultivating & Creating Success Habits", "sectionNum": "VI", "title": "The Anchors You Already Have", "teaser": "How songs, smells, and sirens already trigger your emotional states on cue.", "duration": "1:30", "file": "audio/samples/sample-6.mp3"}]/*END*/;
+    var root = document.getElementById('listen'), au = document.getElementById('lsAudio');
+    var $ = function (id) { return document.getElementById(id); };
+    var seek = $('lsSeek'), mini = $('lsMini'), cur = -1, seeking = false, deckVisible = true, dismissed = false;
+    var rows = Array.prototype.slice.call(list.querySelectorAll('.ls-trk'));
+    function fmt(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
+    function show(i) {
+      var d = DATA[i];
+      $('lsArtN').textContent = d.sectionNum; $('lsKick').textContent = 'Section ' + d.sectionNum;
+      $('lsTitle').textContent = d.title; $('lsSec').textContent = d.section; $('lsMiniT').textContent = d.title;
+      $('lsDur').textContent = d.duration;
+      rows.forEach(function (r, k) { r.classList.toggle('on', k === i); r.querySelector('button').setAttribute('aria-current', k === i ? 'true' : 'false'); });
+    }
+    function load(i) {
+      cur = i; show(i); au.src = '/' + DATA[i].file; seek.value = 0; seek.style.setProperty('--p', '0%'); $('lsCur').textContent = '0:00';
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({ title: DATA[i].title, artist: 'Matthew Payne', album: "The Owner's Manual to the Mind",
+          artwork: [{ src: '/assets/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }, { src: '/assets/favicon-192.png', sizes: '192x192', type: 'image/png' }] });
+      }
+    }
+    function play() { if (cur < 0) load(0); dismissed = false; var p = au.play(); if (p && p.catch) p.catch(function () {}); }
+    function toggle() { if (au.paused) play(); else au.pause(); }
+    rows.forEach(function (r, i) { r.querySelector('button').addEventListener('click', function () { if (i === cur) { toggle(); return; } load(i); play(); }); });
+    $('lsPlay').addEventListener('click', toggle); $('lsMiniPlay').addEventListener('click', toggle);
+    $('lsBack').addEventListener('click', function () { if (cur >= 0) au.currentTime = Math.max(0, au.currentTime - 15); });
+    $('lsFwd').addEventListener('click', function () { if (cur >= 0 && au.duration) au.currentTime = Math.min(au.duration - 0.5, au.currentTime + 15); });
+    $('lsMiniX').addEventListener('click', function () { au.pause(); dismissed = true; syncMini(); });
+    seek.addEventListener('input', function () { seeking = true; seek.style.setProperty('--p', seek.value / 10 + '%'); if (au.duration) $('lsCur').textContent = fmt(au.duration * seek.value / 1000); });
+    seek.addEventListener('change', function () { if (cur < 0) load(0); if (au.duration) au.currentTime = au.duration * seek.value / 1000; seeking = false; });
+    au.addEventListener('timeupdate', function () {
+      if (!au.duration) return; var f = au.currentTime / au.duration;
+      if (!seeking) { seek.value = Math.round(f * 1000); seek.style.setProperty('--p', f * 100 + '%'); $('lsCur').textContent = fmt(au.currentTime); }
+      $('lsMiniP').style.width = f * 100 + '%';
+    });
+    au.addEventListener('loadedmetadata', function () { $('lsDur').textContent = fmt(au.duration); });
+    function state() {
+      var on = !au.paused; root.classList.toggle('playing', on); mini.classList.toggle('playing', on);
+      $('lsPlay').setAttribute('aria-label', on ? 'Pause' : 'Play'); $('lsMiniPlay').setAttribute('aria-label', on ? 'Pause' : 'Play');
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = on ? 'playing' : 'paused';
+      syncMini();
+    }
+    au.addEventListener('play', state); au.addEventListener('pause', state);
+    au.addEventListener('ended', function () { if (cur < DATA.length - 1) { load(cur + 1); play(); } else state(); });
+    function syncMini() { var s = cur >= 0 && !deckVisible && !dismissed && (!au.paused || mini.classList.contains('show')); mini.classList.toggle('show', s); mini.setAttribute('aria-hidden', s ? 'false' : 'true'); mini.querySelectorAll('button').forEach(function (b) { b.tabIndex = s ? 0 : -1; }); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { deckVisible = e[0].isIntersecting; syncMini(); }).observe(document.querySelector('.ls-deck'));
+    if ('mediaSession' in navigator) {
+      var ms = navigator.mediaSession, h = function (a, f) { try { ms.setActionHandler(a, f); } catch (e) {} };
+      h('play', play); h('pause', function () { au.pause(); });
+      h('seekbackward', function () { au.currentTime = Math.max(0, au.currentTime - 15); });
+      h('seekforward', function () { au.currentTime = Math.min((au.duration || 0) - 0.5, au.currentTime + 15); });
+      h('previoustrack', function () { if (cur > 0) { load(cur - 1); play(); } });
+      h('nexttrack', function () { if (cur < DATA.length - 1) { load(cur + 1); play(); } });
+    }
+    show(0);
   })();
 </script>
 </body>
