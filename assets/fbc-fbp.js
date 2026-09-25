@@ -22,11 +22,48 @@
     var expires = new Date(Date.now() + days * 864e5).toUTCString();
     document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/; SameSite=Lax';
   }
+  function readLocalStorage(name) {
+    try { return window.localStorage.getItem(name); } catch (e) { return null; }
+  }
+  function writeLocalStorage(name, value) {
+    try { window.localStorage.setItem(name, value); } catch (e) {}
+  }
+  // 30-day cookie + localStorage persistence, belt and suspenders: cookie survives
+  // in-app browsers that clear localStorage aggressively, localStorage survives
+  // cookie-blocking configs. Reads cookie first, falls back to localStorage.
+  function setPersisted(name, value, days) {
+    setCookie(name, value, days);
+    writeLocalStorage(name, value);
+  }
+  function getPersisted(name) {
+    return readCookie(name) || readLocalStorage(name);
+  }
 
   var fbclid = getParam('fbclid');
-  if (fbclid && !readCookie('_fbc')) {
-    setCookie('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90);
+  if (fbclid) {
+    setPersisted('mpc_fbclid', fbclid, 30);
+    if (!readCookie('_fbc')) {
+      setPersisted('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90);
+    }
   }
+
+  // adid persistence (Fix Pass 2, 2026-09-24): closes the "adid lost on a return visit"
+  // gap flagged in the 2026-09-24 attribution audit (item 3). Meta's dynamic ?adid=
+  // param only exists on the ad's own destination URL -- a visitor who leaves and comes
+  // back organically, from a retarget, or by bookmark previously arrived with no adid
+  // at all. Store it for 30 days, current-URL value always wins over a stored one.
+  var urlAdId = getParam('adid');
+  if (urlAdId) setPersisted('mpc_adid', urlAdId, 30);
+
+  window.mpcGetAdId = function () {
+    return getParam('adid') || getPersisted('mpc_adid') || null;
+  };
+  window.mpcGetFbc = function () {
+    return readCookie('_fbc') || readLocalStorage('_fbc') || '';
+  };
+  window.mpcGetFbp = function () {
+    return readCookie('_fbp') || '';
+  };
 
   // Shared helper: append fbc/fbp (and an optional CAPI dedup event ID) onto a Calendly
   // link as utm_content/utm_term/utm_campaign. Calendly passes utm_* straight through,
@@ -45,9 +82,9 @@
   // "Calendly -> Meta Conversions API" workflow (EW0KbURGz4BpR5wD) already reads back
   // out of tracking.utm_source into the CAPI event's custom_data.ad_id.
   window.mpcMetaParams = function (link, eventId) {
-    var fbc = readCookie('_fbc');
-    var fbp = readCookie('_fbp');
-    var adId = getParam('adid');
+    var fbc = window.mpcGetFbc();
+    var fbp = window.mpcGetFbp();
+    var adId = window.mpcGetAdId();
     var params = [];
     if (fbc) params.push('utm_content=' + encodeURIComponent(fbc));
     if (fbp) params.push('utm_term=' + encodeURIComponent(fbp));

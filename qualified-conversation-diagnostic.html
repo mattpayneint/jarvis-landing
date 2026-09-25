@@ -233,6 +233,11 @@
   #booking-embed-wrap .cta-disclaimer { font-family: Georgia, 'Times New Roman', serif; font-size: 13px; line-height: 1.7; color: #5b5750; margin: 0 0 18px; }
   .calendly-inline-widget { min-width: 280px; height: 700px; }
 
+  /* Honeypot (Fix Pass 2, 2026-09-24): invisible to real visitors and unreachable by
+     keyboard tab order, but sits in the DOM where a form-filling bot will find and fill
+     it. Any value here means the submission is rejected. */
+  .hp-wrap { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  #report-cta .grab-time-btn { margin-top: 4px; }
   .errors { display: none; border-left: 2px solid var(--red); background: var(--bg-elevated); padding: 12px 16px; margin-bottom: 20px; font-size: 13.5px; color: var(--red); }
   .errors.show { display: block; }
   .errors ul { margin: 6px 0 0; padding-left: 18px; }
@@ -348,6 +353,10 @@ fbq('track', 'PageView');
   </section>
 
   <form id="diag-form" novalidate>
+    <div class="hp-wrap" aria-hidden="true">
+      <label for="hp-field">Leave this field blank</label>
+      <input type="text" id="hp-field" name="website" tabindex="-1" autocomplete="off">
+    </div>
     <div class="errors" id="errors"><strong>A few things need fixing:</strong><ul id="error-list"></ul></div>
 
     <section>
@@ -467,6 +476,11 @@ fbq('track', 'PageView');
 
 <script>
 (function () {
+  var PIXEL_ID = "1604378769784336";
+  // Bot protection (Fix Pass 2, 2026-09-24): page-load timestamp for the minimum-time-
+  // on-page check at submit -- this form takes real people well over 8 seconds to fill
+  // out (5 sections, 2 required freeform questions), so anything faster is a bot.
+  var pageLoadedAt = Date.now();
   var SOURCES = [
     "Client referrals",
     "Professional referral relationships",
@@ -516,7 +530,10 @@ fbq('track', 'PageView');
   var optinParams = new URLSearchParams(window.location.search);
   var optinVideoSource = optinParams.get("src") || "unknown";
   var optinCtaPosition = optinParams.get("cta") || "unknown";
-  var optinAdId = optinParams.get("adid") || "unknown";
+  // adid persistence (Fix Pass 2, 2026-09-24): falls back to the 30-day cookie/localStorage
+  // value from assets/fbc-fbp.js when the current URL has none (return visit, bookmark,
+  // organic revisit) instead of collapsing straight to "unknown".
+  var optinAdId = optinParams.get("adid") || (typeof window.mpcGetAdId === "function" && window.mpcGetAdId()) || "unknown";
   var optinFired = false;
 
   function maybeFireOptin() {
@@ -547,6 +564,18 @@ fbq('track', 'PageView');
   document.getElementById("name").addEventListener("blur", maybeFireOptin);
   document.getElementById("email").addEventListener("blur", maybeFireOptin);
   document.getElementById("practice_type").addEventListener("change", maybeFireOptin);
+
+  // Funnel instrumentation (Fix Pass 2, 2026-09-24): fires once, on first interaction
+  // with the first form field, so start -> completion drop-off is visible in Ads
+  // Manager custom conversions/events, separate from the CompleteRegistration event
+  // that only fires on a full, valid submit.
+  var diagnosticStartedFired = false;
+  function maybeFireDiagnosticStarted() {
+    if (diagnosticStartedFired) return;
+    diagnosticStartedFired = true;
+    if (typeof fbq === "function") fbq("trackCustom", "DiagnosticStarted");
+  }
+  document.getElementById("name").addEventListener("focus", maybeFireDiagnosticStarted);
 
   // Meta CAPI matching (added 2026-09-11): Meta Pixel drops _fbc (click ID, present only
   // when the visitor arrived via an ad click) and _fbp (browser ID, present on any Pixel
@@ -587,6 +616,19 @@ fbq('track', 'PageView');
   // book" retargeting audience impossible to build. Idempotent: safe to call more than once
   // (submit-time primary call + renderCta's safety-net call after the report resolves) --
   // only actually renders/inits the widget once.
+  // Calendly prefill (Fix Pass 2, 2026-09-24): name/email were typed into the diagnostic
+  // form seconds earlier -- carry them onto the embed URL so Calendly doesn't ask again
+  // at the highest-intent moment. Read straight off the (still-present, just hidden)
+  // form fields rather than threading extra params through every call site.
+  function appendCalendlyPrefill(link, name, email) {
+    var params = [];
+    if (name) params.push("name=" + encodeURIComponent(name));
+    if (email) params.push("email=" + encodeURIComponent(email));
+    if (!params.length) return link;
+    var sep = link.indexOf("?") === -1 ? "?" : "&";
+    return link + sep + params.join("&");
+  }
+
   function renderBookingEmbed(practiceType) {
     var wrap = document.getElementById("booking-embed-wrap");
     if (!wrap || wrap.classList.contains("show")) return;
@@ -594,7 +636,16 @@ fbq('track', 'PageView');
     if (!link) return;
     if (!mpcBookingEventId && typeof window.mpcNewEventId === "function") mpcBookingEventId = window.mpcNewEventId();
     var embedUrl = buildCalendlyUrl(link, mpcBookingEventId);
-    if (typeof fbq === "function") fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
+    var nameEl = document.getElementById("name");
+    var emailEl = document.getElementById("email");
+    embedUrl = appendCalendlyPrefill(embedUrl, nameEl ? nameEl.value.trim() : "", emailEl ? emailEl.value.trim() : "");
+    // Schedule pixel event (Fix Pass 2, 2026-09-24): moved off embed-render -- it used to
+    // fire here, which meant Ads Manager's "Schedule" count was really counting diagnostic
+    // completions, not bookings (2026-09-24 attribution audit, item 19). Now fires only on
+    // Calendly's own "calendly.event_scheduled" postMessage, see the listener below. Same
+    // mpcBookingEventId is still threaded onto embedUrl above as utm_campaign, so the
+    // server-side CAPI Schedule event (read back from tracking.utm_campaign) still dedups
+    // against whichever eventID this browser event ends up using.
     var html = '<div class="cta-kicker">One More Thing</div>';
     html += '<p class="cta-invite">If it\'d help to talk through any of this, I\'d love to hop on a quick call. No pressure either way. Grab a time right here.</p>';
     if (CAPITAL_RAISE_TYPES[practiceType]) {
@@ -611,12 +662,39 @@ fbq('track', 'PageView');
     }
   }
 
+  // Calendly interaction tracking (Fix Pass 2, 2026-09-24): two purposes. (1) know
+  // whether to skip the post-report auto-scroll (don't scroll a visitor away from a
+  // calendar they're actively using), and (2) fire the real Schedule pixel event only
+  // once a booking is actually made, via Calendly's own postMessage protocol.
+  var lastCalendlyInteractionAt = 0;
+  function markCalendlyInteraction() { lastCalendlyInteractionAt = Date.now(); }
+  function recentCalendlyInteraction() { return (Date.now() - lastCalendlyInteractionAt) < 20000; }
+  document.addEventListener("mouseover", function (e) {
+    var target = document.getElementById("calendly-widget-target");
+    if (target && target.contains(e.target)) markCalendlyInteraction();
+  });
+  window.addEventListener("blur", function () {
+    var target = document.getElementById("calendly-widget-target");
+    if (target && document.activeElement && target.contains(document.activeElement)) markCalendlyInteraction();
+  });
+  window.addEventListener("message", function (e) {
+    if (!e.data || typeof e.data !== "object") return;
+    var evtName = e.data.event;
+    if (typeof evtName !== "string" || evtName.indexOf("calendly.") !== 0) return;
+    markCalendlyInteraction();
+    if (evtName === "calendly.event_scheduled" && typeof fbq === "function") {
+      fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
+    }
+  });
+
   function renderCta(practiceType) {
     var ctaEl = document.getElementById("report-cta");
     var html = "";
     html += '<div class="cta-kicker">One More Thing</div>';
     html += '<p class="cta-confirm">Your full diagnostic is also headed to your inbox right now.</p>';
-    if (!CALENDLY_LINKS[practiceType]) {
+    if (CALENDLY_LINKS[practiceType]) {
+      html += '<button type="button" class="primary grab-time-btn" id="grab-time-btn">Grab a Time</button>';
+    } else {
       html += '<p class="cta-followup">I read every one of these myself. I\'ll follow up by email to find a time that works.</p>';
     }
     ctaEl.innerHTML = html;
@@ -624,6 +702,16 @@ fbq('track', 'PageView');
     // Safety net only -- the real render already happened at submit time via
     // renderBookingEmbed below. This call is a no-op if it's already showing.
     renderBookingEmbed(practiceType);
+    // Calendly return path (Fix Pass 2, 2026-09-24): the report sits below the Calendly
+    // embed in DOM order, so finishing the report otherwise dead-ends a visitor ~4 screens
+    // away from the calendar with no way back short of scrolling up by hand.
+    var grabTimeBtn = document.getElementById("grab-time-btn");
+    if (grabTimeBtn) {
+      grabTimeBtn.addEventListener("click", function () {
+        var target = document.getElementById("booking-embed-wrap");
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   }
 
   var sourcesEl = document.getElementById("sources");
@@ -692,6 +780,15 @@ fbq('track', 'PageView');
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+
+    // Bot protection (Fix Pass 2, 2026-09-24): silent reject, no error shown, no webhook
+    // call -- a filled honeypot or a sub-8-second fill time on a 5-section form is a bot,
+    // not a fast typer, and showing an error just tips off a scripted submitter that a
+    // check exists.
+    var hpValue = (document.getElementById("hp-field") || {}).value || "";
+    var elapsedMs = Date.now() - pageLoadedAt;
+    if (hpValue || elapsedMs < 8000) return;
+
     errorsBox.classList.remove("show");
     statusEl.textContent = "";
     statusEl.classList.remove("err");
@@ -738,6 +835,15 @@ fbq('track', 'PageView');
     // defaults missing fields to "unknown" and this payload never sent them), overwriting
     // whatever the early opt-in had already captured -- would have broken meta_ad_id
     // attribution the same way the moment anyone actually finished the diagnostic.
+    // CompleteRegistration dedup contract (Fix Pass 2, 2026-09-24): the CAPI backend being
+    // built in parallel sends its own server-side CompleteRegistration for this same
+    // submission -- cr_event_id is the shared dedup key, generated the same way
+    // mpcNewEventId() already does (crypto.randomUUID with a fallback), and must be echoed
+    // back by the backend as the CAPI event's event_id.
+    var crEventId = (typeof window.mpcNewEventId === "function") ? window.mpcNewEventId() : String(Date.now());
+    var fbpVal = (typeof window.mpcGetFbp === "function") ? window.mpcGetFbp() : "";
+    var fbcVal = (typeof window.mpcGetFbc === "function") ? window.mpcGetFbc() : "";
+
     var payload = {
       name: name,
       email: email,
@@ -748,19 +854,37 @@ fbq('track', 'PageView');
       biggest_obstacle: obstacle,
       video_source: optinVideoSource,
       cta_position: optinCtaPosition,
-      meta_ad_id: optinAdId
+      meta_ad_id: optinAdId,
+      cr_event_id: crEventId,
+      fbp: fbpVal,
+      fbc: fbcVal,
+      event_source_url: window.location.href,
+      client_user_agent: navigator.userAgent,
+      hp: hpValue,
+      elapsed_ms: elapsedMs
     };
 
     submitBtn.disabled = true;
     form.style.display = "none";
     processing.classList.add("show");
 
+    // Manual advanced matching (Fix Pass 2, 2026-09-24): now that the email (and name) are
+    // known, re-init the pixel with plaintext em/fn/ln -- the pixel hashes client-side
+    // before it ever leaves the browser. Must run before the CompleteRegistration track
+    // call below so that event benefits from the match data too.
+    if (typeof fbq === "function") {
+      var nameParts = name.split(/\s+/);
+      fbq("init", PIXEL_ID, { em: email, fn: nameParts[0] || "", ln: nameParts.slice(1).join(" ") || "" });
+    }
+
     // Diagnostic Completion (added 2026-09-13): this is the exact optimization event named
     // in ADS-STRATEGY.md Section 9a as the Stage 2 (Traffic -> Conversions) graduation
     // trigger -- didn't exist at all before this, so there was nothing for Meta to ever
     // optimize toward or for Sema to count against the 50/week threshold. Fires on every
-    // valid completion regardless of vertical/Calendly availability.
-    if (typeof fbq === "function") fbq("track", "CompleteRegistration", { content_name: "Qualified Conversation Diagnostic", practice_type: practiceType });
+    // valid completion regardless of vertical/Calendly availability. eventID (Fix Pass 2,
+    // 2026-09-24) is the same cr_event_id sent in the POST body above, so the CAPI
+    // backend's server-side CompleteRegistration dedups against this browser event.
+    if (typeof fbq === "function") fbq("track", "CompleteRegistration", {}, { eventID: crEventId });
 
     // Redirect timing (added 2026-09-11, Matt's explicit correction): the calendar
     // navigation fires on submit itself -- the moment someone answers the last question
@@ -818,7 +942,12 @@ fbq('track', 'PageView');
         document.getElementById("doc-watermark").textContent = String(Number(qcRaw));
         renderCta(practiceType);
         reportSection.classList.add("show");
-        reportSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Conditional auto-scroll (Fix Pass 2, 2026-09-24): don't scroll a visitor away
+        // from a Calendly widget they're actively using (focus/pointer over it, or a
+        // calendly.* postMessage) in the last ~20s -- see recentCalendlyInteraction above.
+        if (!recentCalendlyInteraction()) {
+          reportSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       })
       .catch(function () {
         processing.classList.remove("show");
