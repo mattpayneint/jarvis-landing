@@ -1252,6 +1252,9 @@
   ::-webkit-scrollbar-track { background: #0B0B0D; }
   ::-webkit-scrollbar-thumb { background: #9A7B3F; border-radius: 5px; border: 2px solid #0B0B0D; }
   ::-webkit-scrollbar-thumb:hover { background: #C2A468; }
+  /* perf (2026-09-24): freeze every looping animation in blocks that are off screen.
+     Toggled by the IntersectionObserver at the end of <body>; visitors never see it. */
+  .perf-off, .perf-off *, .perf-off *::before, .perf-off *::after { animation-play-state: paused !important; }
 </style>
 
 <nav id="nav">
@@ -2062,8 +2065,10 @@
 
     /* Nav state */
     var nav = document.getElementById('nav');
-    function navState() { nav.classList.toggle('solid', window.scrollY > 60); }
-    window.addEventListener('scroll', navState, { passive: true });
+    var navSolid = null;
+    function navState() { var v = window.scrollY > 60; if (v !== navSolid) { navSolid = v; nav.classList.toggle('solid', v); } }
+    /* runs inside the parallax rAF below (after its reads); plain listener only if parallax is off */
+    if (reduce || !document.querySelector('[data-plx]')) window.addEventListener('scroll', navState, { passive: true });
     navState();
 
     /* Mobile menu toggle */
@@ -2088,14 +2093,19 @@
     /* Parallax on chapter backgrounds + closing portrait */
     var plx = Array.prototype.slice.call(document.querySelectorAll('[data-plx]'));
     var ticking = false;
+    /* perf (2026-09-24): hosts/factors cached once, and all rects read BEFORE any transform
+       is written - the old read/write/read loop forced a full layout per element per frame. */
+    var plxHost = plx.map(function (el) { return el.closest('.cine') || el.parentElement; });
+    var plxF = plx.map(function (el) { return parseFloat(el.getAttribute('data-plx')); });
     function parallax() {
-      plx.forEach(function (el) {
-        var host = el.closest('.cine') || el.parentElement;
-        var r = host.getBoundingClientRect();
-        var f = parseFloat(el.getAttribute('data-plx'));
-        var offset = (r.top + r.height / 2 - window.innerHeight / 2) * f;
+      var vh = window.innerHeight, rs = plxHost.map(function (h) { return h.getBoundingClientRect(); });
+      plx.forEach(function (el, i) {
+        var r = rs[i];
+        if (r.bottom < -vh || r.top > vh * 2) return; /* off screen: leave it where it is */
+        var offset = (r.top + r.height / 2 - vh / 2) * plxF[i];
         el.style.transform = 'translateY(' + (-offset) + 'px)';
       });
+      navState();
       ticking = false;
     }
     if (!reduce && plx.length) {
@@ -2819,6 +2829,8 @@
        they're visited in changes */
     var PHASE_ORDER = [2, 0, 1], orderIdx = 0;
     var phase = PHASE_ORDER[0], phaseT = 0, last = 0, ry = 0, rx = 0.12, started = false;
+    /* perf: the globe only renders while its section is on screen (was running forever off-screen) */
+    var gInView = true, gLoop = false;
     var phaseW = [0, 0, 1];
     var typeEl = (core.closest('.j-stick-inner') || core.parentElement).querySelector('.j-type-text');
     var lines = [
@@ -3258,7 +3270,7 @@
         }
       }
       ctx.globalCompositeOperation = 'source-over';
-      if (!reduce) requestAnimationFrame(frame);
+      if (!reduce && gInView) requestAnimationFrame(frame); else gLoop = false;
     }
     function start() {
       if (started) return; if (!build()) return; started = true;
@@ -3271,7 +3283,7 @@
       settleT = 0; sparkled = false;
       setLine(phase);
       if (reduce) { for (var j = 0; j < N; j++) { px[j] = sx[j]; py[j] = sy[j]; pz[j] = sz[j]; } }
-      requestAnimationFrame(frame);
+      gLoop = true; requestAnimationFrame(frame);
     }
     var zone = core.closest('.j-sticky-wrap') || core.parentElement;
     if (!mobile) {
@@ -3304,13 +3316,15 @@
       var wasInView = false;
       new IntersectionObserver(function (en) {
         var v = en[0].isIntersecting;
+        gInView = v;
+        if (v && started && !gLoop && !reduce) { gLoop = true; last = 0; requestAnimationFrame(frame); }
         if (v && !wasInView && started) {
           orderIdx = 0; phase = PHASE_ORDER[0]; phaseT = 0;
           phaseW[0] = 0; phaseW[1] = 0; phaseW[2] = 1;
           setLine(phase);
         }
         wasInView = v;
-      }, { threshold: 0.2 }).observe(zone);
+      }, { threshold: 0 }).observe(zone);
     }
   })();
 </script>
@@ -4036,6 +4050,21 @@
         window.location.href = 'mailto:matt@matthewpayneconsulting.com?subject=' + encodeURIComponent("Send me Section One of The Owner's Manual to the Mind") + '&body=' + encodeURIComponent('My email: ' + email + '\n\nSend me Section One of The Owner\'s Manual to the Mind.');
       });
     });
+  })();
+</script>
+<script>
+  /* perf (2026-09-24): pause CSS animations in page blocks that are off screen.
+     The page carries ~60 infinite animations; left running everywhere they pinned the
+     main thread and choked slower machines. 300px margin = resumed before it's visible. */
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    var blocks = document.querySelectorAll('main > *, body > footer');
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (e) {
+        e.target.classList.toggle('perf-off', !e.isIntersecting);
+      });
+    }, { rootMargin: '300px 0px' });
+    blocks.forEach(function (el) { io.observe(el); });
   })();
 </script>
 </body>
