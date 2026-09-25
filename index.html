@@ -1033,7 +1033,13 @@
   .om-note { font-size: 12.5px; color: var(--cream-soft); margin-top: 14px; }
   .om-done { font-family: var(--serif); font-size: 1.15rem; line-height: 1.55; color: var(--cream); padding: 10px 2px; }
   .om-done a { color: var(--brass-soft); }
-  .om-more { margin-top: 30px; }
+  .om-more { margin-top: 30px; display: flex; flex-wrap: wrap; align-items: center; gap: 22px 40px; }
+  .om-listen { display: inline-flex; align-items: center; gap: 16px; text-decoration: none; color: var(--cream); }
+  .om-listen .pl { width: 54px; height: 54px; flex: none; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(145deg, #E9CD90, #9A7B3F); color: #16130D; box-shadow: 0 12px 28px -10px rgba(194,164,104,0.6), inset 0 1px 0 rgba(255,255,255,0.35); transition: transform 0.35s var(--ease); }
+  .om-listen .pl svg { width: 20px; height: 20px; margin-left: 2px; }
+  .om-listen:hover .pl { transform: scale(1.06); }
+  .om-listen .lt { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; }
+  .om-listen .ls { display: block; font-size: 13px; color: var(--cream-soft); margin-top: 3px; }
   .om-link { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--brass-soft); font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; }
   .om-link .ar { transition: transform 0.4s var(--ease); }
   .om-link:hover .ar { transform: translateX(8px); }
@@ -2002,7 +2008,7 @@
           </form>
           <p class="om-note">Ten volumes. I'll start you with Section One, The Power of Your Unconscious Mind. When you're ready for the rest, just ask.</p>
         </div>
-        <div class="om-more reveal"><a class="om-link" href="audio/"><span class="tx">See Everything Inside &middot; All 95 Tracks</span><span class="ar">&rarr;</span></a></div>
+        <div class="om-more reveal"><a class="om-listen" href="audio/#listen"><span class="pl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.2-6.8c.6-.4.6-1.2 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg></span><span><span class="lt">Listen To A Sample</span><span class="ls">Six short moments from the program</span></span></a><a class="om-link" href="audio/"><span class="tx">See Everything Inside &middot; All 95 Tracks</span><span class="ar">&rarr;</span></a></div>
       </div>
     </div>
   </div>
