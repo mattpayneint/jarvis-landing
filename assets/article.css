@@ -84,6 +84,13 @@ body.article-page .wrap { max-width: 780px; }
   text-decoration-color: rgba(198,166,103,0.4);
 }
 .article a:hover { text-decoration-color: var(--gold); }
+/* Gold CTA buttons keep their own label treatment inside prose.
+   .article a (0,1,1) was beating .btn-gold (0,1,0), which painted the label
+   gold on the gold gradient: an effectively invisible button. Fixed 2026-09-28. */
+.article a.btn-gold {
+  color: #FFFFFF;
+  text-decoration: none;
+}
 .article ul.plain {
   margin: 0 0 18px 1.2em;
   color: var(--ink-soft);
@@ -181,4 +188,24 @@ body.article-page header.site.conv .mark {
   body.article-page header.site.conv { padding: 16px 20px 14px; }
   body.article-page header.site.conv .mark { font-size: 19px; }
   .btn-gold.conv-cta { font-size: 11px; padding: 9px 14px; }
+}
+
+/* FAQ hub: three vertical-matched calendars, side by side on desktop,
+   stacked on phones. Added 2026-09-28 with faq.html. */
+.faq-books {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 380px;
+  margin: 30px auto 4px;
+}
+.faq-books .btn-gold {
+  padding: 18px 20px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+@media (max-width: 680px) {
+  .faq-books { max-width: none; }
+  .faq-books .btn-gold { padding: 17px 16px; font-size: 12px; }
 }

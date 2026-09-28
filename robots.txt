@@ -47,4 +47,25 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: Google-CloudVertexBot
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
 Sitemap: https://matthewpayneconsulting.com/sitemap.xml
