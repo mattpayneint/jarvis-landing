@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Qualified Conversation Diagnostic | Matthew Payne Consulting</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="A quick assessment for financial advisors, fund managers, and attorneys: find the bottleneck in your conversations with high net worth clients, and where to look next. Get a personalized report on your pipeline back immediately.">
+<link rel="canonical" href="https://matthewpayneconsulting.com/qualified-conversation-diagnostic.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Matthew Payne Consulting">
+<meta property="og:title" content="The Qualified Conversation Diagnostic">
+<meta property="og:description" content="Find the bottleneck in your conversations with high net worth clients, and where to look next. A quick assessment, a written diagnostic back immediately.">
+<meta property="og:url" content="https://matthewpayneconsulting.com/qualified-conversation-diagnostic.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Qualified Conversation Diagnostic">
+<meta name="twitter:description" content="Find the bottleneck in your conversations with high net worth clients, and where to look next. A quick assessment, a written diagnostic back immediately.">
+<script>document.documentElement.className += " js";</script>
+<link rel="preload" as="image" type="image/avif" href="assets/qcd/office-hero-m800.avif" media="(max-width: 860px)" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" imagesrcset="assets/qcd/office-hero-1000.avif 1000w, assets/qcd/office-hero-1600.avif 1600w, assets/qcd/office-hero-2200.avif 2200w" imagesizes="106vw" media="(min-width: 861px)" fetchpriority="high">
+<style>
+  img[width] { height: auto; }
+  :root {
+    --noir: #0B0B0D;
+    --paper: #FDFCF9; --paper-deep: #F6F4EE; --paper-shade: #EFEBE1; --stone: #E9DFCB;
+    --ink: #241F17; --ink-soft: #625A48; --ink-faint: #8E8571;
+    --brass: #9A7B3F; --brass-soft: #C2A468; --brass-hi: #E9CD90;
+    --cream: #F2EDE1; --cream-soft: #B3AC9C;
+    --hairline: #E7E2D5; --hairline-strong: #D6CCB5;
+    --red: #9C5A4A;
+    --serif: "Didot", "Playfair Display", "Bodoni 72", "Times New Roman", Georgia, serif;
+    --sans: "Avenir Next", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --foil: linear-gradient(135deg,#5e4420 0%,#d4af6a 16%,#fff3d4 30%,#c99a4f 45%,#6b4f26 58%,#e8c383 72%,#fff3d4 85%,#a67c3d 100%);
+    --foil-ink: linear-gradient(100deg, #7d5f2c 0%, #a8843f 25%, #c9a35c 45%, #9A7B3F 65%, #b8924f 85%, #7d5f2c 100%);
+    --metal-btn: linear-gradient(180deg,#f1dca6 0%,#d6b170 22%,#b88f4a 52%,#9A7B3F 78%,#c7a160 100%);
+    --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25  0 0 0 0 .2  0 0 0 0 .12  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    --shadow-lift: 0 1px 2px rgba(36,31,23,.06), 0 10px 24px -10px rgba(36,31,23,.16), 0 40px 80px -36px rgba(36,31,23,.28);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+  #report-section { overflow: hidden; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  ::selection { background: rgba(194,164,104,.35); color: var(--ink); }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; margin: 0; text-wrap: balance; }
+  p { margin: 0 0 1.1em; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--brass-soft); outline-offset: 3px; }
+  .foil-ink { background-image: var(--foil-ink); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+  .js .reveal.is-visible { opacity: 1; transform: none; }
+  .stagger .aw { display: inline-block; opacity: 0; transform: translateY(.4em); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .stagger.is-visible .aw { opacity: 1; transform: none; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  /* ---- HERO: a sunlit loggia; the medallion is mounted on the wall, the wordmark engraved into the stone ---- */
+  .hero { position: relative; height: 80vh; min-height: 600px; max-height: 940px; overflow: hidden; background: var(--stone); isolation: isolate;
+    --mx: 26%; --my: 36%; --mr: clamp(70px, 8vw, 128px); }
+  .stage { position: absolute; inset: -3%; will-change: transform; }
+  .stage .ph { position: absolute; inset: 0; }
+  .stage .ph img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
+  .stage, .stage-anim { animation: push 30s ease-in-out infinite alternate; }
+  @keyframes push { from { transform: scale(1); } to { transform: scale(1.04); } }
+  /* the mounted medallion: same coordinates as the mask below, so it sits ON the wall */
+  .plaque { position: absolute; z-index: 2; left: calc(var(--mx) - var(--mr)); top: calc(var(--my) - var(--mr)); width: calc(var(--mr) * 2); height: calc(var(--mr) * 2);
+    filter: drop-shadow(-10px 16px 14px rgba(70,45,12,.38)) drop-shadow(-2px 3px 3px rgba(70,45,12,.35)); }
+  .plaque svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  /* the wall's own leaf shadows, multiplied back across the medallion (masked to its exact circle) */
+  .ph.shade { z-index: 3; mix-blend-mode: multiply; opacity: .78;
+    -webkit-mask-image: radial-gradient(circle var(--mr) at var(--mx) var(--my), #000 98%, transparent 100%);
+            mask-image: radial-gradient(circle var(--mr) at var(--mx) var(--my), #000 98%, transparent 100%); }
+  .ph.shade img { filter: contrast(1.25) brightness(1.08); }
+  .engrave { position: absolute; z-index: 4; left: var(--mx); top: calc(var(--my) + var(--mr) + 30px); transform: translateX(-50%); text-align: center; width: max-content; }
+  .engrave::before { content: ""; position: absolute; inset: -38px -70px -34px; z-index: -2; background: radial-gradient(closest-side, rgba(255,250,238,.62), rgba(255,250,238,.32) 55%, rgba(255,250,238,0)); }
+  .engrave .wm { font-family: var(--serif); font-size: clamp(1.4rem, 2.5vw, 2.45rem); line-height: 1.05; color: #3A2A12; text-shadow: 0 1px 0 rgba(255,250,236,.85), 0 -1px 0 rgba(60,40,12,.25); }
+  .engrave .wm-hi { display: none; position: absolute; left: 0; right: 0; top: 1px; font-family: var(--serif); font-size: clamp(1.3rem, 2.35vw, 2.3rem); line-height: 1.05; color: rgba(255,246,226,.55); mix-blend-mode: screen; z-index: -1; }
+  .engrave .tag { margin-top: 12px; font-size: clamp(8px, .8vw, 11.5px); font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: #5A3F16; text-shadow: 0 1px 0 rgba(255,250,236,.8); }
+  .engrave .tag::before { content: ""; display: block; width: 100%; height: 1px; margin: 0 auto 10px; background: linear-gradient(90deg, transparent, rgba(110,80,34,.75), transparent); }
+  .sunspill { position: absolute; inset: 0; z-index: 5; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(60% 70% at 88% 30%, rgba(255,226,170,.28), transparent 70%); }
+  .hero-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: 6; background: linear-gradient(0deg, rgba(253,252,249,.9), rgba(253,252,249,0)); pointer-events: none; }
+  @media (max-width: 860px) {
+    .hero { height: 318px; min-height: 0; --mx: 36%; --my: 30%; --mr: 50px; }
+    .engrave { top: calc(var(--my) + var(--mr) + 16px); }
+    .engrave::before { inset: -24px -30px -22px; }
+    .engrave .wm, .engrave .wm-hi { font-size: 1.12rem; }
+    .engrave .tag { margin-top: 7px; font-size: 6.6px; letter-spacing: .18em; max-width: 25em; white-space: normal; line-height: 1.75; }
+    .engrave .tag::before { margin-bottom: 6px; }
+  }
+
+  /* ---- The headline card: overlaps the hero edge (Four Seasons booking-module anatomy) ---- */
+  .cardwrap { position: relative; z-index: 10; max-width: 1080px; margin: -210px auto 0; padding: 0 40px; }
+  .hcard { position: relative; background: linear-gradient(180deg, #FFFEFB 0%, var(--paper) 100%); padding: 60px 70px 0; box-shadow: var(--shadow-lift); }
+  .hcard::before { content: ""; position: absolute; inset: 16px -16px -16px 16px; border: 1px solid rgba(194,164,104,.55); z-index: -1; }
+  .hcard::after { content: ""; position: absolute; inset: 0; background: var(--grain); opacity: .05; pointer-events: none; }
+  .kicker { font-size: 11px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--brass); display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+  .kicker::before { content: ""; height: 1.5px; width: 52px; background: linear-gradient(90deg, var(--brass), var(--brass-soft)); flex: none; }
+  .hcard h1 { font-size: clamp(2.1rem, 4vw, 3.6rem); line-height: 1.1; color: var(--ink); max-width: 21ch; }
+  .hcard h1 em { font-style: italic; background-image: var(--foil-ink); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .08em; }
+  .hcard .lede { font-size: 1.14rem; color: var(--ink-soft); max-width: 46ch; margin: 24px 0 0; }
+  .trustrow { display: flex; align-items: center; gap: 22px; margin: 44px -70px 0; padding: 26px 70px; border-top: 1px solid var(--hairline); background: linear-gradient(180deg, rgba(246,244,238,.6), rgba(239,235,225,.9)); position: relative; }
+  .tp { position: relative; flex: none; width: 76px; height: 76px; border-radius: 50%; padding: 2.5px; background: var(--foil); box-shadow: 0 8px 22px -8px rgba(36,31,23,.45); }
+  .tp img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 14%; display: block; background: #fff; }
+  .tl-line { font-family: var(--serif); font-size: clamp(1.2rem, 1.9vw, 1.5rem); line-height: 1.3; color: var(--ink); margin: 0 0 6px; }
+  .tl-line em { font-style: italic; color: var(--brass); }
+  .li { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; text-decoration: none; color: var(--ink-soft); position: relative; padding-bottom: 4px; }
+  .li svg { width: 15px; height: 15px; fill: none; stroke: var(--brass); stroke-width: 1.6; }
+  .li::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--brass-soft); transform: scaleX(.35); transform-origin: left; transition: transform .5s var(--ease); }
+  .li:hover::after { transform: scaleX(1); }
+  @media (max-width: 860px) {
+    .cardwrap { margin-top: -50px; padding: 0 14px; }
+    .hcard { padding: 26px 22px 0; }
+    .kicker { margin-bottom: 14px; }
+    .hcard::before { inset: 10px -8px -10px 8px; }
+    .hcard h1 { font-size: clamp(1.8rem, 7.7vw, 2.2rem); line-height: 1.08; }
+    .hcard .lede { font-size: 1rem; margin-top: 16px; }
+    .trustrow { margin: 22px -22px 0; padding: 16px 22px; gap: 14px; }
+    .tp { width: 64px; height: 64px; }
+    .kicker { font-size: 9.5px; letter-spacing: .16em; gap: 10px; } .kicker::before { width: 24px; }
+  }
+
+  /* ---- Chapters as rooms: a sticky photograph beside each (Aman editorial), grain on every ground ---- */
+  .chapter { position: relative; padding: 120px 0; }
+  .chapter::before { content: ""; position: absolute; inset: 0; background: var(--grain); opacity: .045; pointer-events: none; }
+  .chapter.deep { background: linear-gradient(180deg, var(--paper-deep), var(--paper-shade)); }
+  .chapter.light { background: radial-gradient(90% 70% at 15% 0%, #FFFFFF 0%, var(--paper) 55%, var(--paper-deep) 100%); }
+  .room { position: relative; max-width: 1180px; margin: 0 auto; padding: 0 44px; display: grid; grid-template-columns: 4.2fr 7fr; gap: 80px; align-items: start; }
+  .room.flip { grid-template-columns: 7fr 4.2fr; }
+  .room.flip .rail { order: 2; }
+  .rail { position: sticky; top: 40px; }
+  .rail figure { position: relative; margin: 0; aspect-ratio: 3 / 4; }
+  .rail figure::before { content: ""; position: absolute; inset: 14px -14px -14px 14px; border: 1px solid rgba(194,164,104,.55); }
+  .room.flip .rail figure::before { inset: 14px 14px -14px -14px; }
+  .rail .frame { position: absolute; inset: 0; overflow: hidden; box-shadow: var(--shadow-lift); }
+  .rail img { width: 100%; height: 115%; object-fit: cover; display: block; transform: translateY(-6%); }
+  .rail .cap { position: absolute; left: 22px; bottom: 18px; z-index: 2; font-family: var(--serif); font-style: italic; font-size: 64px; line-height: 1; color: #FFF8EA; text-shadow: 0 2px 20px rgba(60,40,10,.45); }
+  .chead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 40px; padding-bottom: 22px; border-bottom: 1px solid var(--hairline-strong); position: relative; }
+  .chead::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 90px; height: 1.5px; background: linear-gradient(90deg, var(--brass), var(--brass-soft)); }
+  .chead .num { font-size: 11px; font-weight: 600; letter-spacing: .26em; color: var(--brass); flex: none; }
+  .chead h2 { font-size: clamp(1.8rem, 3.2vw, 2.6rem); line-height: 1.12; }
+  @media (max-width: 860px) {
+    .chapter { padding: 46px 0 54px; }
+    .room, .room.flip { grid-template-columns: 1fr; gap: 22px; padding: 0 22px; }
+    .room.flip .rail { order: 0; }
+    .rail { position: relative; top: 0; }
+    .rail figure { aspect-ratio: 16 / 5; margin-right: 8px; }
+    .rail figure::before, .room.flip .rail figure::before { inset: 8px -8px -8px 8px; }
+    .rail img { height: 100%; transform: none; object-position: 50% 55%; }
+    .rail .cap { font-size: 34px; left: 14px; bottom: 6px; }
+    .chead { margin-bottom: 26px; padding-bottom: 14px; }
+    .field { margin-bottom: 26px; }
+    #begin .rail { display: none; }
+    .room > .rail { display: none; }
+    .room > .rail.keep-mobile { display: block; }
+    .chapter { padding: 36px 0 40px; }
+    .src-check { padding: 14px 4px; }
+    .src-check span { font-size: 19px; }
+    textarea { min-height: 114px; }
+    .defn li { padding-top: 13px; padding-bottom: 13px; }
+    .defn p.lead { margin-bottom: 16px; }
+    .count .inner { margin-top: -18px; }
+  }
+
+  .defn p { font-size: 16px; line-height: 1.75; color: var(--ink-soft); }
+  .defn p.lead { font-family: var(--serif); font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.22; color: var(--ink); margin-bottom: 26px; }
+  .defn ol { list-style: none; counter-reset: q; margin: 0 0 26px; padding: 0; }
+  .defn li { counter-increment: q; position: relative; padding: 18px 0 18px 64px; border-top: 1px solid var(--hairline); font-size: 16px; line-height: 1.7; color: var(--ink); }
+  .defn li::before { content: counter(q, upper-roman); position: absolute; left: 0; top: 14px; font-family: var(--serif); font-style: italic; font-size: 26px; background-image: var(--foil-ink); -webkit-background-clip: text; background-clip: text; color: transparent; width: 44px; }
+  .not-line { font-size: 14.5px; color: var(--ink-faint); border-top: 1px solid var(--hairline-strong); padding-top: 18px; margin: 0; }
+  .not-line strong { color: var(--ink-soft); font-weight: 600; }
+  @media (max-width: 700px) { .defn li { padding-left: 46px; } }
+
+  /* ---- Bespoke fields: hairline underline, brass draw-on focus ---- */
+  label { display: block; font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 4px; line-height: 1.6; }
+  .field { margin-bottom: 34px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  @media (max-width: 600px) { .row2 { grid-template-columns: 1fr; gap: 0; } }
+  input[type="text"], input[type="email"], input[type="number"], select, textarea {
+    width: 100%; font-family: var(--serif); font-size: 22px; color: var(--ink); background: transparent;
+    border: 0; border-radius: 0; padding: 10px 0 12px; outline: none; -webkit-appearance: none; appearance: none;
+    background-image: linear-gradient(90deg, var(--brass), var(--brass-hi), var(--brass)), linear-gradient(var(--hairline-strong), var(--hairline-strong));
+    background-size: 0% 1.5px, 100% 1px; background-position: 0 100%, 0 100%; background-repeat: no-repeat;
+    transition: background-size .7s var(--ease);
+  }
+  input:focus, select:focus, textarea:focus { background-size: 100% 1.5px, 100% 1px; }
+  input::placeholder, textarea::placeholder { color: #B5AC98; font-style: italic; }
+  select { cursor: pointer; padding-right: 34px; }
+  .sel { position: relative; }
+  .sel::after { content: ""; position: absolute; right: 6px; top: 50%; width: 9px; height: 9px; border-right: 1.5px solid var(--brass); border-bottom: 1.5px solid var(--brass); transform: translateY(-75%) rotate(45deg); pointer-events: none; }
+  select:invalid { color: #B5AC98; font-style: italic; }
+  textarea { font-family: var(--serif); font-size: 19px; line-height: 38px; min-height: 152px; resize: vertical; padding: 4px 0 0;
+    background-image: linear-gradient(90deg, var(--brass), var(--brass-hi), var(--brass)), repeating-linear-gradient(180deg, transparent 0 37px, var(--hairline-strong) 37px 38px);
+    background-size: 0% 1.5px, 100% 100%; background-position: 0 100%, 0 4px; background-repeat: no-repeat, repeat; }
+  textarea:focus { background-size: 100% 1.5px, 100% 100%; }
+  .hint { font-size: 13px; color: var(--ink-faint); margin: 10px 0 0; line-height: 1.6; }
+
+
+  /* ---- Chapter 02, the engineered peak: one number, written on a sunlit travertine wall ---- */
+  .count { position: relative; overflow: hidden; min-height: 92vh; display: flex; align-items: center; padding: 120px 0; isolation: isolate; }
+  .count .bg { position: absolute; inset: -10% 0; z-index: -2; }
+  .count .bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
+  .count::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(55% 75% at 22% 50%, rgba(253,250,242,.62) 0%, rgba(253,250,242,.32) 50%, rgba(253,250,242,0) 78%); }
+  .count .inner { position: relative; width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 44px; }
+  .count .box { max-width: 560px; }
+  .count .chead { border-bottom-color: rgba(154,123,63,.35); }
+  .count label { max-width: 30em; color: var(--ink-soft); }
+  .count input[type="number"] { font-size: clamp(5rem, 11vw, 8.5rem); line-height: 1; padding: 0 0 4px; width: 3.2ch; max-width: none !important; color: var(--ink); font-variant-numeric: lining-nums tabular-nums; margin-top: 10px;
+    background-image: linear-gradient(90deg, var(--brass), var(--brass-hi), var(--brass)), linear-gradient(rgba(36,31,23,.35), rgba(36,31,23,.35)); background-size: 0% 2px, 100% 1px; }
+  .count input[type="number"]:focus { background-size: 100% 2px, 100% 1px; }
+  .count input::-webkit-outer-spin-button, .count input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .count input::placeholder { color: rgba(36,31,23,.22); font-style: normal; }
+  .count .hint { color: var(--ink-soft); font-size: 13.5px; display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 22px; }
+  .count .hint .z { display: inline-flex; align-items: center; gap: 9px; }
+  .count .hint .z::before { content: ""; width: 7px; height: 7px; border-radius: 50%; }
+  .z.r::before { background: #B8735F; } .z.y::before { background: #C9A050; } .z.g::before { background: #6F8E69; }
+  @media (max-width: 860px) {
+    .count { min-height: 0; padding: 0 0 50px; display: block; }
+    .count .bg { position: relative; inset: auto; height: 190px; z-index: 0; }
+    .count .bg img { object-position: 85% 50%; }
+    .count::before { display: none; } .count { background: var(--paper); }
+    .count .inner { margin-top: -26px; padding: 0 22px; z-index: 1; }
+    .count .bg::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 38%; background: linear-gradient(0deg, var(--paper), rgba(253,252,249,0)); }
+  }
+
+  /* ---- Source audit: gold custom checkboxes + engraved toggle tiles ---- */
+  .sources { border-top: 1px solid var(--hairline-strong); }
+  .src-row { border-bottom: 1px solid var(--hairline-strong); }
+  .src-check { display: flex; align-items: center; gap: 18px; padding: 20px 4px; cursor: pointer; margin: 0; text-transform: none; letter-spacing: 0; font-weight: 400; }
+  .src-check span { font-family: var(--serif); font-size: 21px; color: var(--ink); transition: color .3s var(--ease), transform .4s var(--ease); }
+  .src-check:hover span { transform: translateX(4px); }
+  .src-check input[type="checkbox"] { -webkit-appearance: none; appearance: none; flex: none; width: 22px; height: 22px; margin: 0; border: 1px solid var(--brass); background: linear-gradient(180deg, #FFFEFB, var(--paper-deep)); position: relative; cursor: pointer; transition: background .35s var(--ease), box-shadow .35s var(--ease); box-shadow: inset 0 1px 2px rgba(36,31,23,.12); }
+  .src-check input[type="checkbox"]::after { content: ""; position: absolute; left: 7px; top: 3px; width: 6px; height: 11px; border-right: 2px solid var(--noir); border-bottom: 2px solid var(--noir); transform: rotate(45deg) scale(0); transition: transform .35s var(--ease); }
+  .src-check input[type="checkbox"]:checked { background: var(--metal-btn); border-color: #8a6a32; box-shadow: 0 2px 8px -2px rgba(154,123,63,.6), inset 0 1px 0 rgba(255,255,255,.5); }
+  .src-check input[type="checkbox"]:checked::after { transform: rotate(45deg) scale(1); }
+  .src-check input[type="checkbox"]:focus-visible { outline: 2px solid var(--brass-soft); outline-offset: 3px; }
+  .sub-grid { display: none; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 0 26px 40px; }
+  .sub-grid.open { display: grid; animation: rise .6s var(--ease); }
+  @media (max-width: 760px) { .sub-grid { grid-template-columns: 1fr 1fr; padding-left: 0; } }
+  .toggle { display: flex; flex-direction: column; justify-content: flex-start; font-family: var(--sans); text-align: left; cursor: pointer; padding: 14px 14px 16px; line-height: 1.4; font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--brass);
+    background: linear-gradient(180deg, #FFFEFB, var(--paper-deep)); border: 1px solid var(--hairline-strong); border-top: 2px solid transparent;
+    box-shadow: 0 1px 2px rgba(36,31,23,.05); transition: background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease), transform .35s var(--ease), box-shadow .35s var(--ease); }
+  .toggle:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -12px rgba(36,31,23,.3); }
+  .toggle .q { display: block; margin-top: 6px; font-family: var(--serif); font-size: 15px; letter-spacing: 0; text-transform: none; font-weight: 400; color: var(--ink-soft); line-height: 1.45; }
+  .toggle[aria-pressed="true"] { background: linear-gradient(180deg, #F7EBCF 0%, #EAD6A8 100%); color: #6b4f26; border-color: #C9A35C; border-top: 2px solid var(--brass); box-shadow: inset 0 1px 0 rgba(255,250,235,.8), 0 12px 24px -12px rgba(154,123,63,.55); }
+  .toggle[aria-pressed="true"] .q { color: var(--ink); }
+  .toggle-note { grid-column: 1 / -1; font-size: 12px; color: var(--ink-faint); }
+  #other-name { margin: 0 0 22px 40px; width: calc(100% - 40px); display: none; }
+  #other-name.open { display: block; }
+  @media (max-width: 760px) { #other-name { margin-left: 0; width: 100%; } }
+
+
+  /* ---- Close: gradient-metal button on a lit plinth ---- */
+  .close { text-align: left; }
+  .submit-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: 10px; }
+  button.primary, a.primary { position: relative; overflow: hidden; font-family: var(--sans); font-weight: 600; font-size: 12.5px; letter-spacing: .24em; text-transform: uppercase; color: #1d1710; background: var(--metal-btn); border: 1px solid #8a6a32; padding: 22px 46px; cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,250,235,.7), inset 0 -2px 0 rgba(90,64,26,.35), 0 2px 6px rgba(154,123,63,.3), 0 18px 36px -12px rgba(154,123,63,.55);
+    transition: transform .35s var(--ease), box-shadow .35s var(--ease); text-shadow: 0 1px 0 rgba(255,243,212,.5); }
+  button.primary::after, a.primary::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; transform: skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255,250,235,.55), transparent); transition: left .9s var(--ease); }
+  button.primary:hover::after, a.primary:hover::after { left: 130%; }
+  button.primary:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,250,235,.7), inset 0 -2px 0 rgba(90,64,26,.35), 0 4px 10px rgba(154,123,63,.3), 0 26px 46px -14px rgba(154,123,63,.6); }
+  button.primary:disabled { opacity: .55; cursor: default; transform: none; }
+  @media (max-width: 600px) { button.primary { width: 100%; padding: 22px 20px; } }
+  .status { font-size: 13px; color: var(--ink-faint); }
+  .status.err { color: var(--red); }
+  .assure { display: flex; align-items: center; gap: 12px; margin-top: 26px; font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink-soft); }
+  .assure svg { width: 18px; height: 18px; flex: none; }
+
+  .hp-wrap { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .errors { display: none; border-left: 2px solid var(--red); background: #FBF4EF; padding: 14px 18px; margin-bottom: 30px; font-size: 14px; color: var(--red); }
+  .errors.show { display: block; }
+  .processing { display: none; align-items: center; gap: 18px; padding: 60px 0; }
+  .processing.show { display: flex; }
+  .processing .bar { position: relative; flex: 1; height: 1px; background: var(--hairline-strong); overflow: hidden; }
+  .processing .bar span { position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, var(--brass), var(--brass-hi), transparent); animation: sweepbar 1.4s ease-in-out infinite; }
+  @keyframes sweepbar { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+  .processing p { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--ink-soft); margin: 0; }
+
+
+  /* ---- Post-submit: booking + the written diagnostic as a luxury folio ---- */
+  .cta-kicker { font-size: 11px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: var(--brass); margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+  .cta-kicker::before { content: ""; width: 38px; height: 1px; background: var(--brass-soft); }
+  #booking-embed-wrap { display: none; max-width: 820px; margin: 0 auto; padding: 0 44px 40px; }
+  #booking-embed-wrap.show { display: block; padding-top: 120px; }
+  /* post-submit stage: holds #processing + #booking-embed-wrap; zero height until the live JS shows either */
+  .after { position: relative; background: radial-gradient(90% 70% at 15% 0%, #FFFFFF 0%, var(--paper) 55%, var(--paper-deep) 100%); }
+  .after-in { max-width: 820px; margin: 0 auto; padding: 0 44px; }
+  #booking-embed-wrap .cta-invite { font-family: var(--serif); font-size: 21px; line-height: 1.5; color: var(--ink); margin: 0 0 22px; max-width: 34em; }
+  .cta-disclaimer { font-family: var(--serif); font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
+  .calendly-inline-widget { min-width: 280px; height: 700px; background: #FFFEFB; box-shadow: var(--shadow-lift); outline: 1px solid rgba(194,164,104,.4); outline-offset: 10px; }
+  @media (max-width: 700px) { #booking-embed-wrap { padding: 0 22px 30px; } #booking-embed-wrap.show { padding-top: 46px; } .after-in { padding: 0 22px; } }
+
+  #report-section { display: none; position: relative; padding: 40px 0 120px; }
+  #report-section.show { display: block; animation: rise .8s var(--ease) forwards; }
+  .report-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+  .report-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 20% 50%; display: block; filter: blur(14px) saturate(1.05); transform: scale(1.08); opacity: .55; }
+  #report-section::after { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, var(--paper) 0%, rgba(246,244,238,.35) 30%, rgba(246,244,238,.5) 100%); }
+  .desk { z-index: 1; position: relative; max-width: 900px; margin: 0 auto; padding: 0 44px; }
+  .doc-page { position: relative; background: #FFFEFB; padding: 64px 78px 56px; box-shadow: 0 1px 2px rgba(36,31,23,.06), 0 14px 30px -14px rgba(36,31,23,.22), 0 60px 110px -40px rgba(36,31,23,.38); }
+  .doc-page::before { content: ""; position: absolute; inset: 0; background: var(--grain); opacity: .04; pointer-events: none; }
+  .doc-page::after { /* a second sheet beneath, slightly rotated: a real stack, not a card */ content: ""; position: absolute; inset: 10px -8px -10px 8px; background: #F7F3EA; z-index: -1; transform: rotate(.8deg); box-shadow: 0 30px 60px -30px rgba(36,31,23,.35); }
+  .doc-edge { position: absolute; left: 0; right: 0; top: 0; height: 5px; background: var(--foil); background-size: 200% 100%; }
+  .doc-lh { display: flex; align-items: center; gap: 18px; padding-bottom: 26px; border-bottom: 1px solid var(--hairline); margin-bottom: 34px; }
+  .doc-lh svg { width: 64px; height: 64px; overflow: visible; flex: none; }
+  .doc-lh .n { font-family: var(--serif); font-size: 22px; color: var(--ink); line-height: 1.1; }
+  .doc-lh .t { font-size: 8.5px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; margin-top: 7px; }
+  .doc-header { position: relative; z-index: 0; overflow: hidden; padding: 10px 0 6px; }
+  .doc-watermark { position: absolute; top: -.18em; right: -.02em; z-index: -1; font-family: var(--serif); font-style: italic; font-size: 190px; line-height: 1; white-space: nowrap; pointer-events: none; user-select: none;
+    background-image: var(--foil); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; opacity: .26; }
+  .doc-kicker { font-size: 11px; font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: var(--brass); margin-bottom: 12px; }
+  .doc-title { font-family: var(--serif); font-size: clamp(30px, 4vw, 42px); line-height: 1.12; color: var(--ink); margin-bottom: 26px; max-width: 13em; }
+  .doc-rule { height: 1px; background: linear-gradient(90deg, var(--brass), var(--brass-soft) 30%, var(--hairline) 70%); margin-bottom: 34px; }
+  .report-body p { font-family: Georgia, var(--serif); font-size: 17.5px; line-height: 1.85; color: #2E2820; margin: 0 0 22px; max-width: 36em; }
+  .report-body p:first-of-type::first-letter { font-family: var(--serif); font-size: 3.6em; float: left; line-height: .78; padding: 8px 12px 0 0; background-image: var(--foil); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .report-body strong { font-weight: 400; font-style: italic; color: var(--brass); background: linear-gradient(transparent 62%, rgba(233,205,144,.32) 62%); padding: 0 2px; }
+  .report-sign { margin: 34px 0 0; display: flex; align-items: center; gap: 18px; }
+  .report-sign .sig { font-family: var(--serif); font-style: italic; font-size: 34px; color: var(--ink); line-height: 1; }
+  .report-sign svg { width: 150px; height: 22px; overflow: visible; }
+  .report-sign svg path { fill: none; stroke: var(--brass); stroke-width: 1.6; stroke-linecap: round; }
+  #report-cta { display: none; margin-top: 40px; padding: 30px 32px; background: linear-gradient(180deg, var(--paper-deep), var(--paper-shade)); border-left: 2px solid var(--brass-soft); }
+  #report-cta.show { display: block; }
+  #report-cta .cta-confirm, #report-cta .cta-followup { font-family: var(--serif); font-size: 17px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 20px; }
+  #report-cta .cta-followup { font-style: italic; }
+  .doc-folio { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--hairline); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 8.5px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--brass); }
+  @media (max-width: 700px) { .desk { padding: 0 14px; } .doc-page { padding: 40px 24px 34px; } .doc-watermark { font-size: 120px; } .report-body p { font-size: 16.5px; } .doc-lh svg { width: 50px; height: 50px; } .doc-lh .t { letter-spacing: .18em; } }
+
+
+  /* ---- Footer: the view from the loggia, held in light ---- */
+  footer { position: relative; overflow: hidden; padding: 110px 0 60px; isolation: isolate; color: var(--ink-soft); }
+  footer .fb { position: absolute; inset: 0; z-index: -2; }
+  footer .fb img { width: 100%; height: 100%; object-fit: cover; object-position: 75% 60%; }
+  footer::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, var(--paper) 0%, rgba(253,252,249,.82) 40%, rgba(253,252,249,.7) 100%); }
+  .f-in { max-width: 1100px; margin: 0 auto; padding: 0 44px; display: grid; grid-template-columns: auto 1fr; gap: 50px; align-items: center; }
+  .f-in svg { width: 92px; height: 92px; overflow: visible; }
+  .f-txt { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px 40px; border-left: 1px solid rgba(154,123,63,.4); padding-left: 50px; }
+  footer p { font-size: 13px; color: var(--ink-soft); margin: 0; max-width: 46ch; line-height: 1.7; }
+  footer a { color: var(--ink); text-decoration: none; border-bottom: 1px solid rgba(154,123,63,.6); }
+  @media (max-width: 700px) { .f-in { grid-template-columns: 1fr; padding: 0 22px; gap: 30px; } .f-txt { border-left: 0; padding-left: 0; border-top: 1px solid rgba(154,123,63,.4); padding-top: 26px; } .f-in svg { width: 70px; height: 70px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal, .stagger .aw { opacity: 1 !important; transform: none !important; }
+    .stage, .stage-anim, [data-depth] { animation: none !important; transform: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+
+
+<!-- Meta Pixel base code, PIXEL_ID placeholder, fill in once the ad account exists.
+     Added 2026-09-13: this page is the actual cold-ad landing surface per the 2026-09-09
+     funnel restructure (ad -> diagnostic -> nurture -> VSL -> book), so it's the page that
+     most needs _fbc/_fbp to exist -- previously had no Pixel presence at all. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1604378769784336');
+fbq('track', 'PageView');
+</script>
+<script src="assets/fbc-fbp.js"></script>
+<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css">
+<script src="https://assets.calendly.com/assets/external/widget.js"></script>
+</head>
+<body>
+
+<!-- MPC medallion (existing mark: ring + MPC letterforms outlined to paths so it renders identically on Android, which has no Didot) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5e4420"/><stop offset=".16" stop-color="#d4af6a"/><stop offset=".30" stop-color="#fff3d4"/><stop offset=".45" stop-color="#c99a4f"/><stop offset=".58" stop-color="#6b4f26"/><stop offset=".72" stop-color="#e8c383"/><stop offset=".85" stop-color="#fff3d4"/><stop offset="1" stop-color="#a67c3d"/></linearGradient>
+    <radialGradient id="enamel" cx=".42" cy=".32" r=".78"><stop offset="0" stop-color="#2b251c"/><stop offset=".55" stop-color="#131211"/><stop offset="1" stop-color="#060606"/></radialGradient>
+    <filter id="bevel" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.6" result="b"/><feSpecularLighting in="b" surfaceScale="3.2" specularConstant="1.05" specularExponent="22" lighting-color="#fff6e0" result="s"><feDistantLight azimuth="235" elevation="38"/></feSpecularLighting><feComposite in="s" in2="SourceAlpha" operator="in" result="s2"/><feComposite in="SourceGraphic" in2="s2" operator="arithmetic" k1="0" k2="1" k3=".75" k4="0" result="lit"/><feDropShadow in="lit" dx="0" dy="1.2" stdDeviation=".8" flood-color="#000" flood-opacity=".55"/></filter>
+    <filter id="lift" x="-60%" y="-60%" width="220%" height="240%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".4"/><feDropShadow dx="0" dy="26" stdDeviation="24" flood-color="#000" flood-opacity=".45"/></filter>
+    <symbol id="mpc-medal" viewBox="0 0 400 400" style="overflow:visible">
+      <g filter="url(#lift)"><circle cx="200" cy="200" r="190" fill="url(#enamel)"/></g>
+      <circle cx="200" cy="200" r="186" fill="none" stroke="url(#metal)" stroke-width="6" filter="url(#bevel)"/>
+      <circle cx="200" cy="200" r="175" fill="none" stroke="#C2A468" stroke-opacity=".28" stroke-width=".9"/>
+      <path d="M82.29 231.63H93.17V164.6H82.29V163.22H104.34L122.47 215.95H122.66L140.79 163.22H162.45V164.6H151.57V231.63H162.45V233H130.9V231.63H141.77V165.18H141.58L118.16 233.1L94.83 165.87H94.64V231.63H105.51V233H82.29ZM195.62 197.92Q197.58 198.31 199.73 198.5Q201.89 198.7 203.56 198.7Q210.81 198.7 214.88 194.44Q218.94 190.17 218.94 181.55Q218.94 176.55 217.96 173.22Q216.98 169.89 214.88 167.88Q212.77 165.87 209.39 165.09Q206.01 164.3 201.3 164.3Q199.44 164.3 197.92 164.4Q196.4 164.5 195.62 164.6ZM174.94 231.63H185.82V164.6H174.94V163.22H193.36Q194.74 163.22 196.11 163.17Q197.48 163.13 198.85 163.03Q200.22 163.03 201.55 162.98Q202.87 162.93 204.24 162.93Q209.83 162.93 214.58 164.25Q219.33 165.58 222.81 168.03Q226.29 170.48 228.25 173.91Q230.21 177.34 230.21 181.55Q230.21 185.96 227.96 189.39Q225.7 192.82 221.98 195.17Q218.26 197.52 213.31 198.8Q208.36 200.07 202.97 200.07Q201.6 200.07 199.44 199.83Q197.28 199.58 195.62 199.29V231.63H206.5V233H174.94ZM308.26 233H306.79Q306.11 232.22 305.22 231.58Q304.34 230.94 302.48 230.94Q301.01 230.94 299.3 231.48Q297.58 232.02 295.38 232.71Q293.17 233.39 290.43 233.93Q287.68 234.47 284.35 234.47Q278.18 234.47 272.35 232.22Q266.51 229.96 261.32 224.87Q256.52 220.06 253.28 213.5Q250.05 206.93 250.05 198.31Q250.05 190.96 252.7 184.29Q255.34 177.63 260.05 172.53Q264.75 167.44 271.12 164.45Q277.49 161.46 285.04 161.46Q288.07 161.46 290.43 162.05Q292.78 162.64 294.64 163.37Q296.5 164.11 298.07 164.69Q299.64 165.28 301.11 165.28Q303.07 165.28 303.9 164.64Q304.73 164.01 305.42 163.22H306.89V182.82H305.81Q304.93 179.1 303.56 175.47Q302.19 171.85 299.74 169.06Q297.29 166.26 293.51 164.55Q289.74 162.83 284.15 162.83Q278.96 162.83 275.24 164.45Q271.51 166.07 268.96 168.76Q266.42 171.46 264.9 175.03Q263.38 178.61 262.59 182.58Q261.81 186.55 261.57 190.62Q261.32 194.68 261.32 198.31Q261.32 208.6 262.99 215.36Q264.65 222.12 267.64 226.04Q270.63 229.96 274.84 231.53Q279.06 233.1 284.15 233.1Q290.72 233.1 294.74 231.24Q298.76 229.37 301.21 226.38Q303.66 223.4 304.93 219.62Q306.2 215.85 307.18 212.13H308.26Z" fill="url(#metal)" filter="url(#bevel)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<section class="hero" aria-label="Matthew Payne Consulting">
+  <div class="stage" data-depth="0.3">
+    <div class="ph"><picture><source media="(max-width: 860px)" type="image/avif" srcset="assets/qcd/office-hero-m800.avif" width="800" height="760"><source media="(max-width: 860px)" type="image/webp" srcset="assets/qcd/office-hero-m800.webp" width="800" height="760"><source media="(max-width: 860px)" srcset="assets/qcd/office-hero-m800.jpg" width="800" height="760"><source type="image/avif" srcset="assets/qcd/office-hero-1000.avif 1000w, assets/qcd/office-hero-1600.avif 1600w, assets/qcd/office-hero-2200.avif 2200w" sizes="106vw"><source type="image/webp" srcset="assets/qcd/office-hero-1000.webp 1000w, assets/qcd/office-hero-1600.webp 1600w, assets/qcd/office-hero-2200.webp 2200w" sizes="106vw"><img src="assets/qcd/office-hero-1600.jpg" srcset="assets/qcd/office-hero-1000.jpg 1000w, assets/qcd/office-hero-1600.jpg 1600w, assets/qcd/office-hero-2200.jpg 2200w" sizes="106vw" alt="" width="2200" height="1244" fetchpriority="high"></picture></div>
+    <div class="plaque" aria-hidden="true"><svg viewBox="0 0 400 400"><use href="#mpc-medal"/></svg></div>
+    <div class="ph shade" aria-hidden="true"><picture><source media="(max-width: 860px)" type="image/avif" srcset="assets/qcd/office-hero-m800.avif" width="800" height="760"><source media="(max-width: 860px)" type="image/webp" srcset="assets/qcd/office-hero-m800.webp" width="800" height="760"><source media="(max-width: 860px)" srcset="assets/qcd/office-hero-m800.jpg" width="800" height="760"><source type="image/avif" srcset="assets/qcd/office-hero-1000.avif 1000w, assets/qcd/office-hero-1600.avif 1600w, assets/qcd/office-hero-2200.avif 2200w" sizes="106vw"><source type="image/webp" srcset="assets/qcd/office-hero-1000.webp 1000w, assets/qcd/office-hero-1600.webp 1600w, assets/qcd/office-hero-2200.webp 2200w" sizes="106vw"><img src="assets/qcd/office-hero-1600.jpg" srcset="assets/qcd/office-hero-1000.jpg 1000w, assets/qcd/office-hero-1600.jpg 1600w, assets/qcd/office-hero-2200.jpg 2200w" sizes="106vw" alt="" width="2200" height="1244"></picture></div>
+    <div class="engrave"><span class="wm-hi" aria-hidden="true">Matthew Payne Consulting</span><div class="wm">Matthew Payne Consulting</div><div class="tag">The High Net Worth Client &amp; Investor Attraction &amp; Conversion System</div></div>
+  </div>
+  <div class="sunspill"></div>
+  <div class="hero-fade"></div>
+</section>
+
+<div class="cardwrap">
+  <header class="hcard masthead">
+    <div class="kicker">The Qualified Conversation Diagnostic</div>
+    <h1 class="stagger">Find the Bottleneck in Your Conversations With High Net Worth Clients, and <em>Where to Look Next</em></h1>
+    <p class="lede reveal">A few minutes with last month's calendar gets you a written diagnostic: your bottleneck, and where the real room is.</p>
+    <div class="trustrow">
+      <div class="tp"><picture><source type="image/avif" srcset="assets/qcd/matt-240.avif"><source type="image/webp" srcset="assets/qcd/matt-240.webp"><img src="assets/qcd/matt-240.jpg" alt="Matt Payne" width="240" height="332"></picture></div>
+      <div>
+        <p class="tl-line">I'm Matt. <em>I read every one of these myself.</em></p>
+        <a class="li" href="https://www.linkedin.com/in/matthewpayneconsulting/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>LinkedIn</a>
+      </div>
+    </div>
+  </header>
+</div>
+
+<section class="chapter light definition-card-wrap" id="begin">
+  <div class="room">
+    <div class="rail reveal"><figure><div class="frame"><picture><source type="image/avif" srcset="assets/qcd/rail-conversation-600.avif 600w, assets/qcd/rail-conversation-900.avif 900w" sizes="(max-width: 860px) 92vw, 34vw"><source type="image/webp" srcset="assets/qcd/rail-conversation-600.webp 600w, assets/qcd/rail-conversation-900.webp 900w" sizes="(max-width: 860px) 92vw, 34vw"><img src="assets/qcd/rail-conversation-900.jpg" srcset="assets/qcd/rail-conversation-600.jpg 600w, assets/qcd/rail-conversation-900.jpg 900w" sizes="(max-width: 860px) 92vw, 34vw" alt="" width="900" height="1206" loading="lazy" decoding="async"></picture></div></figure></div>
+    <div class="defn definition-card reveal">
+      <p class="lead">A qualified conversation is all three of the following:</p>
+      <ol>
+        <li>A live, direct exchange, a call, a meeting, or a substantive back-and-forth. Not a like, a download, or a newsletter open.</li>
+        <li>With someone who fits your target profile on the facts, asset level, check size, matter value, deal size, or price point. Not someone who might someday.</li>
+        <li>Where new business was plausibly on the table, and they knew what you do.</li>
+      </ol>
+      <p class="not-line"><strong>Not counted:</strong> existing client service, conversations with peers, or time with referral sources themselves. Those matter, they're just not this number.</p>
+    </div>
+  </div>
+</section>
+
+<form id="diag-form" novalidate>
+  <div class="hp-wrap" aria-hidden="true">
+    <label for="hp-field">Leave this field blank</label>
+    <input type="text" id="hp-field" name="website" tabindex="-1" autocomplete="off">
+  </div>
+
+  <section class="chapter deep">
+    <div class="room flip">
+      <div class="rail reveal keep-mobile"><figure><div class="frame"><picture><source type="image/avif" srcset="assets/qcd/rail-espresso-600.avif 600w, assets/qcd/rail-espresso-900.avif 900w" sizes="(max-width: 860px) 92vw, 34vw"><source type="image/webp" srcset="assets/qcd/rail-espresso-600.webp 600w, assets/qcd/rail-espresso-900.webp 900w" sizes="(max-width: 860px) 92vw, 34vw"><img src="assets/qcd/rail-espresso-900.jpg" srcset="assets/qcd/rail-espresso-600.jpg 600w, assets/qcd/rail-espresso-900.jpg 900w" sizes="(max-width: 860px) 92vw, 34vw" alt="" width="900" height="1206" loading="lazy" decoding="async"></picture></div><span class="cap">01</span></figure></div>
+      <div>
+        <div class="errors" id="errors"><strong>A few things need fixing:</strong><ul id="error-list"></ul></div>
+        <div class="chead reveal"><span class="num">01</span><h2>You</h2></div>
+        <div class="row2 reveal">
+          <div class="field"><label for="name">Name</label><input type="text" id="name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" required></div>
+        </div>
+        <div class="field reveal">
+          <label for="practice_type">Which describes you</label>
+          <div class="sel"><select id="practice_type" name="practice_type" required>
+            <option value="" disabled selected>Select one</option>
+            <option value="Advisor">Financial Advisor</option>
+            <option value="VC/Fund">VC / Fund Principal</option>
+            <option value="Attorney">Attorney</option>
+            <option value="Syndicator">Real Estate Syndicator</option>
+          </select></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="count">
+    <div class="bg" data-depth="0.22"><picture><source media="(max-width: 860px)" type="image/avif" srcset="assets/qcd/wall-1000.avif" width="1000" height="565"><source media="(max-width: 860px)" type="image/webp" srcset="assets/qcd/wall-1000.webp" width="1000" height="565"><source media="(max-width: 860px)" srcset="assets/qcd/wall-1000.jpg" width="1000" height="565"><source type="image/avif" srcset="assets/qcd/wall-1000.avif 1000w, assets/qcd/wall-1920.avif 1920w" sizes="100vw"><source type="image/webp" srcset="assets/qcd/wall-1000.webp 1000w, assets/qcd/wall-1920.webp 1920w" sizes="100vw"><img src="assets/qcd/wall-1920.jpg" srcset="assets/qcd/wall-1000.jpg 1000w, assets/qcd/wall-1920.jpg 1920w" sizes="100vw" alt="" width="1920" height="1086" loading="lazy" decoding="async"></picture></div>
+    <div class="inner"><div class="box">
+      <div class="chead reveal"><span class="num">02</span><h2>The Count</h2></div>
+      <div class="field reveal">
+        <label for="qc">Qualified conversations in the last 30 days, by the definition above</label>
+        <input type="number" id="qc" name="qualified_conversations_30d" min="0" step="1" inputmode="numeric" placeholder="0" required>
+        <p class="hint"><span class="z r">Red: 5 or fewer</span><span class="z y">Yellow: 6-24</span><span class="z g">Green: 25 or more</span></p>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="chapter light">
+    <div class="room">
+      <div class="rail reveal"><figure><div class="frame"><picture><source type="image/avif" srcset="assets/qcd/rail-watch-600.avif 600w, assets/qcd/rail-watch-900.avif 900w" sizes="(max-width: 860px) 92vw, 34vw"><source type="image/webp" srcset="assets/qcd/rail-watch-600.webp 600w, assets/qcd/rail-watch-900.webp 900w" sizes="(max-width: 860px) 92vw, 34vw"><img src="assets/qcd/rail-watch-900.jpg" srcset="assets/qcd/rail-watch-600.jpg 600w, assets/qcd/rail-watch-900.jpg 900w" sizes="(max-width: 860px) 92vw, 34vw" alt="" width="900" height="1206" loading="lazy" decoding="async"></picture></div><span class="cap">03</span></figure></div>
+      <div>
+        <div class="chead reveal"><span class="num">03</span><h2>The Source Audit</h2></div>
+        <p class="hint reveal" style="margin:0 0 26px; font-size:15px; color:var(--ink-soft); max-width:40em;">Check every source that produced a qualified conversation in the last 30 days. For each, answer the four questions that appear beneath it.</p>
+        <div class="sources reveal" id="sources"></div>
+        <input type="text" id="other-name" placeholder="What is it?">
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter deep">
+    <div class="room flip">
+      <div class="rail reveal"><figure><div class="frame"><picture><source type="image/avif" srcset="assets/qcd/rail-pen-600.avif 600w, assets/qcd/rail-pen-900.avif 900w" sizes="(max-width: 860px) 92vw, 34vw"><source type="image/webp" srcset="assets/qcd/rail-pen-600.webp 600w, assets/qcd/rail-pen-900.webp 900w" sizes="(max-width: 860px) 92vw, 34vw"><img src="assets/qcd/rail-pen-900.jpg" srcset="assets/qcd/rail-pen-600.jpg 600w, assets/qcd/rail-pen-900.jpg 900w" sizes="(max-width: 860px) 92vw, 34vw" alt="" width="900" height="1206" loading="lazy" decoding="async"></picture></div><span class="cap">04</span></figure></div>
+      <div>
+        <div class="chead reveal"><span class="num">04</span><h2>Where Your Best Clients Actually Came From</h2></div>
+        <div class="field reveal">
+          <label for="best-clients">Think of your three or four best clients, the ones you'd clone if you could</label>
+          <textarea id="best-clients" name="best_client_source" maxlength="500" placeholder="e.g. Two came through one CPA I've known for years, one from a client referral. Ideally I'd want more coming from relationships I start myself instead of waiting on introductions." required></textarea>
+          <p class="hint">Where did each of them actually come from? And if you could choose, where would you want the next ones to come from? A sentence or two on each is plenty.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter light close">
+    <div class="room">
+      <div class="rail reveal"><figure><div class="frame"><picture><source type="image/avif" srcset="assets/qcd/rail-office-600.avif 600w, assets/qcd/rail-office-900.avif 900w" sizes="(max-width: 860px) 92vw, 34vw"><source type="image/webp" srcset="assets/qcd/rail-office-600.webp 600w, assets/qcd/rail-office-900.webp 900w" sizes="(max-width: 860px) 92vw, 34vw"><img src="assets/qcd/rail-office-900.jpg" srcset="assets/qcd/rail-office-600.jpg 600w, assets/qcd/rail-office-900.jpg 900w" sizes="(max-width: 860px) 92vw, 34vw" alt="" width="900" height="1206" loading="lazy" decoding="async"></picture></div><span class="cap">05</span></figure></div>
+      <div>
+        <div class="chead reveal"><span class="num">05</span><h2>The Obstacle</h2></div>
+        <div class="field reveal">
+          <label for="obstacle">What's the single biggest thing getting in the way of more qualified conversations right now?</label>
+          <textarea id="obstacle" name="biggest_obstacle" maxlength="400" required></textarea>
+          <p class="hint">A sentence or two is enough.</p>
+        </div>
+        <div class="submit-row reveal">
+          <button type="submit" class="primary" id="submit-btn">Get My Diagnostic</button>
+          <span class="status" id="status"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+
+<div class="after">
+  <div class="after-in">
+    <div class="processing" id="processing">
+      <div class="bar"><span></span></div>
+      <p>Reading your answers, writing your diagnostic&hellip;</p>
+    </div>
+  </div>
+  <!-- Inline Calendly embed target (unchanged contract): the live script below renders
+       .cta-kicker/.cta-invite/[.cta-disclaimer]/#calendly-widget-target into this on submit. -->
+  <div id="booking-embed-wrap"></div>
+</div>
+
+<section id="report-section" class="chapter deep">
+  <div class="report-bg" aria-hidden="true"><picture><source type="image/avif" srcset="assets/qcd/wall-1000.avif"><source type="image/webp" srcset="assets/qcd/wall-1000.webp"><img src="assets/qcd/wall-1000.jpg" alt="" width="1000" height="565" loading="lazy" decoding="async"></picture></div>
+  <div class="desk">
+    <div class="doc-page">
+      <span class="doc-edge"></span>
+      <div class="doc-letterhead doc-lh"><svg viewBox="0 0 400 400" aria-hidden="true"><use href="#mpc-medal"/></svg><div><div class="n">Matthew Payne Consulting</div><div class="t foil-ink">The High Net Worth Client &amp; Investor Attraction &amp; Conversion System</div></div></div>
+      <div class="doc-header">
+        <span class="doc-watermark" id="doc-watermark" aria-hidden="true"></span>
+        <div class="doc-kicker" id="report-for">Prepared For</div>
+        <h2 class="doc-title">Your Qualified Conversation Diagnostic</h2>
+      </div>
+      <div class="doc-rule"></div>
+      <div class="report-body" id="report-body"></div>
+      <div class="report-sign"><span class="sig">Matt</span><svg viewBox="0 0 220 30" aria-hidden="true"><path d="M 4 22 C 40 10, 70 26, 105 16 C 140 6, 160 20, 216 10"/></svg></div>
+      <div id="report-cta"></div>
+      <div class="doc-folio"><span>Qualified Conversation Diagnostic</span><span>Matthew Payne Consulting &middot; matthewpayneconsulting.com</span><span>Private</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fb" aria-hidden="true"><picture><source type="image/avif" srcset="assets/qcd/office-hero-1000.avif"><source type="image/webp" srcset="assets/qcd/office-hero-1000.webp"><img src="assets/qcd/office-hero-1000.jpg" alt="" width="1000" height="565" loading="lazy" decoding="async"></picture></div>
+  <div class="f-in">
+    <svg viewBox="0 0 400 400" aria-hidden="true"><use href="#mpc-medal"/></svg>
+    <div class="f-txt">
+      <p>Your answers and this diagnostic are used only to send you this report and, if you're open to it, to follow up directly. No lists, no spam.</p>
+      <p>matthewpayneconsulting.com · <a href="/privacy-policy.html">Privacy Policy</a> · <a href="/terms.html">Terms of Use</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var PIXEL_ID = "1604378769784336";
+  // Bot protection (Fix Pass 2, 2026-09-24): page-load timestamp for the minimum-time-
+  // on-page check at submit -- this form takes real people well over 8 seconds to fill
+  // out (5 sections, 2 required freeform questions), so anything faster is a bot.
+  var pageLoadedAt = Date.now();
+  var SOURCES = [
+    "Client referrals",
+    "Professional referral relationships",
+    "Networking and events",
+    "Speaking or seminars",
+    "Content and inbound",
+    "Outreach you initiate",
+    "Paid channels",
+    "Other"
+  ];
+  var SUBQ = [
+    { key: "control", label: "Control", q: "Could you deliberately increase this next month, on your own?" },
+    { key: "predictability", label: "Predictability", q: "Has it produced one every month, the last 3 months, no exceptions?" },
+    { key: "prequalification", label: "Prequalification", q: "Do people from it usually already fit your target profile?" },
+    { key: "capacity", label: "Capacity", q: "Could it 3x without breaking your time or the relationship?" }
+  ];
+  var WEBHOOK = "https://mattpayneint.app.n8n.cloud/webhook/qualified-conversation-diagnostic";
+
+  var CALENDLY_LINKS = {
+    "Advisor": "https://calendly.com/matthewpayneconsulting/advisor-strategy-call",
+    "VC/Fund": "https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call",
+    "Attorney": "https://calendly.com/matthewpayneconsulting/attorney-strategy-call",
+    "Syndicator": "https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call"
+  };
+  var CAPITAL_RAISE_DISCLAIMER = "Before you grab a time, just to be clear. I'm not a placement agent, I can't make introductions to investors myself, I'm not licensed for that and it would be illegal on my end. What I actually do is help you create a new network of high net worth individuals and family offices. It's peer to peer, so you keep a high degree of exclusivity and scarcity. Bottom line, they want to meet and speak with you.";
+  var CAPITAL_RAISE_TYPES = { "VC/Fund": true, "Syndicator": true };
+  // Set once, at whichever point (submit-time redirect or the renderCta safety net) first
+  // builds a Calendly link -- reused by both so a single booking attempt carries one
+  // eventID all the way through (client Pixel Schedule event -> Calendly utm_campaign ->
+  // n8n CAPI event_id), which is what lets Meta dedup the browser and server events
+  // instead of double-counting the same booking.
+  var mpcBookingEventId = null;
+
+  // Early opt-in capture (nurture engine Track 1 entry point): fires the moment someone
+  // has entered name + email + which vertical describes them (the full "You" section, 01),
+  // before they finish the rest of the form. This page is a single scrolling form rather
+  // than a click-through wizard, so "moves to the next step" is read as "completes section 01",
+  // fired on blur/change of those three fields, once per pageview, never blocking or
+  // interfering with the real submit flow below. video_source/cta_position come from URL
+  // query params (?src=<video_id>&cta=mid|end) on the link that brought them here; both
+  // default to "unknown" when absent so this stays fully backward compatible with existing
+  // traffic that has no params. adid (added for Meta ad attribution join, 2026-09-15) reads
+  // Meta's dynamic destination-URL param ?adid={{ad.id}} the same way -- once real Meta ads
+  // launch, each ad's destination URL will append this param so a click can be traced all
+  // the way to a Keap contact record, not just to a booked Calendly call.
+  var OPTIN_WEBHOOK = "https://mattpayneint.app.n8n.cloud/webhook/qualified-conversation-diagnostic-optin";
+  var optinParams = new URLSearchParams(window.location.search);
+  var optinVideoSource = optinParams.get("src") || "unknown";
+  var optinCtaPosition = optinParams.get("cta") || "unknown";
+  // adid persistence (Fix Pass 2, 2026-09-24): falls back to the 30-day cookie/localStorage
+  // value from assets/fbc-fbp.js when the current URL has none (return visit, bookmark,
+  // organic revisit) instead of collapsing straight to "unknown".
+  var optinAdId = optinParams.get("adid") || (typeof window.mpcGetAdId === "function" && window.mpcGetAdId()) || "unknown";
+  var optinFired = false;
+
+  function maybeFireOptin() {
+    if (optinFired) return;
+    var nameEl = document.getElementById("name");
+    var emailEl = document.getElementById("email");
+    var practiceTypeEl = document.getElementById("practice_type");
+    if (!nameEl || !emailEl || !practiceTypeEl) return;
+    var optinName = nameEl.value.trim();
+    var optinEmail = emailEl.value.trim();
+    var optinPracticeType = practiceTypeEl.value;
+    if (!optinName || !optinEmail || optinEmail.indexOf("@") === -1 || !optinPracticeType) return;
+    optinFired = true;
+    fetch(OPTIN_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: optinName,
+        email: optinEmail,
+        practice_type: optinPracticeType,
+        video_source: optinVideoSource,
+        cta_position: optinCtaPosition,
+        meta_ad_id: optinAdId
+      })
+    }).catch(function () {});
+  }
+
+  document.getElementById("name").addEventListener("blur", maybeFireOptin);
+  document.getElementById("email").addEventListener("blur", maybeFireOptin);
+  document.getElementById("practice_type").addEventListener("change", maybeFireOptin);
+
+  // Funnel instrumentation (Fix Pass 2, 2026-09-24): fires once, on first interaction
+  // with the first form field, so start -> completion drop-off is visible in Ads
+  // Manager custom conversions/events, separate from the CompleteRegistration event
+  // that only fires on a full, valid submit.
+  var diagnosticStartedFired = false;
+  function maybeFireDiagnosticStarted() {
+    if (diagnosticStartedFired) return;
+    diagnosticStartedFired = true;
+    if (typeof fbq === "function") fbq("trackCustom", "DiagnosticStarted");
+  }
+  document.getElementById("name").addEventListener("focus", maybeFireDiagnosticStarted);
+
+  // Meta CAPI matching (added 2026-09-11): Meta Pixel drops _fbc (click ID, present only
+  // when the visitor arrived via an ad click) and _fbp (browser ID, present on any Pixel
+  // pageview) as first-party cookies. Carrying those through to the Calendly URL as UTM
+  // params means the eventual booking (via the n8n "Calendly -> Meta Conversions API"
+  // workflow, currently built but inactive) can be matched server-side back to the ad
+  // click that produced it. Calendly officially supports utm_source/medium/campaign/
+  // content/term as pass-through query params: they don't affect the booking flow UI,
+  // they just ride along into the webhook payload's "tracking" object. utm_content/
+  // utm_term are otherwise unused by this page, so fbc/fbp go there.
+  // fbc/fbp cookie capture + the utm_content/utm_term/utm_campaign passthrough convention
+  // now lives in assets/fbc-fbp.js (shared across every funnel page); this just delegates.
+  function buildCalendlyUrl(link, eventId) {
+    if (typeof window.mpcMetaParams !== "function") return link;
+    return window.mpcMetaParams(link, eventId);
+  }
+
+  // Matt's framing (2026-09-10): this block is the soft, low-pressure moment right after
+  // the report itself, not a hard sell or a gate. Order matters: confirm the email is on
+  // its way first, then make the call an easy, no-pressure add-on, never "get more calls"
+  // energy (see feedback_hnw_quality_over_volume_positioning).
+  //
+  // Auto-redirect (added 2026-09-11, revised same day per Matt's explicit corrections):
+  // the PRIMARY redirect now fires at form-submit time, decoupled from report generation
+  // entirely (see the submit handler below) -- the instant someone answers the last
+  // question, not gated on the report finishing or on any score/qualification (completing
+  // the diagnostic IS the qualification). This renderCta-level redirect is now a second
+  // safety net only, for the case where this function still runs (report resolved and the
+  // user is somehow still on this page, e.g. the submit-time redirect got blocked): it
+  // re-attempts the same navigation immediately (no artificial delay) the moment the
+  // report/CTA renders. The "Schedule a Call" button stays as the manual fallback either
+  // way (skip-ahead, or safety net if both auto-redirects are blocked by an ad blocker /
+  // JS error) -- clicking it cancels this pending timer so the visitor doesn't end up with
+  // two tabs both pointed at Calendly.
+  // Inline Calendly embed (added 2026-09-13, replaces the old redirect-away approach).
+  // Sema's playbook: an inline embed is a hard requirement, not a nice-to-have -- a link-out
+  // breaks pixel tracking at the exact step that matters and makes the "visited but didn't
+  // book" retargeting audience impossible to build. Idempotent: safe to call more than once
+  // (submit-time primary call + renderCta's safety-net call after the report resolves) --
+  // only actually renders/inits the widget once.
+  // Calendly prefill (Fix Pass 2, 2026-09-24): name/email were typed into the diagnostic
+  // form seconds earlier -- carry them onto the embed URL so Calendly doesn't ask again
+  // at the highest-intent moment. Read straight off the (still-present, just hidden)
+  // form fields rather than threading extra params through every call site.
+  function appendCalendlyPrefill(link, name, email) {
+    var params = [];
+    if (name) params.push("name=" + encodeURIComponent(name));
+    if (email) params.push("email=" + encodeURIComponent(email));
+    if (!params.length) return link;
+    var sep = link.indexOf("?") === -1 ? "?" : "&";
+    return link + sep + params.join("&");
+  }
+
+  function renderBookingEmbed(practiceType) {
+    var wrap = document.getElementById("booking-embed-wrap");
+    if (!wrap || wrap.classList.contains("show")) return;
+    var link = CALENDLY_LINKS[practiceType];
+    if (!link) return;
+    if (!mpcBookingEventId && typeof window.mpcNewEventId === "function") mpcBookingEventId = window.mpcNewEventId();
+    var embedUrl = buildCalendlyUrl(link, mpcBookingEventId);
+    var nameEl = document.getElementById("name");
+    var emailEl = document.getElementById("email");
+    embedUrl = appendCalendlyPrefill(embedUrl, nameEl ? nameEl.value.trim() : "", emailEl ? emailEl.value.trim() : "");
+    // Schedule pixel event (Fix Pass 2, 2026-09-24): moved off embed-render -- it used to
+    // fire here, which meant Ads Manager's "Schedule" count was really counting diagnostic
+    // completions, not bookings (2026-09-24 attribution audit, item 19). Now fires only on
+    // Calendly's own "calendly.event_scheduled" postMessage, see the listener below. Same
+    // mpcBookingEventId is still threaded onto embedUrl above as utm_campaign, so the
+    // server-side CAPI Schedule event (read back from tracking.utm_campaign) still dedups
+    // against whichever eventID this browser event ends up using.
+    var html = '<div class="cta-kicker">One More Thing</div>';
+    html += '<p class="cta-invite">If it\'d help to talk through any of this, I\'d love to hop on a quick call. No pressure either way. Grab a time right here.</p>';
+    if (CAPITAL_RAISE_TYPES[practiceType]) {
+      html += '<p class="cta-disclaimer">' + CAPITAL_RAISE_DISCLAIMER + '</p>';
+    }
+    html += '<div id="calendly-widget-target" class="calendly-inline-widget"></div>';
+    wrap.innerHTML = html;
+    wrap.classList.add("show");
+    if (window.Calendly && typeof window.Calendly.initInlineWidget === "function") {
+      window.Calendly.initInlineWidget({
+        url: embedUrl,
+        parentElement: document.getElementById("calendly-widget-target")
+      });
+    }
+  }
+
+  // Calendly interaction tracking (Fix Pass 2, 2026-09-24): two purposes. (1) know
+  // whether to skip the post-report auto-scroll (don't scroll a visitor away from a
+  // calendar they're actively using), and (2) fire the real Schedule pixel event only
+  // once a booking is actually made, via Calendly's own postMessage protocol.
+  var lastCalendlyInteractionAt = 0;
+  function markCalendlyInteraction() { lastCalendlyInteractionAt = Date.now(); }
+  function recentCalendlyInteraction() { return (Date.now() - lastCalendlyInteractionAt) < 20000; }
+  document.addEventListener("mouseover", function (e) {
+    var target = document.getElementById("calendly-widget-target");
+    if (target && target.contains(e.target)) markCalendlyInteraction();
+  });
+  window.addEventListener("blur", function () {
+    var target = document.getElementById("calendly-widget-target");
+    if (target && document.activeElement && target.contains(document.activeElement)) markCalendlyInteraction();
+  });
+  window.addEventListener("message", function (e) {
+    if (!e.data || typeof e.data !== "object") return;
+    var evtName = e.data.event;
+    if (typeof evtName !== "string" || evtName.indexOf("calendly.") !== 0) return;
+    markCalendlyInteraction();
+    if (evtName === "calendly.event_scheduled" && typeof fbq === "function") {
+      fbq("track", "Schedule", {}, { eventID: mpcBookingEventId });
+    }
+  });
+
+  function renderCta(practiceType) {
+    var ctaEl = document.getElementById("report-cta");
+    var html = "";
+    html += '<div class="cta-kicker">One More Thing</div>';
+    html += '<p class="cta-confirm">Your full diagnostic is also headed to your inbox right now.</p>';
+    if (CALENDLY_LINKS[practiceType]) {
+      html += '<button type="button" class="primary grab-time-btn" id="grab-time-btn">Grab a Time</button>';
+    } else {
+      html += '<p class="cta-followup">I read every one of these myself. I\'ll follow up by email to find a time that works.</p>';
+    }
+    ctaEl.innerHTML = html;
+    ctaEl.classList.add("show");
+    // Safety net only -- the real render already happened at submit time via
+    // renderBookingEmbed below. This call is a no-op if it's already showing.
+    renderBookingEmbed(practiceType);
+    // Calendly return path (Fix Pass 2, 2026-09-24): the report sits below the Calendly
+    // embed in DOM order, so finishing the report otherwise dead-ends a visitor ~4 screens
+    // away from the calendar with no way back short of scrolling up by hand.
+    var grabTimeBtn = document.getElementById("grab-time-btn");
+    if (grabTimeBtn) {
+      grabTimeBtn.addEventListener("click", function () {
+        var target = document.getElementById("booking-embed-wrap");
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }
+
+  var sourcesEl = document.getElementById("sources");
+  var otherNameEl = document.getElementById("other-name");
+
+  SOURCES.forEach(function (name, i) {
+    var row = document.createElement("div");
+    row.className = "src-row";
+
+    var check = document.createElement("label");
+    check.className = "src-check";
+    var cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.id = "src-" + i;
+    cb.dataset.name = name;
+    var span = document.createElement("span");
+    span.textContent = name;
+    check.appendChild(cb);
+    check.appendChild(span);
+
+    var grid = document.createElement("div");
+    grid.className = "sub-grid";
+    grid.id = "grid-" + i;
+    SUBQ.forEach(function (sq) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "toggle";
+      btn.setAttribute("aria-pressed", "false");
+      btn.dataset.key = sq.key;
+      btn.innerHTML = sq.label + "<span class='q'>" + sq.q + "</span>";
+      btn.addEventListener("click", function () {
+        var on = btn.getAttribute("aria-pressed") === "true";
+        btn.setAttribute("aria-pressed", on ? "false" : "true");
+      });
+      grid.appendChild(btn);
+    });
+
+    cb.addEventListener("change", function () {
+      grid.classList.toggle("open", cb.checked);
+      if (name === "Other") otherNameEl.classList.toggle("open", cb.checked);
+    });
+
+    row.appendChild(check);
+    row.appendChild(grid);
+    sourcesEl.appendChild(row);
+  });
+
+  var form = document.getElementById("diag-form");
+  var errorsBox = document.getElementById("errors");
+  var errorList = document.getElementById("error-list");
+  var processing = document.getElementById("processing");
+  var reportSection = document.getElementById("report-section");
+  var submitBtn = document.getElementById("submit-btn");
+  var statusEl = document.getElementById("status");
+
+  function showErrors(msgs) {
+    errorList.innerHTML = "";
+    msgs.forEach(function (m) {
+      var li = document.createElement("li");
+      li.textContent = m;
+      errorList.appendChild(li);
+    });
+    errorsBox.classList.add("show");
+    errorsBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // Bot protection (Fix Pass 2, 2026-09-24): silent reject, no error shown, no webhook
+    // call -- a filled honeypot or a sub-8-second fill time on a 5-section form is a bot,
+    // not a fast typer, and showing an error just tips off a scripted submitter that a
+    // check exists.
+    var hpValue = (document.getElementById("hp-field") || {}).value || "";
+    var elapsedMs = Date.now() - pageLoadedAt;
+    if (hpValue || elapsedMs < 8000) return;
+
+    errorsBox.classList.remove("show");
+    statusEl.textContent = "";
+    statusEl.classList.remove("err");
+
+    var name = document.getElementById("name").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var practiceType = document.getElementById("practice_type").value;
+    var qcRaw = document.getElementById("qc").value;
+    var bestClients = document.getElementById("best-clients").value.trim();
+    var obstacle = document.getElementById("obstacle").value.trim();
+
+    var problems = [];
+    if (!name) problems.push("Enter your name.");
+    if (!email || email.indexOf("@") === -1) problems.push("Enter a valid email.");
+    if (!practiceType) problems.push("Select which describes you.");
+    if (qcRaw === "" || isNaN(qcRaw) || Number(qcRaw) < 0) problems.push("Enter how many qualified conversations you had in the last 30 days.");
+    if (!bestClients) problems.push("Tell us where your best clients actually came from.");
+    if (!obstacle) problems.push("Tell us the biggest obstacle in your way right now.");
+
+    var sources = [];
+    var checkboxes = sourcesEl.querySelectorAll("input[type=checkbox]");
+    checkboxes.forEach(function (cb, i) {
+      if (!cb.checked) return;
+      var srcName = cb.dataset.name;
+      if (srcName === "Other") {
+        var custom = otherNameEl.value.trim();
+        if (custom) srcName = custom;
+      }
+      var grid = document.getElementById("grid-" + i);
+      var entry = { name: srcName };
+      grid.querySelectorAll(".toggle").forEach(function (btn) {
+        entry[btn.dataset.key] = btn.getAttribute("aria-pressed") === "true";
+      });
+      sources.push(entry);
+    });
+    if (sources.length === 0) problems.push("Check at least one source you currently use.");
+
+    if (problems.length) { showErrors(problems); return; }
+
+    // video_source/cta_position/meta_ad_id (added 2026-09-15): read once from the URL at
+    // page load (see optinVideoSource/optinCtaPosition/optinAdId above) and carried through
+    // here too, not just the early opt-in POST. Without this, completing the full form
+    // silently reset video_source/cta_position back to "unknown" server-side (the backend
+    // defaults missing fields to "unknown" and this payload never sent them), overwriting
+    // whatever the early opt-in had already captured -- would have broken meta_ad_id
+    // attribution the same way the moment anyone actually finished the diagnostic.
+    // CompleteRegistration dedup contract (Fix Pass 2, 2026-09-24): the CAPI backend being
+    // built in parallel sends its own server-side CompleteRegistration for this same
+    // submission -- cr_event_id is the shared dedup key, generated the same way
+    // mpcNewEventId() already does (crypto.randomUUID with a fallback), and must be echoed
+    // back by the backend as the CAPI event's event_id.
+    var crEventId = (typeof window.mpcNewEventId === "function") ? window.mpcNewEventId() : String(Date.now());
+    var fbpVal = (typeof window.mpcGetFbp === "function") ? window.mpcGetFbp() : "";
+    var fbcVal = (typeof window.mpcGetFbc === "function") ? window.mpcGetFbc() : "";
+
+    var payload = {
+      name: name,
+      email: email,
+      practice_type: practiceType,
+      qualified_conversations_30d: Number(qcRaw),
+      sources: sources,
+      best_client_source: bestClients,
+      biggest_obstacle: obstacle,
+      video_source: optinVideoSource,
+      cta_position: optinCtaPosition,
+      meta_ad_id: optinAdId,
+      cr_event_id: crEventId,
+      fbp: fbpVal,
+      fbc: fbcVal,
+      event_source_url: window.location.href,
+      client_user_agent: navigator.userAgent,
+      hp: hpValue,
+      elapsed_ms: elapsedMs
+    };
+
+    submitBtn.disabled = true;
+    form.style.display = "none";
+    processing.classList.add("show");
+
+    // Manual advanced matching (Fix Pass 2, 2026-09-24): now that the email (and name) are
+    // known, re-init the pixel with plaintext em/fn/ln -- the pixel hashes client-side
+    // before it ever leaves the browser. Must run before the CompleteRegistration track
+    // call below so that event benefits from the match data too.
+    if (typeof fbq === "function") {
+      var nameParts = name.split(/\s+/);
+      fbq("init", PIXEL_ID, { em: email, fn: nameParts[0] || "", ln: nameParts.slice(1).join(" ") || "" });
+    }
+
+    // Diagnostic Completion (added 2026-09-13): this is the exact optimization event named
+    // in ADS-STRATEGY.md Section 9a as the Stage 2 (Traffic -> Conversions) graduation
+    // trigger -- didn't exist at all before this, so there was nothing for Meta to ever
+    // optimize toward or for Sema to count against the 50/week threshold. Fires on every
+    // valid completion regardless of vertical/Calendly availability. eventID (Fix Pass 2,
+    // 2026-09-24) is the same cr_event_id sent in the POST body above, so the CAPI
+    // backend's server-side CompleteRegistration dedups against this browser event.
+    if (typeof fbq === "function") fbq("track", "CompleteRegistration", {}, { eventID: crEventId });
+
+    // Redirect timing (added 2026-09-11, Matt's explicit correction): the calendar
+    // navigation fires on submit itself -- the moment someone answers the last question
+    // -- not gated on report generation finishing. Completing the diagnostic IS the
+    // qualification (no score/tier gate here, every vertical with a live Calendly link
+    // gets sent, full stop). The fetch below still runs in parallel so the report still
+    // generates and gets emailed server-side regardless of whether this tab is still
+    // around to see the response. If a vertical has no Calendly link yet (Home Builder,
+    // still pilot-stage) there's nowhere to send them, so that path falls through to the
+    // normal on-page report + fallback-text render further down once the fetch resolves.
+    renderBookingEmbed(practiceType);
+
+    // keepalive: true matters a lot more now that we navigate away almost immediately --
+    // without it, a browser can abort a plain in-flight fetch when the tab unloads for
+    // navigation, which would silently kill report generation/email delivery. keepalive
+    // is the standard mechanism (same one analytics beacons use) for "let this request
+    // finish even if the page is gone"; payload here is a small JSON body, well under
+    // the ~64KB keepalive limit.
+    var reportPromise = fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+
+    reportPromise
+      .then(function (res) {
+        return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+      })
+      .then(function (result) {
+        processing.classList.remove("show");
+        if (!result.ok) {
+          form.style.display = "block";
+          submitBtn.disabled = false;
+          var details = (result.data && result.data.details) || [(result.data && result.data.error) || "Something went wrong. Please try again."];
+          showErrors(details);
+          return;
+        }
+        var reportText = (result.data && result.data.report) || "";
+        var bodyEl = document.getElementById("report-body");
+        bodyEl.innerHTML = "";
+        function escapeHtml(s) {
+          return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+        function mdInline(s) {
+          return s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>");
+        }
+        reportText.split(/\n\s*\n/).forEach(function (para) {
+          if (!para.trim()) return;
+          var p = document.createElement("p");
+          p.innerHTML = mdInline(escapeHtml(para.trim()));
+          bodyEl.appendChild(p);
+        });
+        document.getElementById("report-for").textContent = "Prepared for " + name;
+        document.getElementById("doc-watermark").textContent = String(Number(qcRaw));
+        renderCta(practiceType);
+        reportSection.classList.add("show");
+        // Conditional auto-scroll (Fix Pass 2, 2026-09-24): don't scroll a visitor away
+        // from a Calendly widget they're actively using (focus/pointer over it, or a
+        // calendly.* postMessage) in the last ~20s -- see recentCalendlyInteraction above.
+        if (!recentCalendlyInteraction()) {
+          reportSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      })
+      .catch(function () {
+        processing.classList.remove("show");
+        form.style.display = "block";
+        submitBtn.disabled = false;
+        statusEl.textContent = "Couldn't reach the server. Check your connection and try again.";
+        statusEl.classList.add("err");
+      });
+  });
+})();
+</script>
+<script>
+/* Presentation only (homepage pattern): scroll reveals, headline word-stagger, depth parallax. No form/tracking logic. */
+(function () {
+  /* Homepage reveal system (same IntersectionObserver pattern as index.html) */
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var els = document.querySelectorAll(".reveal, .stagger");
+  if (reduce || !("IntersectionObserver" in window)) { els.forEach(function (el) { el.classList.add("is-visible"); }); }
+  else {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); } }); }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    els.forEach(function (el) { io.observe(el); });
+  }
+  /* Word-stagger: wrap each word of .stagger headings (keeps child <em>) */
+  document.querySelectorAll(".stagger").forEach(function (h) {
+    var i = 0;
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (w) {
+            if (!w) return;
+            if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; }
+            var s = document.createElement("span"); s.className = "aw"; s.textContent = w;
+            s.style.transitionDelay = (0.25 + i++ * 0.07) + "s"; frag.appendChild(s);
+          });
+          n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1) walk(n);
+      });
+    })(h);
+  });
+
+  /* Depth: scroll + pointer parallax on [data-depth] planes (transform only, rAF, off under reduced motion) */
+  if (!reduce) {
+    var planes = document.querySelectorAll("[data-depth]");
+    var px = 0, py = 0, sy = 0, ticking = false;
+    function paint() {
+      planes.forEach(function (p) {
+        var d = parseFloat(p.dataset.depth);
+        p.style.transform = "translate3d(" + (px * d * 14) + "px," + (sy * d * 0.35 + py * d * 10) + "px,0)";
+      });
+      ticking = false;
+    }
+    function req() { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }
+    window.addEventListener("scroll", function () { sy = Math.min(window.scrollY, 1200); req(); }, { passive: true });
+    window.addEventListener("pointermove", function (e) { px = e.clientX / innerWidth - 0.5; py = e.clientY / innerHeight - 0.5; req(); }, { passive: true });
+  }
+})();
+
+</script>
+</body>
+</html>
