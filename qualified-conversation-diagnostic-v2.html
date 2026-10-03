@@ -346,6 +346,29 @@
   }
   #booking-embed-wrap .cta-disclaimer { margin: 0 0 34px; }
   .report-body p:first-of-type { display: flow-root; }
+  /* ---- B4 accent pass: color only. Espresso + forest as quiet design accents; gold stays primary. No image/type/geometry changes. ---- */
+  :root { --espresso: #3A2A1D; --forest: #2F4636; --forest-soft: #E8EDE6; }
+  .kicker::before { background: var(--espresso); }
+  .chead::after { background: var(--espresso); }
+  .src-check input[type="checkbox"]:checked { background: var(--forest); border-color: var(--forest); box-shadow: 0 2px 8px -3px rgba(47,70,54,.6); }
+  .src-check input[type="checkbox"]::after { border-color: #F2EDE1; }
+  .toggle[aria-pressed="true"] { background: linear-gradient(180deg, #F1F4EF 0%, var(--forest-soft) 100%); color: var(--forest); border-color: #9DB0A0; border-top: 2px solid var(--forest); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 12px 24px -14px rgba(47,70,54,.45); }
+  button.primary:hover, a.primary:hover { background: var(--espresso); color: var(--brass-hi); border-color: var(--espresso); text-shadow: none; }
+  .doc-edge { background: linear-gradient(180deg, var(--forest) 0 3px, var(--brass-soft) 3px 5px); }
+  .report-body strong { color: var(--forest); }
+  .f-txt { border-left-color: rgba(58,42,29,.35); }
+  @media (max-width: 700px) { .f-txt { border-top-color: rgba(58,42,29,.35); } }
+  /* shading: faint espresso warmth in grounds + shadows, a whisper of forest wash */
+  :root { --shadow-lift: 0 1px 2px rgba(58,42,29,.07), 0 10px 24px -10px rgba(58,42,29,.17), 0 40px 80px -36px rgba(58,42,29,.30); }
+  .chapter.deep { background: radial-gradient(70% 60% at 100% 100%, rgba(58,42,29,.045), transparent 70%), linear-gradient(180deg, var(--paper-deep), var(--paper-shade)); }
+  .chapter.light { background: radial-gradient(60% 50% at 100% 100%, rgba(47,70,54,.035), transparent 70%), radial-gradient(90% 70% at 15% 0%, #FFFFFF 0%, var(--paper) 55%, var(--paper-deep) 100%); }
+  .trustrow { background: linear-gradient(180deg, rgba(246,244,238,.6), rgba(236,230,218,.95)); }
+  /* Frames (Matt-approved): olive from B5, kept at the original 1px. Hero is full-bleed, unframed. */
+  :root { --frame: #6F7550; }
+  .rail figure::before { border: 1px solid var(--frame); }
+  .hcard::before { border: 1px solid var(--frame); }
+  .tp { background: var(--frame); }
+  .calendly-inline-widget { outline: 1px solid var(--frame); }
 </style>
 
 
