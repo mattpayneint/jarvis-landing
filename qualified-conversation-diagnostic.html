@@ -77,6 +77,11 @@
   .engrave .tag { margin-top: 12px; font-size: clamp(8px, .8vw, 11.5px); font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: #5A3F16; text-shadow: 0 1px 0 rgba(255,250,236,.8); text-indent: .26em; }
   .engrave .tag::before { content: ""; display: block; width: 100%; height: 1px; margin: 0 auto 10px; background: linear-gradient(90deg, transparent, rgba(110,80,34,.75), transparent); }
   .sunspill { position: absolute; inset: 0; z-index: 5; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(60% 70% at 88% 30%, rgba(255,226,170,.28), transparent 70%); }
+  /* Short desktop screens: keep the engraved name + tagline clear of the title card (Jarvis 2026-10-04) */
+  @media (min-width: 861px) and (max-height: 880px) {
+    .hero { --my: 28%; }
+    .cardwrap { margin-top: -120px; }
+  }
   .hero-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: 6; background: linear-gradient(0deg, rgba(253,252,249,.9), rgba(253,252,249,0)); pointer-events: none; }
   @media (max-width: 860px) {
     .hero { height: 318px; min-height: 0; --mx: 36%; --my: 30%; --mr: 50px; }
