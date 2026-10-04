@@ -74,7 +74,7 @@
   .engrave::before { content: ""; position: absolute; inset: -38px -70px -34px; z-index: -2; background: radial-gradient(closest-side, rgba(255,250,238,.62), rgba(255,250,238,.32) 55%, rgba(255,250,238,0)); }
   .engrave .wm { font-family: var(--serif); font-size: clamp(1.4rem, 2.5vw, 2.45rem); line-height: 1.05; color: #3A2A12; text-shadow: 0 1px 0 rgba(255,250,236,.85), 0 -1px 0 rgba(60,40,12,.25); }
   .engrave .wm-hi { display: none; position: absolute; left: 0; right: 0; top: 1px; font-family: var(--serif); font-size: clamp(1.3rem, 2.35vw, 2.3rem); line-height: 1.05; color: rgba(255,246,226,.55); mix-blend-mode: screen; z-index: -1; }
-  .engrave .tag { margin-top: 12px; font-size: clamp(8px, .8vw, 11.5px); font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: #5A3F16; text-shadow: 0 1px 0 rgba(255,250,236,.8); }
+  .engrave .tag { margin-top: 12px; font-size: clamp(8px, .8vw, 11.5px); font-weight: 600; letter-spacing: .26em; text-transform: uppercase; color: #5A3F16; text-shadow: 0 1px 0 rgba(255,250,236,.8); text-indent: .26em; }
   .engrave .tag::before { content: ""; display: block; width: 100%; height: 1px; margin: 0 auto 10px; background: linear-gradient(90deg, transparent, rgba(110,80,34,.75), transparent); }
   .sunspill { position: absolute; inset: 0; z-index: 5; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(60% 70% at 88% 30%, rgba(255,226,170,.28), transparent 70%); }
   .hero-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: 6; background: linear-gradient(0deg, rgba(253,252,249,.9), rgba(253,252,249,0)); pointer-events: none; }
@@ -83,7 +83,7 @@
     .engrave { top: calc(var(--my) + var(--mr) + 16px); }
     .engrave::before { inset: -24px -30px -22px; }
     .engrave .wm, .engrave .wm-hi { font-size: 1.12rem; }
-    .engrave .tag { margin-top: 7px; font-size: 6.6px; letter-spacing: .18em; max-width: 25em; white-space: normal; line-height: 1.75; }
+    .engrave .tag { margin-top: 8px; font-size: 7.6px; letter-spacing: .22em; text-indent: .22em; white-space: nowrap; line-height: 1.75; }
     .engrave .tag::before { margin-bottom: 6px; }
   }
 
@@ -413,7 +413,7 @@ fbq('track', 'PageView');
     <div class="ph"><picture><source media="(max-width: 860px)" type="image/avif" srcset="assets/qcd/office-hero-m800.avif" width="800" height="760"><source media="(max-width: 860px)" type="image/webp" srcset="assets/qcd/office-hero-m800.webp" width="800" height="760"><source media="(max-width: 860px)" srcset="assets/qcd/office-hero-m800.jpg" width="800" height="760"><source type="image/avif" srcset="assets/qcd/office-hero-1000.avif 1000w, assets/qcd/office-hero-1600.avif 1600w, assets/qcd/office-hero-2200.avif 2200w" sizes="106vw"><source type="image/webp" srcset="assets/qcd/office-hero-1000.webp 1000w, assets/qcd/office-hero-1600.webp 1600w, assets/qcd/office-hero-2200.webp 2200w" sizes="106vw"><img src="assets/qcd/office-hero-1600.jpg" srcset="assets/qcd/office-hero-1000.jpg 1000w, assets/qcd/office-hero-1600.jpg 1600w, assets/qcd/office-hero-2200.jpg 2200w" sizes="106vw" alt="" width="2200" height="1244" fetchpriority="high"></picture></div>
     <div class="plaque" aria-hidden="true"><svg viewBox="0 0 400 400"><use href="#mpc-medal"/></svg></div>
     <div class="ph shade" aria-hidden="true"><picture><source media="(max-width: 860px)" type="image/avif" srcset="assets/qcd/office-hero-m800.avif" width="800" height="760"><source media="(max-width: 860px)" type="image/webp" srcset="assets/qcd/office-hero-m800.webp" width="800" height="760"><source media="(max-width: 860px)" srcset="assets/qcd/office-hero-m800.jpg" width="800" height="760"><source type="image/avif" srcset="assets/qcd/office-hero-1000.avif 1000w, assets/qcd/office-hero-1600.avif 1600w, assets/qcd/office-hero-2200.avif 2200w" sizes="106vw"><source type="image/webp" srcset="assets/qcd/office-hero-1000.webp 1000w, assets/qcd/office-hero-1600.webp 1600w, assets/qcd/office-hero-2200.webp 2200w" sizes="106vw"><img src="assets/qcd/office-hero-1600.jpg" srcset="assets/qcd/office-hero-1000.jpg 1000w, assets/qcd/office-hero-1600.jpg 1600w, assets/qcd/office-hero-2200.jpg 2200w" sizes="106vw" alt="" width="2200" height="1244"></picture></div>
-    <div class="engrave"><span class="wm-hi" aria-hidden="true">Matthew Payne Consulting</span><div class="wm">Matthew Payne Consulting</div><div class="tag">The High Net Worth Client &amp; Investor Attraction &amp; Conversion System</div></div>
+    <div class="engrave"><span class="wm-hi" aria-hidden="true">Matthew Payne Consulting</span><div class="wm">Matthew Payne Consulting</div><div class="tag">High Net Worth Investors &amp; Clients</div></div>
   </div>
   <div class="sunspill"></div>
   <div class="hero-fade"></div>
@@ -553,7 +553,7 @@ fbq('track', 'PageView');
   <div class="desk">
     <div class="doc-page">
       <span class="doc-edge"></span>
-      <div class="doc-letterhead doc-lh"><svg viewBox="0 0 400 400" aria-hidden="true"><use href="#mpc-medal"/></svg><div><div class="n">Matthew Payne Consulting</div><div class="t foil-ink">The High Net Worth Client &amp; Investor Attraction &amp; Conversion System</div></div></div>
+      <div class="doc-letterhead doc-lh"><svg viewBox="0 0 400 400" aria-hidden="true"><use href="#mpc-medal"/></svg><div><div class="n">Matthew Payne Consulting</div><div class="t foil-ink">High Net Worth Investors &amp; Clients</div></div></div>
       <div class="doc-header">
         <span class="doc-watermark" id="doc-watermark" aria-hidden="true"></span>
         <div class="doc-kicker" id="report-for">Prepared For</div>
