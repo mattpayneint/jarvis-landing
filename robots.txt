@@ -68,4 +68,10 @@ Allow: /
 User-agent: YouBot
 Allow: /
 
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
 Sitemap: https://matthewpayneconsulting.com/sitemap.xml
