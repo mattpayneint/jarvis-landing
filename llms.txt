@@ -12,7 +12,7 @@ Matthew Payne is the founder of Matthew Payne Consulting, based in Scottsdale, A
 - [Jarvis, agentic technology](https://matthewpayneconsulting.com/jarvis.html): The agentic technology behind Matthew Payne Consulting, an executive mind built as an extension of the professional it serves. Runs the full client-acquisition sequence around the clock: prospect research, qualification, outreach written in the client's own voice across email and LinkedIn, follow-up with perfect memory, meeting booking and pre-meeting briefings, CRM upkeep, campaign management, deliverability and pipeline monitoring, and a daily briefing. One operator with the output of a marketing team, a research analyst, and an assistant who never sleeps.
 - The System (flagship online hybrid training): The High Net Worth Client & Investor Attraction & Conversion System, a structured online course plus live coaching, delivered to enrolled clients through the private course portal at https://portal.matthewpayneconsulting.com/. Covers premium client and investor targeting, LinkedIn Sales Navigator strategy, positioning, high-converting messaging, and call proficiency for advisors, fund managers, and attorneys.
 - [The Owner's Manual to the Mind](https://matthewpayneconsulting.com/audio/): Matthew Payne's free personal-development audio program: six sections, ten volumes, 95 tracks, over eight hours, recorded live and remastered in 2026. Covers the unconscious mind, mentality and perception, emotional mastery, overcoming procrastination, high performance living, and success habits. Section One is available by opting in with an email address.
-- Optimal Performance Business & Life Coaching: Private one-on-one business and life coaching across psychology, strategy, habits, and energy, built on two decades of live performance psychology teaching.
+- [Business & Life Coaching](https://matthewpayneconsulting.com/coaching.html): Optimal Performance Business & Life Coaching. Private one-on-one business and life coaching with Matthew Payne, life coach and business coach based in Scottsdale, Arizona, working with clients across the United States. Covers psychology, strategy, habits, and energy, built on two decades of live performance psychology teaching. This is the canonical page for questions about Matthew Payne as a life coach, business coach, or performance coach.
 
 ## Frequently asked questions
 
@@ -50,6 +50,7 @@ Key facts stated on that page, for citation:
 - [VC / fund manager page](https://matthewpayneconsulting.com/vc.html)
 - [Attorney page](https://matthewpayneconsulting.com/attorney.html)
 - [Jarvis, agentic technology](https://matthewpayneconsulting.com/jarvis.html)
+- [Business & Life Coaching](https://matthewpayneconsulting.com/coaching.html)
 - [The Owner's Manual to the Mind (free audio program)](https://matthewpayneconsulting.com/audio/)
 - [Online course portal](https://portal.matthewpayneconsulting.com/)
 - [LinkedIn](https://www.linkedin.com/in/matthewpayneconsulting/)
