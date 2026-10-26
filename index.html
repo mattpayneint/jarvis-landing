@@ -618,8 +618,15 @@
   .hero-content { position: relative; z-index: 5; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; max-width: 1200px; margin: 0 auto; padding: 0 44px 220px; box-sizing: border-box; }
   .hero .kicker { font-size: clamp(16px, 1.3vw, 21px); font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--brass-soft); text-shadow: 0 2px 18px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 18px; margin-bottom: 42px; opacity: 0; animation: rise 1s var(--ease) 0.3s forwards; }
   .hero .kicker::before { content: ""; height: 2px; width: 64px; background: linear-gradient(90deg, var(--brass), var(--brass-soft)); flex: none; }
-  .hero h1 { font-size: clamp(2.2rem, 4.2vw, 3.6rem); line-height: 1.1; max-width: 20ch; color: var(--cream); animation: herostatglow 4.5s ease-in-out 1.6s infinite alternate; }
-  @keyframes herostatglow { 0% { text-shadow: 0 2px 30px rgba(0,0,0,0.45), 0 0 0 rgba(194,164,104,0); } 100% { text-shadow: 0 2px 30px rgba(0,0,0,0.45), 0 0 26px rgba(194,164,104,0.55); } }
+  .hero h1 { font-size: clamp(2.2rem, 4.2vw, 3.6rem); line-height: 1.1; max-width: 20ch; color: var(--cream); position: relative; text-shadow: 0 2px 30px rgba(0,0,0,0.45); }
+  /* perf (2026-10-26): gold breathe moved off animated text-shadow (repaint every frame) onto a
+     transparent-text overlay whose opacity animates on the compositor. Same glow, same 4.5s rhythm. */
+  .hero h1 .h1-glow { position: absolute; inset: 0; pointer-events: none; user-select: none; text-shadow: 0 0 26px rgba(194,164,104,0.55); opacity: 0; will-change: opacity; animation: herostatglow 4.5s ease-in-out 1.6s infinite alternate; }
+  .hero h1 .h1-glow, .hero h1 .h1-glow * { color: transparent !important; }
+  @keyframes herostatglow { from { opacity: 0; } to { opacity: 1; } }
+  /* perf (2026-10-26): number glows don't run while the number is still hidden waiting for its
+     constellation entrance (they were burning repaints on invisible text during the hero load) */
+  .stat-line .n.asm-target:not(.shown), .om-stat .n.asm-target:not(.shown) { animation-play-state: paused !important; }
   .hero h1 .w { display: inline-block; }
   @keyframes rise { to { opacity: 1; transform: none; } }
   .hero .sub { font-size: 1.1rem; color: rgba(242,237,225,0.75); max-width: 46ch; margin-top: 26px; opacity: 0; animation: rise 1s var(--ease) 1.3s forwards; }
@@ -1426,6 +1433,7 @@
     .reveal, .s-step { opacity: 1; transform: none; transition: none; }
     .hero-plane--mid .hero-layer-img { animation: none; }
     .hero h1 { animation: none; text-shadow: 0 2px 30px rgba(0,0,0,0.45), 0 0 14px rgba(194,164,104,0.3); }
+    .hero h1 .h1-glow { display: none; }
     .hero .kicker, .hero h1 .w, .hero .sub, .hero-actions, .hero-jbadge { opacity: 1; transform: none; animation: none; }
     .jb-core { animation: none; }
     .capital .bg video { display: none; }
@@ -1599,8 +1607,8 @@
       <div class="capital-grid">
         <div>
           <div class="eyebrow reveal">Raising Capital</div>
-          <h2 class="reveal about-h2"><span class="aw" style="transition-delay: 0ms">The</span> <span class="aw" style="transition-delay: 70ms">allocators</span> <span class="aw" style="transition-delay: 140ms">you</span> <span class="aw" style="transition-delay: 210ms">want</span> <span class="aw" style="transition-delay: 280ms">to</span> <span class="aw" style="transition-delay: 350ms">meet,</span> <span class="aw" style="transition-delay: 420ms"><em style="color: var(--brass-soft); font-style: italic;">wanting</em></span> <span class="aw" style="transition-delay: 490ms"><em style="color: var(--brass-soft); font-style: italic;">to</em></span> <span class="aw" style="transition-delay: 560ms"><em style="color: var(--brass-soft); font-style: italic;">meet</em></span> <span class="aw" style="transition-delay: 630ms"><em style="color: var(--brass-soft); font-style: italic;">you.</em></span></h2>
-          <p class="lede reveal">Standing, peer to peer, with real allocators and real high net worth investors who want the meeting. Never solicited, so nothing about it undermines the scarcity and exclusivity you need to protect.</p>
+          <h2 class="reveal about-h2"><span class="aw" style="transition-delay: 0ms">Real</span> <span class="aw" style="transition-delay: 70ms">allocators</span> <span class="aw" style="transition-delay: 140ms">within</span> <span class="aw" style="transition-delay: 210ms">mandate,</span> <span class="aw" style="transition-delay: 280ms">aligned</span> <span class="aw" style="transition-delay: 350ms">with</span> <span class="aw" style="transition-delay: 420ms">your</span> <span class="aw" style="transition-delay: 490ms">thesis,</span> <span class="aw" style="transition-delay: 560ms"><em style="color: var(--brass-soft); font-style: italic;">wanting</em></span> <span class="aw" style="transition-delay: 630ms"><em style="color: var(--brass-soft); font-style: italic;">to</em></span> <span class="aw" style="transition-delay: 700ms"><em style="color: var(--brass-soft); font-style: italic;">become</em></span> <span class="aw" style="transition-delay: 770ms"><em style="color: var(--brass-soft); font-style: italic;">your</em></span> <span class="aw" style="transition-delay: 840ms"><em style="color: var(--brass-soft); font-style: italic;">LPs.</em></span></h2>
+          <p class="lede reveal">Standing, peer to peer, with real allocators currently allocating to your asset class, sized to the check your raise actually needs. Never solicited, so nothing about it undermines the scarcity and exclusivity you need to protect.</p>
           <div class="reveal" style="margin-top: 40px;"><a class="btn" href="https://calendly.com/matthewpayneconsulting/fund-manager-gp-strategy-call" target="_blank" rel="noopener">Start The Conversation</a></div>
         </div>
         <div class="cap-col">
@@ -2291,6 +2299,15 @@
         return '<span class="w"' + cls + ' style="animation-delay:' + (0.45 + i * 0.08) + 's">' + p + '</span>';
       }).join(' ');
     }
+    /* perf (2026-10-26): the headline's gold breathe used to animate text-shadow on the h1
+       itself, which repainted + re-rastered the whole headline and re-laid-out every word on
+       every frame, starting at 1.6s, right on top of the hero entrance. Same glow now lives on
+       a transparent-text copy stacked exactly over the headline and only its OPACITY animates
+       (compositor-only, zero repaint). Look is unchanged. */
+    var h1Glow = document.createElement('span');
+    h1Glow.className = 'h1-glow'; h1Glow.setAttribute('aria-hidden', 'true');
+    h1Glow.innerHTML = h1.innerHTML;
+    h1.appendChild(h1Glow);
 
     /* Nav state */
     var nav = document.getElementById('nav');
@@ -2549,7 +2566,7 @@
     function restartAuto() {
       if (reduce) return;
       clearInterval(autoTimer);
-      autoTimer = setInterval(function () { go(idx + 1 > cards.length - 1 ? 0 : idx + 1); }, 5500);
+      autoTimer = setInterval(function () { /* perf: no auto-advance while scrolled out of view */ var vr = track.getBoundingClientRect(); if (vr.bottom < 0 || vr.top > window.innerHeight) return; go(idx + 1 > cards.length - 1 ? 0 : idx + 1); }, 5500);
     }
     track.addEventListener('mouseenter', function () { clearInterval(autoTimer); });
     track.addEventListener('mouseleave', restartAuto);
@@ -2680,6 +2697,7 @@
       clearInterval(autoTimer);
       autoTimer = setInterval(function () {
         if (hovering || dragging) return;
+        /* perf: no auto-advance while scrolled out of view */ var vr = track.getBoundingClientRect(); if (vr.bottom < 0 || vr.top > window.innerHeight) return;
         var next = idx + 1 > cards.length - 1 ? 0 : idx + 1;
         glideTo(Math.min(next * cardStep(), maxShift()));
         setActive(next);
@@ -2760,6 +2778,7 @@
       clearInterval(autoTimer);
       autoTimer = setInterval(function () {
         if (hovering || dragging) return;
+        /* perf: no auto-advance while scrolled out of view */ var vr = track.getBoundingClientRect(); if (vr.bottom < 0 || vr.top > window.innerHeight) return;
         var next = idx + 1 > cards.length - 1 ? 0 : idx + 1;
         glideTo(Math.min(next * cardStep(), maxShift()));
         setActive(next);
@@ -3854,7 +3873,9 @@
         { name: 'dust', dur: 7000 },
         { name: 'earth', dur: 7000 }
       ];
-      var BALL_YAW = 0.00007, BALL_PITCH = 0.12;
+      /* hero badge spin doubled 2026-10-26 (Matt): was 0.00007 (~90s per turn), now ~45s per turn.
+         The chapter globe keeps its own BALL_YAW (0.00007) unchanged. */
+      var BALL_YAW = 0.00014, BALL_PITCH = 0.12;
       var BPHASE_ORDER = [2, 0, 1], borderIdx = 0;
       var bphase = BPHASE_ORDER[0], bphaseT = 0, bry = 0, brx = 0.12, blast = 0, brun = true, bbuilt = false;
       var bphaseW = [0, 0, 1];
@@ -4093,8 +4114,10 @@
           for (i = 0; i < BN; i++) {
             bpx[i] += (bsx[i] - bpx[i]) * bk[i]; bpy[i] += (bsy[i] - bpy[i]) * bk[i]; bpz[i] += (bsz2[i] - bpz[i]) * bk[i];
             bk[i] += (bk0[i] - bk[i]) * 0.06;
-            var q2 = brot([bpx[i], bpy[i], bpz[i]], ax, ay), sc2 = bF / (bF + q2[2]), xp2 = bcx + q2[0] * sc2, yp2 = bcy - q2[1] * sc2;
-            var depth2 = (q2[2] + bR) / (2 * bR), al;
+            var qx1 = bpx[i] * bcAy + bpz[i] * bsAy, qz1 = -bpx[i] * bsAy + bpz[i] * bcAy;
+            var qy2 = bpy[i] * bcAx - qz1 * bsAx, qz2 = bpy[i] * bsAx + qz1 * bcAx;
+            var sc2 = bF / (bF + qz2), xp2 = bcx + qx1 * sc2, yp2 = bcy - qy2 * sc2;
+            var depth2 = (qz2 + bR) / (2 * bR), al;
             if (!bRevealGate) {
               al = (0.18 + 0.72 * (1 - depth2)) * bphaseW[1];
             } else if (bLandC[i] < 0) {
@@ -4176,10 +4199,10 @@
         var tEl = textEl(item), cs = getComputedStyle(tEl), bx = box(tEl);
         if (spec.words) {
           /* multi-line text: one fillText per word at that word's own laid-out position (Range rects), transform-corrected */
-          var o2 = document.createElement('canvas'); o2.width = W; o2.height = H; var g2 = o2.getContext('2d'); g2.fillStyle = '#fff'; g2.textBaseline = 'alphabetic'; g2.textAlign = 'left';
+          var o2 = document.createElement('canvas'); o2.width = W; o2.height = H; var g2 = o2.getContext('2d', { willReadFrequently: true }); g2.fillStyle = '#fff'; g2.textBaseline = 'alphabetic'; g2.textAlign = 'left';
           var pr = tEl.getBoundingClientRect(), cr = container.getBoundingClientRect();
           var ddx = (pr.left - cr.left + PADX) - bx.x, ddy = (pr.top - cr.top + PADY) - bx.y;
-          var walker = document.createTreeWalker(tEl, NodeFilter.SHOW_TEXT, null), node;
+          var walker = document.createTreeWalker(tEl, NodeFilter.SHOW_TEXT, { acceptNode: function (n) { return n.parentElement && n.parentElement.closest('.h1-glow') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } }), node;
           while ((node = walker.nextNode())) {
             var pcs = getComputedStyle(node.parentElement); g2.font = pcs.fontStyle + ' ' + pcs.fontWeight + ' ' + pcs.fontSize + ' ' + pcs.fontFamily;
             var re = /\S+/g, mm, txt = node.nodeValue;
@@ -4193,7 +4216,7 @@
         var ta = cs.textAlign; if (ta === 'start') ta = 'left'; if (ta === 'end') ta = 'right'; if (ta !== 'center' && ta !== 'right') ta = 'left';
         var tx = ta === 'center' ? bx.x + pl + (bx.w - pl - pr) / 2 : ta === 'right' ? bx.x + bx.w - pr : bx.x + pl;
         var text = finalText(tEl); if (cs.textTransform === 'uppercase') text = text.toUpperCase();
-        var o = document.createElement('canvas'); o.width = W; o.height = H; var g = o.getContext('2d');
+        var o = document.createElement('canvas'); o.width = W; o.height = H; var g = o.getContext('2d', { willReadFrequently: true });
         g.fillStyle = '#fff'; g.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; g.textBaseline = 'middle'; g.textAlign = ta;
         if ('letterSpacing' in g) g.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing;
         g.fillText(text, tx, bx.y + pt + (bx.h - pt - pb) / 2);
@@ -4219,14 +4242,16 @@
       }
       function frame(now) {
         if (!last) last = now; var dt = Math.min(50, now - last); last = now;
-        ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = COMP;
+        ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = COMP; ctx.fillStyle = 'rgb(' + COL + ')';
         var alive = false, i, p;
         for (var gi = 0; gi < groups.length; gi++) {
           var gr = groups[gi]; if (gr.dead) continue; alive = true;
           gr.t += dt;
           if (gr.burst) {
             var bf = 1 - gr.t / 850; if (bf <= 0) { gr.dead = true; continue; }
-            for (i = 0; i < gr.ps.length; i++) { p = gr.ps[i]; p.x += p.vx * dt * 0.06; p.y += p.vy * dt * 0.06; ctx.fillStyle = 'rgba(' + COL + ',' + (bf * 0.8).toFixed(3) + ')'; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz); }
+            ctx.globalAlpha = bf * 0.8;
+            for (i = 0; i < gr.ps.length; i++) { p = gr.ps[i]; p.x += p.vx * dt * 0.06; p.y += p.vy * dt * 0.06; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz); }
+            ctx.globalAlpha = 1;
             continue;
           }
           var T = gr.t - gr.delay; if (T < 0) continue;
@@ -4237,9 +4262,10 @@
           for (i = 0; i < gr.ps.length; i++) {
             p = gr.ps[i]; p.x += (p.tx - p.x) * p.k; p.y += (p.ty - p.y) * p.k; p.a += (1 - p.a) * 0.05;
             if (T > T_FADE) { p.x += (p.x - W / 2) * 0.004; p.y += (p.y - H / 2) * 0.004; }
-            var al = p.a * fade; ctx.fillStyle = 'rgba(' + COL + ',' + (al * AMUL).toFixed(3) + ')'; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz);
-            if (i % 23 === 0 && T < T_LINES && lw < 24) { var q = gr.ps[(i * 7) % gr.ps.length]; ctx.strokeStyle = 'rgba(' + COL + ',' + (0.12 * (1 - T / T_LINES) * p.a).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); lw++; }
+            ctx.globalAlpha = p.a * fade * AMUL; ctx.fillRect(p.x - p.sz / 2, p.y - p.sz / 2, p.sz, p.sz);
+            if (i % 23 === 0 && T < T_LINES && lw < 24) { var q = gr.ps[(i * 7) % gr.ps.length]; ctx.globalAlpha = 1; ctx.strokeStyle = 'rgba(' + COL + ',' + (0.12 * (1 - T / T_LINES) * p.a).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); lw++; }
           }
+          ctx.globalAlpha = 1;
         }
         ctx.globalCompositeOperation = 'source-over';
         if (alive) requestAnimationFrame(frame); else { running = false; groups = []; if (cv) { cv.remove(); cv = null; } }
