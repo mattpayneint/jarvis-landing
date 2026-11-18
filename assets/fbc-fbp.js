@@ -90,9 +90,14 @@
     if (fbp) params.push('utm_term=' + encodeURIComponent(fbp));
     if (eventId) params.push('utm_campaign=' + encodeURIComponent(eventId));
     if (adId) params.push('utm_source=' + encodeURIComponent(adId));
-    if (!params.length) return link;
+    // Booking source tag (2026-11-18): assets/cal-source.js adds utm_medium=website.<page>.<from>.
+    // utm_medium is the one UTM slot not used for Meta params above.
+    var tag = function (l) {
+      return typeof window.mpcTagCalendlyLink === 'function' ? window.mpcTagCalendlyLink(l) : l;
+    };
+    if (!params.length) return tag(link);
     var sep = link.indexOf('?') === -1 ? '?' : '&';
-    return link + sep + params.join('&');
+    return tag(link + sep + params.join('&'));
   };
 
   window.mpcNewEventId = function () {
