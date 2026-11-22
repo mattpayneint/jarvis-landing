@@ -472,7 +472,7 @@ fbq('track', 'PageView');
           <div class="field"><label for="name">Name</label><input type="text" id="name" name="name" autocomplete="name" required></div>
           <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" required></div>
         </div>
-        <div class="field reveal">
+        <div class="field reveal" id="practice_type_field">
           <label for="practice_type">Which describes you</label>
           <div class="sel"><select id="practice_type" name="practice_type" required>
             <option value="" disabled selected>Select one</option>
@@ -646,6 +646,18 @@ fbq('track', 'PageView');
   // value from assets/fbc-fbp.js when the current URL has none (return visit, bookmark,
   // organic revisit) instead of collapsing straight to "unknown".
   var optinAdId = optinParams.get("adid") || (typeof window.mpcGetAdId === "function" && window.mpcGetAdId()) || "unknown";
+
+  // Meta ad traffic is advisor-only (Matt, 2026-11-22): Meta ads run to financial advisors
+  // only, never attorneys or VCs. Anyone arriving from an ad (adid present, or held from an
+  // ad click in the last 30 days) gets practice_type fixed to Advisor and the dropdown
+  // hidden, so every ad-attributed completion Meta learns from is an advisor. Visitors
+  // from other channels still see the full dropdown.
+  if (optinAdId !== "unknown") {
+    var adPracticeEl = document.getElementById("practice_type");
+    var adPracticeField = document.getElementById("practice_type_field");
+    if (adPracticeEl) adPracticeEl.value = "Advisor";
+    if (adPracticeField) adPracticeField.style.display = "none";
+  }
   var optinFired = false;
 
   function maybeFireOptin() {
